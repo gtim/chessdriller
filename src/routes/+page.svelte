@@ -1,2 +1,17 @@
+<script>
+	export let data;
+	function createTest() {
+		alert(123);
+	}
+	/*
+	export async function load({ fetch, params }) {
+		const res = await fetch(`/api/${params.id}`);
+		const item = await res.json();
+		return { item };
+	}
+	*/
+</script>
+
 <h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<a on:click={createTest}>{data.bla}</a>
+
