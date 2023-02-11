@@ -14,3 +14,17 @@ model PrismaTest {
 	uid String @id @default(cuid())
 	created_at DateTime
 }
+
+model User {
+	id    Int    @id @default(autoincrement())
+	moves Move[]
+}
+
+model Move {
+	id      Int    @id @default(autoincrement())
+	user    User   @relation( fields: [userId], references: [id] )
+	userId  Int
+	fromFEN String
+	toFEN   String
+	movePGN String
+}
