@@ -12,6 +12,6 @@
 	*/
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<a on:click={createTest}>{data.bla}</a>
+<h1>Chess Driller</h1>
 
+<p><a on:click={createTest}>{data.bla}</a></p>
