@@ -18,13 +18,27 @@ model PrismaTest {
 model User {
 	id    Int    @id @default(autoincrement())
 	moves Move[]
+	pgns  Pgn[]
 }
 
 model Move {
 	id      Int    @id @default(autoincrement())
 	user    User   @relation( fields: [userId], references: [id] )
 	userId  Int
-	fromFEN String
-	toFEN   String
-	movePGN String
+	fromFen String
+	toFen   String
+	moveSan String
+	pgns    Pgn[]
+
+	@@unique([ userId, fromFen, toFen ])
+}
+
+model Pgn {
+	id       Int      @id @default(autoincrement())
+	user     User     @relation( fields: [userId], references: [id] )
+	userId   Int
+	filename String
+	uploaded DateTime @default(now())
+	content  String
+	moves    Move[]
 }

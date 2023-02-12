@@ -9,7 +9,7 @@
 
 <form method="POST" use:enhance>
 	<label for="pgn">Upload PGN:</label>
-	<input type="file" accept=".pgn" />
+	<input type="file" name="pgn" accept=".pgn" />
 	<input type="submit" value="Upload"/>
 </form>
 
