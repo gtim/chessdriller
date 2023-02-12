@@ -6,6 +6,7 @@ export const actions = {
 	default: async ({cookies,request}) => {
 		const formData = await request.formData();
 		const file = formData.get('pgn');
+		const forWhite = false;
 		// TODO: check file size
 
 		const pgntext_orig = await file.text();
@@ -16,11 +17,12 @@ export const actions = {
 
 		const pgn = await prisma.pgn.create({ data: {
 			userId: 1, //TODO
+			forWhite: forWhite,
 			filename: file.name,
 			content: pgntext_orig
 		} });
 
-		await insert_all_moves( pgn.id, chess.history() );
+		await insert_all_moves( pgn.id, forWhite, chess.history() );
 
 		return { success: true };
 	}
@@ -33,20 +35,22 @@ function normalize_fen( fen ) {
 }
 
 // Traverse all variations and insert each move into database
-async function insert_all_moves( pgn_id, moves ) {
+async function insert_all_moves( pgn_id, forWhite, moves ) {
 	for ( const move of moves ) {
 		const from_fen = normalize_fen( move.previous ? move.previous.fen : 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' );
 		const to_fen   = normalize_fen(move.fen);
 		await prisma.move.upsert( {
 			where: {
-				userId_fromFen_toFen: {
+				userId_forWhite_fromFen_toFen: {
 					userId: 1, //TODO
+					forWhite: forWhite,
 					fromFen: from_fen,
 					toFen: to_fen
 				}
 			},
 			create: {
 				userId: 1, //TODO
+				forWhite: forWhite,
 				fromFen: from_fen,
 				toFen:   to_fen,
 				moveSan: move.san,
@@ -59,7 +63,7 @@ async function insert_all_moves( pgn_id, moves ) {
 		// traverse variations.
 		// await required to avoid race conditions triggering Prisma Sqlite bug: https://github.com/prisma/prisma/issues/11789
 		for ( const variation of move.variations ) {
-			await insert_all_moves( pgn_id, variation );
+			await insert_all_moves( pgn_id, forWhite, variation );
 		}
 	}
 }

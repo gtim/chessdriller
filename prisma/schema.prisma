@@ -22,21 +22,23 @@ model User {
 }
 
 model Move {
-	id      Int    @id @default(autoincrement())
-	user    User   @relation( fields: [userId], references: [id] )
-	userId  Int
-	fromFen String
-	toFen   String
-	moveSan String
-	pgns    Pgn[]
+	id       Int    @id @default(autoincrement())
+	user     User   @relation( fields: [userId], references: [id] )
+	userId   Int
+	forWhite Boolean
+	fromFen  String
+	toFen    String
+	moveSan  String
+	pgns     Pgn[]
 
-	@@unique([ userId, fromFen, toFen ])
+	@@unique([ userId, forWhite, fromFen, toFen ])
 }
 
 model Pgn {
 	id       Int      @id @default(autoincrement())
 	user     User     @relation( fields: [userId], references: [id] )
 	userId   Int
+	forWhite Boolean
 	filename String
 	uploaded DateTime @default(now())
 	content  String

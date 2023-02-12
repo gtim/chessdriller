@@ -7,8 +7,9 @@
 
 <h2>Upload PGN</h2>
 
+<h3>Black Repertoire</h3>
+
 <form method="POST" use:enhance>
-	<label for="pgn">Upload PGN:</label>
 	<input type="file" name="pgn" accept=".pgn" />
 	<input type="submit" value="Upload"/>
 </form>
