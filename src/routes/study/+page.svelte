@@ -15,9 +15,17 @@
 	function rightMove(e) {
 		console.log('yes! move ID: ' + e.detail.moveId);
 		lastRightMoveIx = e.detail.moveIx;
+		line[lastRightMoveIx].class ||= 'right';
+		if ( lastRightMoveIx > 0 ) {
+			line[lastRightMoveIx-1].class ||= 'right';
+		}
 	}
 	function wrongMove(e) {
 		console.log('no:( move ID: ' + e.detail.moveId);
+		line[e.detail.moveIx].class = 'wrong';
+		if ( e.detail.moveIx > 0 ) {
+			line[e.detail.moveIx-1].class = 'wrong';
+		}
 	}
 
 	
@@ -45,8 +53,16 @@
 		{#if ix % 2 == 0}
 			{1+ix/2}.
 		{/if}
-		{move.moveSan+' '} 
+		<span class="{move.class}">{move.moveSan+' '}</span>
 	{/each}
 	</p>
 {/if}
 
+<style>
+	.right {
+		color:green;
+	}
+	.wrong {
+		color:red;
+	}
+</style>
