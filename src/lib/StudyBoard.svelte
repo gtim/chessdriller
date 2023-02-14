@@ -8,6 +8,7 @@
 	const dispatch = createEventDispatcher();
 	
 	export let line; // line is an array of moves
+	export let start_move_ix; // move index (of line[]) for the first move to show; fast-forward to that one
 	let current_move_i = 0;
 	
 
@@ -24,11 +25,15 @@
 		premovable: { enabled: false },
 	};
 
-	function playOpponentMove() {
-		console.assert( ! line[current_move_i].ownMove );
+	function stepOneMoveForward() {
 		const chess_move = chess.move( line[current_move_i].moveSan );
 		chessground.move( chess_move.from, chess_move.to );
 		current_move_i++;
+	}
+
+	function playOpponentMove() {
+		console.assert( ! line[current_move_i].ownMove );
+		stepOneMoveForward();
 		if ( current_move_i == line.length ) {
 			lineFinished();
 		} else {
@@ -88,7 +93,14 @@
 	}
 
 	onMount(async () => {
-		playOpponentMove();
+		while ( current_move_i < start_move_ix ) {
+			stepOneMoveForward();
+		}
+		if ( line[current_move_i].ownMove ) {
+			allowBoardInput();
+		} else {
+			playOpponentMove();
+		}
 	});
 
 	function colorToMove( fen ) {

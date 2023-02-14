@@ -3,10 +3,13 @@
 	import StudyBoard from '$lib/StudyBoard.svelte';
 	
 	let line;
+	let start_move_ix;
 	async function studyLine() {
 		const response = await fetch('/api/study?color=b');
+		//const response = await fetch('/api/study?color=b&last=[1,2,522,523,524,525,526,527,528,533,534,535]');
 		const json = await response.json();
 		line = json.line;
+		start_move_ix = json.start_ix;
 		console.log(json);
 	}
 
@@ -47,7 +50,7 @@
 {/if}
 
 {#if line}
-	<StudyBoard {line} on:rightMove={rightMove} on:wrongMove={wrongMove} on:lineFinished={lineFinished} />
+	<StudyBoard {line} {start_move_ix} on:rightMove={rightMove} on:wrongMove={wrongMove} on:lineFinished={lineFinished} />
 {/if}
 
 {#if lastRightMoveIx}
