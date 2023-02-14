@@ -54,7 +54,7 @@ function split_pgndb_into_pgns( pgn_db ) {
 
 // Canonicalise FEN by removing last three elements: en passant square, half-move clock and fullmove number. see README
 function normalize_fen( fen ) {
-	return fen.replace(/(-|[a-h][1-8]) \d+ \d+$/, '' );
+	return fen.replace(/ (-|[a-h][1-8]) \d+ \d+$/, '' );
 }
 
 // Traverse all variations and insert each move into database.
@@ -64,7 +64,7 @@ async function insert_all_moves( pgn_id, repForWhite, moves ) {
 	for ( const move of moves ) {
 		const from_fen = normalize_fen( move.previous ? move.previous.fen : 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' );
 		const to_fen   = normalize_fen(move.fen);
-		const moveByWhite = move.color == 'w';
+		const ownMove = ( repForWhite && move.color == 'w' || !repForWhite && move.color == 'b' );
 		await prisma.move.upsert( {
 			where: {
 				userId_repForWhite_fromFen_toFen: {
@@ -77,7 +77,7 @@ async function insert_all_moves( pgn_id, repForWhite, moves ) {
 			create: {
 				userId: 1, //TODO
 				repForWhite: repForWhite,
-				moveByWhite: moveByWhite,
+				ownMove: ownMove,
 				fromFen: from_fen,
 				toFen:   to_fen,
 				moveSan: move.san,
