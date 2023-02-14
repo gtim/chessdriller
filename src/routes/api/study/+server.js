@@ -13,9 +13,11 @@
  * 		and contains due move
  *
  * 	          
+ * TODO: handle multiple ownMoves
  *
  * future:
  * 	return a bunch of lines to study, maybe covering the entire due repertoire
+ *
  *
  */
 

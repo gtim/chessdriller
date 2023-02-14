@@ -4,11 +4,19 @@
 	import { Chess } from 'chess.js'; // Chess logic for finding valid moves
 	import { onMount } from 'svelte';
 
-	export let line; // array of moves
-	let chessground;
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
+	
+	export let line; // line is an array of moves
+	let current_move_i = 0;
+	
 
+	// Chess logic from chess.js 
 	const chess = new Chess();
-	chess.load( line[0].fromFen + ' - 1 1');
+	chess.load( line[current_move_i].fromFen + ' - 1 1');
+
+	// Board from Chessground
+	let chessground;
 	const config = {
 		fen: chess.fen(),
 		orientation: 'black',
@@ -16,17 +24,23 @@
 		premovable: { enabled: false },
 	};
 
-	function playOpponentMove( move ) {
-		console.assert( ! move.ownMove );
-		const chess_move = chess.move( move.moveSan );
+	function playOpponentMove() {
+		console.assert( ! line[current_move_i].ownMove );
+		const chess_move = chess.move( line[current_move_i].moveSan );
 		chessground.move( chess_move.from, chess_move.to );
+		current_move_i++;
 		allowBoardInput();
 	}
 
 	function checkMove( orig, dest ) {
 		const chess_move = chess.move( { from: orig, to: dest } );
-		if ( chess_move.san !== line[0].moveSan ) {
+		const moveMessage = {
+			moveId: line[current_move_i].id,
+			moveIx: current_move_i
+		};
+		if ( chess_move.san !== line[current_move_i].moveSan ) {
 			// Incorrect move
+			dispatch( 'wrongMove', moveMessage );
 			chess.undo();
 			chessground.set({
 				fen: chess.fen(),
@@ -35,10 +49,11 @@
 			allowBoardInput();
 		} else {
 			// Correct move
+			dispatch( 'rightMove', moveMessage );
 			const turnColor = chess.turn() === 'w' ? 'white' : 'black';
 			chessground.set({ turnColor: turnColor });
-			line.shift();
-			playOpponentMove( line.shift() );
+			current_move_i++;
+			playOpponentMove();
 		}
 	}
 
@@ -58,8 +73,7 @@
 	}
 
 	onMount(async () => {
-		playOpponentMove( line[0] );
-		line.shift();
+		playOpponentMove();
 	});
 
 	function colorToMove( fen ) {

@@ -10,7 +10,14 @@
 		console.log(json);
 	}
 
-	function bla() {
+	let lastRightMoveIx = 0;
+
+	function rightMove(e) {
+		console.log('yes! move ID: ' + e.detail.moveId);
+		lastRightMoveIx = e.detail.moveIx;
+	}
+	function wrongMove(e) {
+		console.log('no:( move ID: ' + e.detail.moveId);
 	}
 
 	
@@ -19,7 +26,6 @@
 <h2>Study Black Repertoire</h2>
 
 <button on:click={studyLine}>study line</button>
-<button on:click={bla}>bla</button>
 
 {#if line}
 	<p>
@@ -30,5 +36,17 @@
 {/if}
 
 {#if line}
-<StudyBoard {line}/>
+	<StudyBoard {line} on:rightMove={rightMove} on:wrongMove={wrongMove}/>
 {/if}
+
+{#if lastRightMoveIx}
+	<p>
+	{#each line.slice(0,lastRightMoveIx+2) as move, ix}
+		{#if ix % 2 == 0}
+			{1+ix/2}.
+		{/if}
+		{move.moveSan+' '} 
+	{/each}
+	</p>
+{/if}
+
