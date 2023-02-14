@@ -9,16 +9,40 @@
 
 	const chess = new Chess();
 	chess.load( line[0].fromFen + ' - 1 1');
-	let config = {
+	const config = {
 		fen: chess.fen(),
 		orientation: 'black',
 		turnColor: chess.turn() === 'w' ? 'white' : 'black',
+		premovable: { enabled: false },
 	};
 
 	function playOpponentMove( move ) {
 		console.assert( ! move.ownMove );
 		const chess_move = chess.move( move.moveSan );
 		chessground.move( chess_move.from, chess_move.to );
+		allowBoardInput();
+	}
+
+	function checkMove( orig, dest ) {
+		const chess_move = chess.move( { from: orig, to: dest } );
+		if ( chess_move.san !== line[0].moveSan ) {
+			// Incorrect move
+			chess.undo();
+			chessground.set({
+				fen: chess.fen(),
+				lastMove: undefined,
+			});
+			allowBoardInput();
+		} else {
+			// Correct move
+			const turnColor = chess.turn() === 'w' ? 'white' : 'black';
+			chessground.set({ turnColor: turnColor });
+			line.shift();
+			playOpponentMove( line.shift() );
+		}
+	}
+
+	function allowBoardInput() {
 		const turnColor = chess.turn() === 'w' ? 'white' : 'black';
 		chessground.set({
 			turnColor: turnColor,
@@ -31,18 +55,6 @@
 				}
 			}
 		});
-	}
-
-	function checkMove( orig, dest ) {
-		// TODO: check the move
-		console.log('cm');
-		console.log(chess);
-		console.log(chessground);
-		chess.move( { from: orig, to: dest } );
-		const turnColor = chess.turn() === 'w' ? 'white' : 'black';
-		chessground.set({ turnColor: turnColor });
-		line.shift();
-		playOpponentMove( line.shift() );
 	}
 
 	onMount(async () => {
