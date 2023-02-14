@@ -22,25 +22,26 @@ model User {
 }
 
 model Move {
-	id       Int    @id @default(autoincrement())
-	user     User   @relation( fields: [userId], references: [id] )
-	userId   Int
-	forWhite Boolean
-	fromFen  String
-	toFen    String
-	moveSan  String
-	pgns     Pgn[]
+	id          Int    @id @default(autoincrement())
+	user        User   @relation( fields: [userId], references: [id] )
+	userId      Int
+	repForWhite Boolean // true if move(+pgn) belong to White repertoire. white/black enum would have been preferred, but is not supported by prisma+sqlite.
+	moveByWhite Boolean // true if this is a move by White (e.g. 1. e4 or 3. c3, or false if by Black, e.g. 1... c6)
+	fromFen     String
+	toFen       String
+	moveSan     String
+	pgns        Pgn[]
 
-	@@unique([ userId, forWhite, fromFen, toFen ])
+	@@unique([ userId, repForWhite, fromFen, toFen ])
 }
 
 model Pgn {
-	id       Int      @id @default(autoincrement())
-	user     User     @relation( fields: [userId], references: [id] )
-	userId   Int
-	forWhite Boolean
-	filename String
-	uploaded DateTime @default(now())
-	content  String
-	moves    Move[]
+	id          Int      @id @default(autoincrement())
+	user        User     @relation( fields: [userId], references: [id] )
+	userId      Int
+	repForWhite Boolean // true if pgn belongs to White repertoire (or false if to Black repertoire)
+	filename    String
+	uploaded    DateTime @default(now())
+	content     String
+	moves       Move[]
 }

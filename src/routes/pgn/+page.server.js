@@ -6,20 +6,20 @@ export const actions = {
 	default: async ({cookies,request}) => {
 		const formData = await request.formData();
 		const file = formData.get('pgn');
-		const forWhite = false;
+		const repForWhite = false;
 		// TODO: check file size
 
 		const pgndb = await file.text();
 		const pgntexts = split_pgndb_into_pgns( pgndb );
 		const pgn = await prisma.pgn.create({ data: {
 			userId: 1, //TODO
-			forWhite: forWhite,
+			repForWhite: repForWhite,
 			filename: file.name,
 			content: pgndb
 		} });
 
 		const rep_moves_before = await prisma.move.count({
-			where: { userId: 1, forWhite: forWhite } //TODO userId
+			where: { userId: 1, repForWhite: repForWhite } //TODO userId
 		});
 
 		let total_moves_parsed = 0;
@@ -27,11 +27,11 @@ export const actions = {
 			const pgntext_fixed = pgntext.replace(/\*\s*$/, '\n'); // remove final '*', maybe cm-chess/chess.js bug makes it cause parser issues?
 			const chess = new Chess();
 			chess.loadPgn( pgntext_fixed ); // TODO: handle unparsable PGNs
-			total_moves_parsed += await insert_all_moves( pgn.id, forWhite, chess.history() );
+			total_moves_parsed += await insert_all_moves( pgn.id, repForWhite, chess.history() );
 		}
 
 		const rep_moves_after = await prisma.move.count({
-			where: { userId: 1, forWhite: forWhite } //TODO userId
+			where: { userId: 1, repForWhite: repForWhite } //TODO userId
 		});
 
 		return {
@@ -59,23 +59,25 @@ function normalize_fen( fen ) {
 
 // Traverse all variations and insert each move into database.
 // Returns the number of moves parsed.
-async function insert_all_moves( pgn_id, forWhite, moves ) {
+async function insert_all_moves( pgn_id, repForWhite, moves ) {
 	let num_moves_parsed = 0;
 	for ( const move of moves ) {
 		const from_fen = normalize_fen( move.previous ? move.previous.fen : 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' );
 		const to_fen   = normalize_fen(move.fen);
+		const moveByWhite = move.color == 'w';
 		await prisma.move.upsert( {
 			where: {
-				userId_forWhite_fromFen_toFen: {
+				userId_repForWhite_fromFen_toFen: {
 					userId: 1, //TODO
-					forWhite: forWhite,
+					repForWhite: repForWhite,
 					fromFen: from_fen,
 					toFen: to_fen
 				}
 			},
 			create: {
 				userId: 1, //TODO
-				forWhite: forWhite,
+				repForWhite: repForWhite,
+				moveByWhite: moveByWhite,
 				fromFen: from_fen,
 				toFen:   to_fen,
 				moveSan: move.san,
@@ -89,7 +91,7 @@ async function insert_all_moves( pgn_id, forWhite, moves ) {
 		// traverse variations.
 		// await required to avoid race conditions triggering Prisma Sqlite bug: https://github.com/prisma/prisma/issues/11789
 		for ( const variation of move.variations ) {
-			num_moves_parsed += await insert_all_moves( pgn_id, forWhite, variation );
+			num_moves_parsed += await insert_all_moves( pgn_id, repForWhite, variation );
 		}
 	}
 	return num_moves_parsed;

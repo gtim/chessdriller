@@ -18,7 +18,7 @@
 	<p>
 	Success!
 	Parsed one file
-	with {form.num_games_parsed} PGN{form.num_games_parsed==1?'':'s'}
+	with {form.num_games_parsed} game{form.num_games_parsed==1?'':'s'}/chapter{form.num_games_parsed==1?'':'s'}
 	and {form.num_moves_parsed} move{form.num_moves_parsed==1?'':'s'}.
 	Added {form.num_moves_added} new move{form.num_moves_added==1?'':'s'}.
 	</p>
