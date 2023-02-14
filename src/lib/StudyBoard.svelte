@@ -29,7 +29,11 @@
 		const chess_move = chess.move( line[current_move_i].moveSan );
 		chessground.move( chess_move.from, chess_move.to );
 		current_move_i++;
-		allowBoardInput();
+		if ( current_move_i == line.length ) {
+			lineFinished();
+		} else {
+			allowBoardInput();
+		}
 	}
 
 	function checkMove( orig, dest ) {
@@ -53,7 +57,11 @@
 			const turnColor = chess.turn() === 'w' ? 'white' : 'black';
 			chessground.set({ turnColor: turnColor });
 			current_move_i++;
-			playOpponentMove();
+			if ( current_move_i == line.length ) {
+				lineFinished();
+			} else {
+				playOpponentMove();
+			}
 		}
 	}
 
@@ -70,6 +78,13 @@
 				}
 			}
 		});
+	}
+	
+	function lineFinished() {
+		chessground.set({
+			movable: {}
+		});
+		dispatch( 'lineFinished' );
 	}
 
 	onMount(async () => {

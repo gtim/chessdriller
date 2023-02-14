@@ -27,6 +27,9 @@
 			line[e.detail.moveIx-1].class = 'wrong';
 		}
 	}
+	function lineFinished(e) {
+		console.log('nice!');
+	}
 
 	
 </script>
@@ -44,7 +47,7 @@
 {/if}
 
 {#if line}
-	<StudyBoard {line} on:rightMove={rightMove} on:wrongMove={wrongMove}/>
+	<StudyBoard {line} on:rightMove={rightMove} on:wrongMove={wrongMove} on:lineFinished={lineFinished} />
 {/if}
 
 {#if lastRightMoveIx}
