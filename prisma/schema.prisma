@@ -27,7 +27,7 @@ model Move {
 	learningDueTime DateTime? @default(now())
 	learningStep    Int?  @default(0)
 	reviewDueDate   DateTime? // only date, at midnight (UTC?)
-	reviewInterval  Int?
+	reviewInterval  Float?
 	reviewEase      Float?
 	history         StudyHistory[]
 

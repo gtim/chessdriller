@@ -29,7 +29,7 @@ import { json, error } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-const now = new Date(); // TODO: possible timezone issues?
+const now = new Date(); 
 
 export async function GET({ url }) {
 	const userId = 1; // TODO

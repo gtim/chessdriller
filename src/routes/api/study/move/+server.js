@@ -2,11 +2,15 @@ import { json, error } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
+const now = new Date(); 
+
 /*
  * learning step:
  *   0: new card, show immediately
  *   1: 1 min
- *   2: 10 min (move to review when done)
+ *   2: 10 min
+ *   3: 8h
+ *   4: 16h (move to review when done)
  */
 
 export async function POST({ request }) {
@@ -38,14 +42,12 @@ export async function POST({ request }) {
 
 	let update = {};
 	if ( ! correct ) {
-		if ( move.learningDueTime ) { // move in Learning
-			update.learningDueTime = new Date();
-			update.learningStep = 0;
-		} else { // move in Review
-			update.reviewDueDate  = date_in_n_days(1);
-			update.reviewInterval = 1;
-			// TODO: "relearn"-step on lapse
-		}
+		// Incorrect: reset card, regardless of Learning/Review state.
+		update.learningDueTime = new Date();
+		update.learningStep = 0;
+		update.reviewDueDate  = null;
+		update.reviewInterval = null;
+		update.reviewEase     = move.reviewEase ? Math.min( 1.3, move.reviewEase - 0.2 ) : null;
 	} else {
 		if ( move.learningDueTime ) {
 			// promote correct moves in Learning regardless of whether they were due or not
@@ -56,19 +58,30 @@ export async function POST({ request }) {
 				update.learningDueTime = datetime_in_n_minutes(10);
 				update.learningStep = 2;
 			} else if ( move.learningStep == 2 ) {
+				update.learningDueTime = datetime_in_n_minutes(8*60);
+				update.learningStep = 3;
+			} else if ( move.learningStep == 3 ) {
+				update.learningDueTime = datetime_in_n_minutes(16*60);
+				update.learningStep = 4;
+			} else if ( move.learningStep == 4 ) {
 				// graduate
 				update.learningDueTime = null;
 				update.learningStep    = null;
 				update.reviewInterval  = 1;
 				update.reviewDueDate   = date_in_n_days( update.reviewInterval );
-				update.reviewEase      = 2;
+				update.reviewEase      = move.reviewEase || 2.5;
 			} else {
 				throw new Error( 'invalid learning step for move '+move.id+': '+move.learningStep );
 			}
 		} else {
 			// move in review
-			// TODO
-			throw new Error( 'moves in review not yet implemented' );
+			if ( isDue( move ) ) {
+				update.reviewInterval = move.reviewInterval * move.reviewEase;
+				update.reviewDueDate  = date_in_n_days( Math.ceil( update.reviewInterval ) );
+			} else {
+				// not due: don't increase interval
+				update.reviewDueDate  = date_in_n_days( Math.ceil( move.reviewInterval ) );
+			}
 		}
 	}
 
@@ -109,6 +122,15 @@ function date_in_n_days( n ) {
 	return date;
 }
 
-function a() {
+function isDue(move) {
+	// TODO duplicated in api/study/+server.js, abstract it properly
+	if ( ! move.ownMove ) {
+		return false;
+	} else if ( move.learningDueTime ) {
+		return move.learningDueTime <= now;
+	} else if ( move.reviewDueDate ) {
+		return move.reviewDueDate <= now; 
+	} else {
+		throw new Error( 'isDue invalid own/learning/review state for move #'+move.id );
+	}
 }
-
