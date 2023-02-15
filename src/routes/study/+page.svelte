@@ -1,6 +1,7 @@
 <script>
 
 	import StudyBoard from '$lib/StudyBoard.svelte';
+	import { onMount } from 'svelte';
 
 	const delay_after_line_ms = 500;
 	
@@ -64,13 +65,11 @@
 		}, delay_after_line_ms );
 	}
 
+	onMount( studyNextLine );
 	
 </script>
 
 <h2>Study Black Repertoire</h2>
-
-<button on:click={()=>studyNextLine()}>study line</button>
-<button on:click={()=>studyNextLine(line.map(m=>m.id))}>study next line</button>
 
 {#if line}
 	<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} />
