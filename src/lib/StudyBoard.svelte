@@ -10,20 +10,50 @@
 	export let line; // line is an array of moves
 	export let start_move_ix; // move index (of line[]) for the first move to show; fast-forward to that one
 	let current_move_i = 0;
+	let is_mounted = false;
 	
 
 	// Chess logic from chess.js 
 	const chess = new Chess();
-	chess.load( line[current_move_i].fromFen + ' - 1 1');
 
 	// Board from Chessground
 	let chessground;
 	const config = {
-		fen: chess.fen(),
 		orientation: 'black',
-		turnColor: chess.turn() === 'w' ? 'white' : 'black',
 		premovable: { enabled: false },
 	};
+
+	// Reset board when line is changed
+	$: if ( line && is_mounted ) {
+		resetBoard();
+	}
+
+	onMount(async () => {
+		is_mounted = true;
+	});
+
+	// Reset the board to the current line and start_move_ix
+	function resetBoard() {
+		current_move_i = 0;
+		// Load FEN from current move
+		chess.load( line[current_move_i].fromFen + ' - 1 1');
+		chessground.set({
+			fen: chess.fen(),
+			turnColor: chess.turn() === 'w' ? 'white' : 'black',
+		});
+
+		// Move to right point if we're not at the start move
+		while ( current_move_i < start_move_ix ) {
+			stepOneMoveForward();
+		}
+
+		// Let player/computer make the first move
+		if ( line[current_move_i].ownMove ) {
+			allowBoardInput();
+		} else {
+			playOpponentMove();
+		}
+	}
 
 	function stepOneMoveForward() {
 		const chess_move = chess.move( line[current_move_i].moveSan );
@@ -44,8 +74,8 @@
 	function checkMove( orig, dest ) {
 		const chess_move = chess.move( { from: orig, to: dest } );
 		const moveMessage = {
-			moveId: line[current_move_i].id,
-			moveIx: current_move_i
+			move_id: line[current_move_i].id,
+			move_ix: current_move_i
 		};
 		if ( chess_move.san !== line[current_move_i].moveSan ) {
 			// Incorrect move
@@ -89,19 +119,11 @@
 		chessground.set({
 			movable: {}
 		});
-		dispatch( 'lineFinished' );
+		dispatch( 
+			'lineFinished',
+			{move_ids:line.map(m=>m.id)}
+		);
 	}
-
-	onMount(async () => {
-		while ( current_move_i < start_move_ix ) {
-			stepOneMoveForward();
-		}
-		if ( line[current_move_i].ownMove ) {
-			allowBoardInput();
-		} else {
-			playOpponentMove();
-		}
-	});
 
 	function colorToMove( fen ) {
 		return fen.split(' ')[1] === 'w' ? 'white' : 'black';

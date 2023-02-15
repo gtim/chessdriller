@@ -50,10 +50,10 @@ export async function GET({ url }) {
 		}
 	});
 
-	const last_line = url.searchParams.has('last') ? JSON.parse( url.searchParams.get('last') ) : undefined;
+	const last_line = url.searchParams.has('last') ? JSON.parse( url.searchParams.get('last') ) : [];
 	let line_to_study;
 	let start_ix = 0;
-	if ( last_line ) {
+	if ( last_line.length ) {
 		[ line_to_study, start_ix ] = findDueLineWithLatestDeviation( last_line, moves );
 	} else {
 		// build a line from the most due move
