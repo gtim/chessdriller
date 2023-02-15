@@ -46,11 +46,11 @@ model Pgn {
 }
 
 model StudyHistory {
-	id        Int      @id @default(autoincrement())
-	user      User     @relation( fields: [userId], references: [id] )
-	userId    Int
-	move      Move     @relation( fields: [moveId], references: [id] )
-	moveId    Int
-	studiedAt DateTime @default(now())
-	correct   Boolean
+	id                 Int      @id @default(autoincrement())
+	user               User     @relation( fields: [userId], references: [id] )
+	userId             Int
+	move               Move     @relation( fields: [moveId], references: [id] )
+	moveId             Int
+	studiedAt          DateTime @default(now())
+	incorrectGuessSan  String?  // guess if it was wrong, null if it was right
 }

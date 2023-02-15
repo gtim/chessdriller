@@ -18,23 +18,43 @@
 		console.log(json);
 	}
 
+	let error_text = "";
+
 
 	let lastRightMoveIx = 0;
 
-	function rightMove(e) {
-		console.log('yes! move ID: ' + e.detail.move_id);
-		lastRightMoveIx = e.detail.move_ix;
-		progress_line[lastRightMoveIx].class ||= 'right';
-		if ( lastRightMoveIx > 0 ) {
-			progress_line[lastRightMoveIx-1].class ||= 'right';
+	function onMove(e) {
+		if ( e.detail.correct ) {
+			console.log('yes! move ID: ' + e.detail.move_id);
+			lastRightMoveIx = e.detail.move_ix;
+			progress_line[lastRightMoveIx].class ||= 'right';
+			if ( lastRightMoveIx > 0 ) {
+				progress_line[lastRightMoveIx-1].class ||= 'right';
+			}
+		} else {
+			console.log('no:( move ID: ' + e.detail.move_id);
+			progress_line[e.detail.move_ix].class = 'wrong';
+			if ( e.detail.move_ix > 0 ) {
+				progress_line[e.detail.move_ix-1].class = 'wrong';
+			}
 		}
-	}
-	function wrongMove(e) {
-		console.log('no:( move ID: ' + e.detail.move_id);
-		progress_line[e.detail.move_ix].class = 'wrong';
-		if ( e.detail.move_ix > 0 ) {
-			progress_line[e.detail.move_ix-1].class = 'wrong';
-		}
+		fetch( '/api/study/move', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				move_id: e.detail.move_id,
+				correct: e.detail.correct,
+				guess:   e.detail.guess
+			})
+		})
+		.then( (res) => res.json() )
+		.then( (data) => {
+			if ( data.success ) {
+				error_text = '';
+			} else { 
+				error_text = 'API call failed: ' + data.error;
+			}
+		} );
 	}
 	function lineFinished(e) {
 		console.log('nice!');
@@ -53,15 +73,7 @@
 <button on:click={()=>studyNextLine(line.map(m=>m.id))}>study next line</button>
 
 {#if line}
-	<p>
-	{#each line as move}
-		{move.moveSan+' '} 
-	{/each}
-	</p>
-{/if}
-
-{#if line}
-	<StudyBoard {line} {start_move_ix} on:rightMove={rightMove} on:wrongMove={wrongMove} on:lineFinished={lineFinished} />
+	<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} />
 {/if}
 
 {#if lastRightMoveIx}
@@ -75,11 +87,19 @@
 	</p>
 {/if}
 
+{#if error_text}
+	<p class="error">{error_text}</p>
+{/if}
+
 <style>
 	.right {
 		color:green;
 	}
 	.wrong {
 		color:red;
+	}
+	.error {
+		color:red;
+		font-weight:bold;
 	}
 </style>

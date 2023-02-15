@@ -73,13 +73,14 @@
 
 	function checkMove( orig, dest ) {
 		const chess_move = chess.move( { from: orig, to: dest } );
-		const moveMessage = {
+		const correct = chess_move.san === line[current_move_i].moveSan;
+		dispatch( 'move', {
 			move_id: line[current_move_i].id,
-			move_ix: current_move_i
-		};
-		if ( chess_move.san !== line[current_move_i].moveSan ) {
-			// Incorrect move
-			dispatch( 'wrongMove', moveMessage );
+			move_ix: current_move_i,
+			correct: correct,
+			guess: chess_move.san
+		} );
+		if ( ! correct ) {
 			chess.undo();
 			chessground.set({
 				fen: chess.fen(),
@@ -87,8 +88,6 @@
 			});
 			allowBoardInput();
 		} else {
-			// Correct move
-			dispatch( 'rightMove', moveMessage );
 			const turnColor = chess.turn() === 'w' ? 'white' : 'black';
 			chessground.set({ turnColor: turnColor });
 			current_move_i++;
