@@ -16,21 +16,22 @@
 		const json = await response.json();
 		line = json.line;
 		start_move_ix = json.start_ix;
+		last_progress_move_ix = Math.max( start_move_ix - 1, 0 );
 		console.log(json);
 	}
 
 	let error_text = "";
 
 
-	let lastRightMoveIx = 0;
+	let last_progress_move_ix = 0;
 
 	function onMove(e) {
 		if ( e.detail.correct ) {
 			console.log('yes! move ID: ' + e.detail.move_id);
-			lastRightMoveIx = e.detail.move_ix;
-			progress_line[lastRightMoveIx].class ||= 'right';
-			if ( lastRightMoveIx > 0 ) {
-				progress_line[lastRightMoveIx-1].class ||= 'right';
+			last_progress_move_ix = e.detail.move_ix;
+			progress_line[last_progress_move_ix].class ||= 'right';
+			if ( last_progress_move_ix > 0 ) {
+				progress_line[last_progress_move_ix-1].class ||= 'right';
 			}
 		} else {
 			console.log('no:( move ID: ' + e.detail.move_id);
@@ -75,9 +76,9 @@
 	<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} />
 {/if}
 
-{#if lastRightMoveIx}
+{#if line}
 	<p>
-	{#each progress_line.slice(0,lastRightMoveIx+2) as move, ix}
+	{#each progress_line.slice(0,last_progress_move_ix+2) as move, ix}
 		{#if ix % 2 == 0}
 			{1+ix/2}.
 		{/if}
