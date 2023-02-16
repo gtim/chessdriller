@@ -21,11 +21,13 @@
 	}
 
 	let error_text = "";
+	let stats;
 
 
 	let last_progress_move_ix = 0;
 
-	function onMove(e) {
+	async function onMove(e) {
+		updateStats();
 		if ( e.detail.correct ) {
 			console.log('yes! move ID: ' + e.detail.move_id);
 			last_progress_move_ix = e.detail.move_ix;
@@ -66,7 +68,22 @@
 		}, delay_after_line_ms );
 	}
 
-	onMount( studyNextLine );
+	async function updateStats() {
+		fetch( '/api/stats' )
+		.then( (res) => res.json() )
+		.then( (data) => {
+			if ( data.success ) {
+				stats = data.stats;
+			} else { 
+				// TODO
+			}
+		} );
+	}
+
+	onMount( () => {
+		studyNextLine();
+		updateStats();
+	} );
 	
 </script>
 
@@ -89,6 +106,10 @@
 
 {#if error_text}
 	<p class="error">{error_text}</p>
+{/if}
+
+{#if stats}
+	<p>{stats.moves_due} move{stats.moves_due==1?'':'s'} due</p>
 {/if}
 
 <style>

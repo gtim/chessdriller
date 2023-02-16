@@ -123,7 +123,7 @@ function date_in_n_days( n ) {
 }
 
 function isDue(move) {
-	// TODO duplicated in api/study/+server.js, abstract it properly
+	// TODO duplicated in api/{study,api}/+server.js, abstract it properly
 	if ( ! move.ownMove ) {
 		return false;
 	} else if ( move.learningDueTime ) {
