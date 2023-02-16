@@ -4,24 +4,34 @@
 	import { onMount } from 'svelte';
 
 	const delay_after_line_ms = 500;
+
+	const nocache_headers = new Headers();
+	nocache_headers.append('pragma', 'no-cache');
+	nocache_headers.append('cache-control', 'no-cache');
 	
 	let line;
 	$: progress_line = JSON.parse( JSON.stringify( line || [] ) ); // deep copy
 	let start_move_ix;
 	async function studyNextLine( last_line_move_ids = [] ) {
-		const response = await fetch( '/api/study?' + new URLSearchParams({
+		fetch( '/api/study?' + new URLSearchParams({
 			color: 'b',
 			last: JSON.stringify(last_line_move_ids),
-		}) );
-		const json = await response.json();
-		line = json.line;
-		start_move_ix = json.start_ix;
-		last_progress_move_ix = Math.max( start_move_ix - 1, 0 );
-		console.log(json);
+		}), nocache_headers )
+		.then( (res) => res.json() )
+		.then( (data) => {
+			if ( data.num_due_moves > 0 ) {
+				line = data.line;
+				start_move_ix = data.start_ix;
+				last_progress_move_ix = Math.max( start_move_ix - 1, 0 );
+			} else {
+				review_finished = true;
+			}
+		});
 	}
 
 	let error_text = "";
 	let stats;
+	let review_finished = false;
 
 
 	let last_progress_move_ix = 0;
@@ -89,27 +99,35 @@
 
 <h2>Study Black Repertoire</h2>
 
-{#if line}
-	<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} />
-{/if}
+{#if review_finished}
 
-{#if line}
-	<p>
-	{#each progress_line.slice(0,last_progress_move_ix+2) as move, ix}
-		{#if ix % 2 == 0}
-			{1+ix/2}.
-		{/if}
-		<span class="{move.class}">{move.moveSan+' '}</span>
-	{/each}
-	</p>
-{/if}
+	<p>You're done reviewing!</p>
 
-{#if error_text}
-	<p class="error">{error_text}</p>
-{/if}
+{:else}
 
-{#if stats}
-	<p>{stats.moves_due} move{stats.moves_due==1?'':'s'} due</p>
+	{#if line}
+		<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} />
+	{/if}
+
+	{#if line}
+		<p>
+		{#each progress_line.slice(0,last_progress_move_ix+2) as move, ix}
+			{#if ix % 2 == 0}
+				{1+ix/2}.
+			{/if}
+			<span class="{move.class}">{move.moveSan+' '}</span>
+		{/each}
+		</p>
+	{/if}
+
+	{#if error_text}
+		<p class="error">{error_text}</p>
+	{/if}
+
+	{#if stats}
+		<p>{stats.moves_due} move{stats.moves_due==1?'':'s'} due</p>
+	{/if}
+
 {/if}
 
 <style>

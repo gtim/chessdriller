@@ -49,16 +49,21 @@ export async function GET({ url }) {
 			reviewDueDate: true
 		}
 	});
+	moves.forEach( m => m.isDue = isDue(m) );
 
 	const last_line = url.searchParams.has('last') ? JSON.parse( url.searchParams.get('last') ) : [];
-	let line_to_study;
+	let line_to_study = [];
 	let start_ix = 0;
-	if ( last_line.length ) {
+	const num_due_moves = moves.filter( m => m.isDue ).length;
+
+	if ( num_due_moves == 0 ) {
+		// no due moves
+	} else if ( last_line.length ) {
+		// just finished another line
 		[ line_to_study, start_ix ] = findDueLineWithLatestDeviation( last_line, moves );
 	} else {
-		// build a line from the most due move
+		// start studying: build a line from the most due move
 		const due_move = mostDueMove(moves);
-		// TODO check if move is actually due
 		line_to_study = buildLineBackwards( [due_move], moves );
 		line_to_study = continueLineUntilEnd( line_to_study, moves );
 	}
@@ -66,6 +71,7 @@ export async function GET({ url }) {
 	return json({
 		line: line_to_study,
 		start_ix: start_ix,
+		num_due_moves: num_due_moves
 	});
 }
 
@@ -84,10 +90,9 @@ function findDueLineWithLatestDeviation( last_line_ids, all_moves ) {
 }
 function findContinuationWithMostDueMoves( start_move, all_moves, excluded_move_ids ) {
 	// Assume no cycles (TODO): directed acyclic graph -> single-path shortest path is straight-forward
-	const is_due = isDue( start_move ) ? 1 : 0;
 	const possible_moves = all_moves.filter( m => m.fromFen === start_move.toFen && ! excluded_move_ids.hasOwnProperty(m.id) );
 	if ( possible_moves.length == 0 ) {
-		return [is_due, [start_move]];
+		return [start_move.isDue ? 1 : 0, [start_move]];
 	} else {
 		let max_due_moves = -1;
 		let best_continuation = [];
@@ -99,7 +104,7 @@ function findContinuationWithMostDueMoves( start_move, all_moves, excluded_move_
 			}
 		}
 		best_continuation.unshift(start_move);
-		return [max_due_moves + is_due, best_continuation];
+		return [max_due_moves + ( start_move.isDue ? 1 : 0 ), best_continuation];
 	}
 }
 function isDue(move) {
