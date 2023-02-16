@@ -19,7 +19,6 @@
 	// Board from Chessground
 	let chessground;
 	const config = {
-		orientation: 'black',
 		premovable: { enabled: false },
 	};
 
@@ -35,10 +34,13 @@
 	// Reset the board to the current line and start_move_ix
 	function resetBoard() {
 		current_move_i = 0;
-		// Load FEN from current move
-		chess.load( line[current_move_i].fromFen + ' - 1 1');
+		// Load FEN from current move (should always be initial position)
+		console.assert( line[current_move_i].fromFen == 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq' );
+		chess.load( line[current_move_i].fromFen + ' - 1 1'); 
+		console.assert( chess.turn() === 'w' );
 		chessground.set({
-			fen: chess.fen(),
+			orientation: line[0].ownMove ? 'white' : 'black',
+			fen: chess.fen(), 
 			turnColor: chess.turn() === 'w' ? 'white' : 'black',
 		});
 

@@ -1,6 +1,5 @@
 /*
  * input:
- * 	color (w/b rep)
  * 	optional: last
  * 		last line studied. array of move IDs.
  *
@@ -33,18 +32,15 @@ const now = new Date();
 
 export async function GET({ url }) {
 	const userId = 1; // TODO
-	const repForWhite = url.searchParams.get('color') == 'w';
 	const moves = await prisma.Move.findMany({
-		where: {
-			userId: userId,
-			repForWhite: repForWhite
-		},
+		where: { userId: userId },
 		select: {
 			id: true,
 			fromFen: true,
 			toFen: true,
 			moveSan: true,
 			ownMove: true,
+			repForWhite: true,
 			learningDueTime: true,
 			reviewDueDate: true
 		}
@@ -55,17 +51,20 @@ export async function GET({ url }) {
 	let line_to_study = [];
 	let start_ix = 0;
 	const num_due_moves = moves.filter( m => m.isDue ).length;
+	console.log( num_due_moves + ' due moves' );
 
 	if ( num_due_moves == 0 ) {
 		// no due moves
 	} else if ( last_line.length ) {
 		// just finished another line
+		// TODO: prefer same color as last line, in case search goes back to move 0
 		[ line_to_study, start_ix ] = findDueLineWithLatestDeviation( last_line, moves );
 	} else {
 		// start studying: build a line from the most due move
 		const due_move = mostDueMove(moves);
-		line_to_study = buildLineBackwards( [due_move], moves );
-		line_to_study = continueLineUntilEnd( line_to_study, moves );
+		const moves_same_color = moves.filter( m => m.repForWhite == due_move.repForWhite );
+		line_to_study = buildLineBackwards( [due_move], moves_same_color );
+		line_to_study = continueLineUntilEnd( line_to_study, moves_same_color );
 	}
 
 	return json({

@@ -6,7 +6,7 @@ export const actions = {
 	default: async ({cookies,request}) => {
 		const formData = await request.formData();
 		const file = formData.get('pgn');
-		const repForWhite = false;
+		const repForWhite = formData.get('repForWhite') ? true : false;
 		// TODO: check file size
 
 		const pgndb = await file.text();

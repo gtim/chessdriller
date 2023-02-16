@@ -14,11 +14,11 @@
 	let start_move_ix;
 	async function studyNextLine( last_line_move_ids = [] ) {
 		fetch( '/api/study?' + new URLSearchParams({
-			color: 'b',
 			last: JSON.stringify(last_line_move_ids),
 		}), nocache_headers )
 		.then( (res) => res.json() )
 		.then( (data) => {
+			console.log(data);
 			if ( data.num_due_moves > 0 ) {
 				line = data.line;
 				start_move_ix = data.start_ix;
@@ -97,7 +97,7 @@
 	
 </script>
 
-<h2>Study Black Repertoire</h2>
+<h2>Study Repertoire</h2>
 
 {#if review_finished}
 

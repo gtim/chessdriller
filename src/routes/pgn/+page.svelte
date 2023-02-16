@@ -11,8 +11,18 @@
 
 <form method="POST" use:enhance>
 	<input type="file" name="pgn" accept=".pgn" />
-	<input type="submit" value="Upload"/>
+	<input type="hidden" name="repForWhite" value="0" />
+	<input type="submit" value="Upload Black Repertoire"/>
 </form>
+
+<h3>White Repertoire</h3>
+
+<form method="POST" use:enhance>
+	<input type="file" name="pgn" accept=".pgn" />
+	<input type="hidden" name="repForWhite" value="1" />
+	<input type="submit" value="Upload White Repertoire"/>
+</form>
+
 
 {#if form?.success}
 	<p>

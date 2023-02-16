@@ -13,3 +13,6 @@
     - possible solution: just quiz until the last due move, not to the end of the line 
     - counter-issue: when in learning, a line will "trickle in" to the due-queue, and if reviewed before it's finished trickling, stopping at the last due move would leave the rest for the due-queue in a couple minutes.
 * connect to lichess account for auto-updating rep when study changes
+* auto-detect if a PGN is for white or black based on number of alternative moves for either
+    - warn if it seems the PGN was added to the wrong side
+    - just have a single "upload PGN to rep" and let the user confirm auto-detected side
