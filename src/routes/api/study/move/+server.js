@@ -2,8 +2,6 @@ import { json, error } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-const now = new Date(); 
-
 /*
  * learning step:
  *   0: new card, show immediately
@@ -40,6 +38,7 @@ export async function POST({ request }) {
 
 	// find next step
 
+	const now = new Date(); 
 	let update = {};
 	if ( ! correct ) {
 		// Incorrect: reset card, regardless of Learning/Review state.
@@ -75,7 +74,7 @@ export async function POST({ request }) {
 			}
 		} else {
 			// move in review
-			if ( isDue( move ) ) {
+			if ( isDue( move, now ) ) {
 				update.reviewInterval = move.reviewInterval * move.reviewEase;
 				update.reviewDueDate  = date_in_n_days( Math.ceil( update.reviewInterval ) );
 			} else {
@@ -122,7 +121,7 @@ function date_in_n_days( n ) {
 	return date;
 }
 
-function isDue(move) {
+function isDue(move,now) {
 	// TODO duplicated in api/{study,api}/+server.js, abstract it properly
 	if ( ! move.ownMove ) {
 		return false;

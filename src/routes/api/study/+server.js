@@ -28,8 +28,6 @@ import { json, error } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-const now = new Date(); 
-
 export async function GET({ url }) {
 	const userId = 1; // TODO
 	const moves = await prisma.Move.findMany({
@@ -45,7 +43,8 @@ export async function GET({ url }) {
 			reviewDueDate: true
 		}
 	});
-	moves.forEach( m => m.isDue = isDue(m) );
+	const now = new Date(); 
+	moves.forEach( m => m.isDue = isDue(m,now) );
 
 	const last_line = url.searchParams.has('last') ? JSON.parse( url.searchParams.get('last') ) : [];
 	let line_to_study = [];
@@ -106,7 +105,7 @@ function findContinuationWithMostDueMoves( start_move, all_moves, excluded_move_
 		return [max_due_moves + ( start_move.isDue ? 1 : 0 ), best_continuation];
 	}
 }
-function isDue(move) {
+function isDue(move,now) {
 	if ( ! move.ownMove ) {
 		return false;
 	} else if ( move.learningDueTime ) {

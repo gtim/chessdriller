@@ -2,8 +2,6 @@ import { json, error } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-const now = new Date(); 
-
 export async function GET({ url }) {
 	const userId = 1; // TODO
 	const moves = await prisma.Move.findMany({
@@ -18,7 +16,8 @@ export async function GET({ url }) {
 		}
 	});
 
-	moves.forEach( m => m.isDue = isDue(m) );
+	const now = new Date(); 
+	moves.forEach( m => m.isDue = isDue(m,now) );
 
 	return json( {
 		success: true,
@@ -31,7 +30,7 @@ export async function GET({ url }) {
 	} );
 }
 
-function isDue(move) {
+function isDue(move,now) {
 	if ( ! move.ownMove ) {
 		return false;
 	} else if ( move.learningDueTime ) {
