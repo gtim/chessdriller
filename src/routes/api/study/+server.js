@@ -47,30 +47,36 @@ export async function GET({ url }) {
 	moves.forEach( m => m.isDue = isDue(m,now) );
 
 	const last_line = url.searchParams.has('last') ? JSON.parse( url.searchParams.get('last') ) : [];
-	let line_to_study = [];
-	let start_ix = 0;
 	const num_due_moves = moves.filter( m => m.isDue ).length;
-	console.log( num_due_moves + ' due moves' );
+	const response = {
+		line: [],
+		start_ix: 0,
+		num_due_moves: num_due_moves
+	};
 
 	if ( num_due_moves == 0 ) {
 		// no due moves
-	} else if ( last_line.length ) {
-		// just finished another line
-		// TODO: prefer same color as last line, in case search goes back to move 0
-		[ line_to_study, start_ix ] = findDueLineWithLatestDeviation( last_line, moves );
-	} else {
-		// start studying: build a line from the most due move
-		const due_move = mostDueMove(moves);
-		const moves_same_color = moves.filter( m => m.repForWhite == due_move.repForWhite );
-		line_to_study = buildLineBackwards( [due_move], moves_same_color );
-		line_to_study = continueLineUntilEnd( line_to_study, moves_same_color );
+		return json(response);
 	}
 
-	return json({
-		line: line_to_study,
-		start_ix: start_ix,
-		num_due_moves: num_due_moves
-	});
+	if ( last_line.length ) {
+		// just finished another line
+		const last_line_repForWhite = moves.find( m => m.id === last_line[0] ).repForWhite;
+		const moves_same_rep_as_last = moves.filter( m => m.repForWhite == last_line_repForWhite );
+		if ( moves_same_rep_as_last.filter( m => m.isDue ).length ) {
+			// there are more due moves for that color's repertoire
+			[ response.line, response.start_ix ] = findDueLineWithLatestDeviation( last_line, moves_same_rep_as_last );
+			return json(response);
+		}
+	}
+
+	// build a line from the most due move
+	const due_move = mostDueMove(moves);
+	const moves_same_rep = moves.filter( m => m.repForWhite == due_move.repForWhite );
+	response.line = buildLineBackwards( [due_move], moves_same_rep );
+	response.line = continueLineUntilEnd( response.line, moves_same_rep );
+
+	return json(response);
 }
 
 function findDueLineWithLatestDeviation( last_line_ids, all_moves ) {
