@@ -11,7 +11,7 @@
 
 <form method="POST" use:enhance>
 	<input type="file" name="pgn" accept=".pgn" />
-	<input type="hidden" name="repForWhite" value="0" />
+	<input type="hidden" name="color" value="b" />
 	<input type="submit" value="Upload Black Repertoire"/>
 </form>
 
@@ -19,7 +19,7 @@
 
 <form method="POST" use:enhance>
 	<input type="file" name="pgn" accept=".pgn" />
-	<input type="hidden" name="repForWhite" value="1" />
+	<input type="hidden" name="color" value="w" />
 	<input type="submit" value="Upload White Repertoire"/>
 </form>
 
@@ -28,8 +28,7 @@
 	<p>
 	Success!
 	Parsed one file
-	with {form.num_games_parsed} game{form.num_games_parsed==1?'':'s'}/chapter{form.num_games_parsed==1?'':'s'}
-	and {form.num_moves_parsed} move{form.num_moves_parsed==1?'':'s'}.
-	Added {form.num_moves_added} new move{form.num_moves_added==1?'':'s'} to your Black repertoire.
+	with {form.num_moves_parsed} move{form.num_moves_parsed==1?'':'s'}.
+	Added {form.num_moves_added} new move{form.num_moves_added==1?'':'s'} to your repertoire.
 	</p>
 {/if}
