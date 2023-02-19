@@ -1,16 +1,15 @@
 import { Chess } from '../../node_modules/cm-chess/src/cm-chess/Chess.js';
 import { PrismaClient } from '@prisma/client';
 
-export async function importPgn( file, prisma, user_id, repForWhite ) {
+export async function importPgn( pgn_content, pgn_filename, prisma, user_id, repForWhite ) {
 
-	const pgndb = await file.text();
-	const pgntexts = split_pgndb_into_pgns( pgndb );
+	const pgntexts = split_pgndb_into_pgns( pgn_content );
 
 	const pgn = await prisma.pgn.create({ data: {
 		userId: user_id,
 		repForWhite: repForWhite,
-		filename: file.name,
-		content: pgndb
+		filename: pgn_filename,
+		content: pgn_content
 	} });
 
 	let total_moves_parsed = 0;

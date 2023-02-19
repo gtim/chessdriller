@@ -14,7 +14,13 @@ export const actions = {
 			where: { userId: user_id, repForWhite: repForWhite } 
 		});
 
-		const total_moves_parsed = await importPgn( file, prisma, user_id, repForWhite );
+		const total_moves_parsed = await importPgn(
+			await file.text(),
+			file.name,
+			prisma,
+			user_id,
+			repForWhite
+		);
 
 		const rep_moves_after = await prisma.move.count({
 			where: { userId: user_id, repForWhite: repForWhite }
