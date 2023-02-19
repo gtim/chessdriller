@@ -2,6 +2,9 @@ import { PrismaClient } from '@prisma/client';
 import { importPgn } from '$lib/pgnImporter.js';
 import fs from 'fs';
 
+// TODO test: multiple games in one PGN
+// TODO test: transposition
+
 let prisma;
 
 beforeAll( async () => {
@@ -14,13 +17,17 @@ beforeAll( async () => {
 	await prisma.user.create({data:{}});
 } );
 
+beforeEach( async () => {
+	await prisma.move.deleteMany({});
+} );
+
 test("prisma client is defined", () => {
 	expect(prisma).toBeDefined();
 });
 
 test('simple pgn', async () => {
-	const pgn_content = fs.readFileSync( './test/pgn/1.pgn', 'utf8' );
-	await importPgn( pgn_content, '1.pgn', prisma, 1, true );
+	const pgn_content = fs.readFileSync( './test/pgn/simple.pgn', 'utf8' );
+	await importPgn( pgn_content, 'simple.pgn', prisma, 1, true );
 	expect( await prisma.move.count() ).toEqual( 4 );
 	expect(
 		await prisma.move.findFirst({ where: { moveSan: 'e4' } })
@@ -59,4 +66,50 @@ test('simple pgn', async () => {
 		ownMove: false
 	} );
 	expect( await prisma.move.count({ where: { moveSan: 'e5' } }) ).toEqual( 0 );
+});
+
+test('simple pgn, black', async () => {
+	const pgn_content = fs.readFileSync( './test/pgn/simple.pgn', 'utf8' );
+	await importPgn( pgn_content, 'simple.pgn', prisma, 1, false );
+	expect( await prisma.move.count() ).toEqual( 4 );
+	expect(
+		await prisma.move.findFirst({ where: { moveSan: 'e4' } })
+	).toMatchObject( {
+		ownMove: false,
+		repForWhite: false
+	} );
+	expect(
+		await prisma.move.findFirst({ where: { moveSan: 'c5' } })
+	).toMatchObject( {
+		ownMove: true,
+		repForWhite: false
+	} );
+	expect(
+		await prisma.move.findFirst({ where: { moveSan: 'Nf3' } })
+	).toMatchObject( {
+		ownMove: false,
+		repForWhite: false
+	} );
+	expect(
+		await prisma.move.findFirst({ where: { moveSan: 'd6' } })
+	).toMatchObject( {
+		ownMove: true,
+		repForWhite: false
+	} );
+});
+
+test('recursive annotation variation', async () => {
+	const pgn_content = fs.readFileSync( './test/pgn/rav.pgn', 'utf8' );
+	await importPgn( pgn_content, 'rav.pgn', prisma, 1, true );
+	expect( await prisma.move.count() ).toEqual( 11 );
+	expect( await prisma.move.count({ where: { moveSan: 'd5' } } )).toEqual( 2 );
+	expect( await prisma.move.count({ 
+		where: { fromFen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq' }
+	} )).toEqual( 1 );
+	expect( await prisma.move.count({ 
+		where: { fromFen: 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq' }
+	} )).toEqual( 2 );
+	expect( await prisma.move.count({ 
+		where: { fromFen: 'rnbqkb1r/pppppppp/5n2/6B1/3P4/8/PPP1PPPP/RN1QKBNR b KQkq' }
+	} )).toEqual( 3 );
 });
