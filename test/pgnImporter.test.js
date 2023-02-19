@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client';
 import { importPgn } from '$lib/pgnImporter.js';
 import fs from 'fs';
 
-// TODO test: multiple games in one PGN
 // TODO test: transposition
 
 let prisma;
@@ -111,5 +110,18 @@ test('recursive annotation variation', async () => {
 	} )).toEqual( 2 );
 	expect( await prisma.move.count({ 
 		where: { fromFen: 'rnbqkb1r/pppppppp/5n2/6B1/3P4/8/PPP1PPPP/RN1QKBNR b KQkq' }
+	} )).toEqual( 3 );
+});
+
+test('pgn database', async () => {
+	const pgn_content = fs.readFileSync( './test/pgn/database.pgn', 'utf8' );
+	await importPgn( pgn_content, 'database.pgn', prisma, 1, true );
+	expect( await prisma.move.count() ).toEqual( 13 );
+	expect( await prisma.move.count({ where: { moveSan: 'd4' } } )).toEqual( 1 );
+	expect( await prisma.move.count({ where: { moveSan: 'd5' } } )).toEqual( 1 );
+	expect( await prisma.move.count({ where: { moveSan: 'c4' } } )).toEqual( 2 );
+	expect( await prisma.move.count({ where: { moveSan: 'Nf3' } } )).toEqual( 2 );
+	expect( await prisma.move.count({ 
+		where: { fromFen: 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq' }
 	} )).toEqual( 3 );
 });
