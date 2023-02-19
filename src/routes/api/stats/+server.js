@@ -1,5 +1,6 @@
 import { json, error } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
+import { moveIsDue } from '$lib/scheduler.js';
 const prisma = new PrismaClient();
 
 export async function GET({ url }) {
@@ -17,7 +18,7 @@ export async function GET({ url }) {
 	});
 
 	const now = new Date(); 
-	moves.forEach( m => m.isDue = isDue(m,now) );
+	moves.forEach( m => m.isDue = moveIsDue(m,now) );
 
 	return json( {
 		success: true,
@@ -28,16 +29,4 @@ export async function GET({ url }) {
 			moves_review:   moves.filter( m => m.reviewDueDate ).length
 		}
 	} );
-}
-
-function isDue(move,now) {
-	if ( ! move.ownMove ) {
-		return false;
-	} else if ( move.learningDueTime ) {
-		return move.learningDueTime <= now;
-	} else if ( move.reviewDueDate ) {
-		return move.reviewDueDate <= now; 
-	} else {
-		throw new Error( 'isDue invalid own/learning/review state for move #'+move.id );
-	}
 }

@@ -1,5 +1,7 @@
 import { json, error } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
+import { moveIsDue } from '$lib/scheduler.js';
+
 const prisma = new PrismaClient();
 
 /*
@@ -74,7 +76,7 @@ export async function POST({ request }) {
 			}
 		} else {
 			// move in review
-			if ( isDue( move, now ) ) {
+			if ( moveIsDue( move, now ) ) {
 				update.reviewInterval = move.reviewInterval * move.reviewEase;
 				update.reviewDueDate  = date_in_n_days( Math.ceil( update.reviewInterval ) );
 			} else {
@@ -119,17 +121,4 @@ function date_in_n_days( n ) {
 	date.setDate( date.getDate() + n );
 	date.setUTCHours(0,0,0,0);
 	return date;
-}
-
-function isDue(move,now) {
-	// TODO duplicated in api/{study,api}/+server.js, abstract it properly
-	if ( ! move.ownMove ) {
-		return false;
-	} else if ( move.learningDueTime ) {
-		return move.learningDueTime <= now;
-	} else if ( move.reviewDueDate ) {
-		return move.reviewDueDate <= now; 
-	} else {
-		throw new Error( 'isDue invalid own/learning/review state for move #'+move.id );
-	}
 }
