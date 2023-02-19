@@ -2,8 +2,6 @@ import { PrismaClient } from '@prisma/client';
 import { importPgn } from '$lib/pgnImporter.js';
 import fs from 'fs';
 
-// TODO test: transposition
-
 let prisma;
 
 beforeAll( async () => {
@@ -124,4 +122,22 @@ test('pgn database', async () => {
 	expect( await prisma.move.count({ 
 		where: { fromFen: 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq' }
 	} )).toEqual( 3 );
+});
+
+test('transposition', async () => {
+	const pgn_content = fs.readFileSync( './test/pgn/transposition.pgn', 'utf8' );
+	await importPgn( pgn_content, 'transposition.pgn', prisma, 1, true );
+	expect( await prisma.move.count() ).toEqual( 11 );
+	expect( await prisma.move.count({ where: { moveSan: 'd4' } } )).toEqual( 2 );
+	expect( await prisma.move.count({ where: { moveSan: 'd5' } } )).toEqual( 2 );
+	expect( await prisma.move.count({ where: { moveSan: 'Nf3' } } )).toEqual( 1 );
+	expect( await prisma.move.count({ 
+		where: { toFen: 'rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/8/PP2PPPP/RNBQKBNR w KQkq' }
+	} )).toEqual( 2 );
+	expect( await prisma.move.count({ 
+		where: { fromFen: 'rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/8/PP2PPPP/RNBQKBNR w KQkq' }
+	} )).toEqual( 1 );
+	expect( await prisma.move.count({ 
+		where: { toFen: 'rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/5N2/PP2PPPP/RNBQKB1R b KQkq' }
+	} )).toEqual( 1 );
 });
