@@ -63,6 +63,11 @@ describe( 'moveIsDue', () => {
 });
 
 describe( 'getNextLineForStudy', () => {
+	const empty_response = {
+		line: [],
+		start_ix: 0,
+		num_due_moves: 0
+	};
 	test('no due moves', async () => {
 		const moves = [
 			{ id: 0, moveSan: 'e4', ownMove: true, repForWhite: true,
@@ -85,11 +90,7 @@ describe( 'getNextLineForStudy', () => {
 		moves.forEach( m => m.learningDueTime = new Date('2023-01-21T12:34:56' ) );
 		expect(
 			await getNextLineForStudy( moves, new Date('2023-01-21T12:34:55') )
-		).toMatchObject( {
-			line: [],
-			start_ix: 0,
-			num_due_moves: 0
-		} );
+		).toMatchObject( empty_response );
 		// all moves in review
 		moves.forEach( m => {
 			m.learningDueTime = null;
@@ -97,15 +98,30 @@ describe( 'getNextLineForStudy', () => {
 		} );
 		expect(
 			await getNextLineForStudy( moves, new Date('2023-01-21T12:34:55') )
-		).toMatchObject( {
-			line: [],
-			start_ix: 0,
-			num_due_moves: 0
-		} );
+		).toMatchObject( empty_response );
 	} );
 
-	test.todo( 'no moves at all' );
-	test.todo( 'moves, but no own moves' );
+	test( 'no moves at all', async () => {
+		expect(
+			await getNextLineForStudy( [], new Date('2023-01-21T12:34:56') )
+		).toMatchObject( empty_response );
+	} );
+
+	test( 'no own moves', async () => {
+		const moves = [
+			{ id: 0, moveSan: 'e4', ownMove: false, repForWhite: false,
+			  fromFen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq',
+			  toFen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq',
+			  learningDueTime: new Date( '2023-01-21T12:34:56' ) },
+			{ id: 1, moveSan: 'd4', ownMove: false, repForWhite: false,
+			  fromFen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq',
+			  toFen: 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq',
+			  learningDueTime: new Date( '2023-01-21T12:34:56' ) },
+		];
+		expect(
+			await getNextLineForStudy( moves, new Date('2023-01-28T00:00:00') )
+		).toMatchObject( empty_response );
+	} );
 	test.todo( 'no last_line: find the most due move (review-only and mixed)' );
 	test.todo( 'no last_line: buildLineBackwards, make sure proper sane line is returned' );
 	test.todo( 'no last_line: continueLineUntilEnd, make sure proper sane line is returned' );
