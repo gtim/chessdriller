@@ -6,6 +6,7 @@ const config = {
 	plugins: [sveltekit({ hot: !process.env.VITEST })],
 	test: {
 		globals: true,
+		threads: false
 	}
 };
 

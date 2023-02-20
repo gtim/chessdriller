@@ -1,21 +1,33 @@
-import { PrismaClient } from '@prisma/client';
+/*
+ * scheduler.js
+ *
+ * Logic governing when a move is due for repetition and how to pick a line/variation to practice.
+ *
+ * Note: some algorithms here are DoS-vulnerable to malign/pathological PGNs.
+ *
+ */
 
-export async function getNextLineForStudy( prisma, user_id, last_line = [] ) {
 
-	const moves = await prisma.Move.findMany({
-		where: { userId: user_id },
-		select: {
-			id: true,
-			fromFen: true,
-			toFen: true,
-			moveSan: true,
-			ownMove: true,
-			repForWhite: true,
-			learningDueTime: true,
-			reviewDueDate: true
-		}
-	});
-	const now = new Date(); 
+/*
+ * getNextLineForStudy( prisma, user_id, last_line )
+ *
+ * Next line scheduled for study
+ *
+ * Input:
+ *   movs: all moves belonging to user ID (handled by caller to avoid prisma dependency here)
+ *   now: current datetime (new Date())
+ *   last_line?: array of move IDs for the last line practiced
+ *
+ * Output: {
+ *   line: array of moves (not just move IDs), starting from the first move 
+ *   start_ix: line[start_ix] is the first move to be quizzed (prior moves were part of last line)
+ *   num_due_moves: total number of due moves
+ * }
+ *
+ * TODO: handle multiple ownMoves
+ */
+export async function getNextLineForStudy( moves, now, last_line = [] ) {
+
 	moves.forEach( m => m.isDue = moveIsDue(m,now) );
 
 	const num_due_moves = moves.filter( m => m.isDue ).length;
@@ -27,13 +39,14 @@ export async function getNextLineForStudy( prisma, user_id, last_line = [] ) {
 	};
 
 
+	// No due moves: nothing to practice
 	if ( num_due_moves == 0 ) {
-		// no due moves
 		return response;
 	}
 
+
+	// Just finished another line: find the closest line with a due move
 	if ( last_line.length ) {
-		// just finished another line
 		const last_line_repForWhite = moves.find( m => m.id === last_line[0] ).repForWhite;
 		const moves_same_rep_as_last = moves.filter( m => m.repForWhite == last_line_repForWhite );
 		if ( moves_same_rep_as_last.filter( m => m.isDue ).length ) {
@@ -43,7 +56,7 @@ export async function getNextLineForStudy( prisma, user_id, last_line = [] ) {
 		}
 	}
 	
-	// build a line from the most due move
+	// Else: Find the most due move, and find a line including it
 	const due_move = mostDueMove(moves);
 	const moves_same_rep = moves.filter( m => m.repForWhite == due_move.repForWhite );
 	response.line = buildLineBackwards( [due_move], moves_same_rep );
@@ -52,6 +65,12 @@ export async function getNextLineForStudy( prisma, user_id, last_line = [] ) {
 	return response;
 }
 
+/*
+ * moveIsDue( move, now )
+ *
+ * Find if a move is due at the supplied date.
+ *
+ */
 export function moveIsDue( move, now ) {
 	if ( ! move.ownMove ) {
 		return false;
