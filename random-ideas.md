@@ -2,6 +2,7 @@
 
 * delay opponent moves slightly
 * animation feedback on: correct/wrong move, variation done, entire variation correct
+    - different-sized feedback depending on whether move was due or not (e.g. big star, small star)
 * keep W/B rep on the same study page, just distinguish them through board orientation. also force going through one color first, before switching to the other.
 * pretend that there's no due moves if number of moves is <10 and another one will be due in a couple minutes
 * identify leeches (keep count of lapses?)
@@ -16,3 +17,4 @@
 * auto-detect if a PGN is for white or black based on number of alternative moves for either
     - warn if it seems the PGN was added to the wrong side
     - just have a single "upload PGN to rep" and let the user confirm auto-detected side
+* "skip end of line" button if no other moves are due or in learning

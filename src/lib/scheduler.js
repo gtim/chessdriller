@@ -68,7 +68,7 @@ export async function getNextLineForStudy( moves, now, last_line = [] ) {
 /*
  * moveIsDue( move, now )
  *
- * Find if a move is due at the supplied date.
+ * Find whether a move is due at the supplied datetime.
  *
  */
 export function moveIsDue( move, now ) {
