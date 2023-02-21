@@ -214,4 +214,45 @@ describe( 'getNextLineForStudy', () => {
 	test.todo( 'last_line: make sure latest due deviation is returned' );
 	test.todo( 'last_line: make sure latest due deviation is returned when a later non-due deviation exists' );
 	test.todo( 'last_line: with no more moves in same rep, make sure most due move is returned' );
+
+	test( 'no last_line: same FEN should not be repeated (cyclic move graph)', async () => {
+		const moves = [
+			{ id: 0, moveSan: 'e4', ownMove: true, repForWhite: true,
+			  fromFen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq',
+			  toFen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq' },
+			{ id: 1, moveSan: 'e5', ownMove: false, repForWhite: true,
+			  fromFen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq',
+			  toFen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq' },
+			{ id: 2, moveSan: 'Bc4', ownMove: true, repForWhite: true,
+			  fromFen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq',
+			  toFen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq' },
+			{ id: 3, moveSan: 'Bc5', ownMove: false, repForWhite: true,
+			  fromFen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq',
+			  toFen: 'rnbqk1nr/pppp1ppp/8/2b1p3/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq' },
+			{ id: 4, moveSan: 'Bf1', ownMove: true, repForWhite: true,
+			  fromFen: 'rnbqk1nr/pppp1ppp/8/2b1p3/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq',
+			  toFen: 'rnbqk1nr/pppp1ppp/8/2b1p3/4P3/8/PPPP1PPP/RNBQKBNR b KQkq' },
+			{ id: 5, moveSan: 'Bf8', ownMove: false, repForWhite: true,
+			  fromFen: 'rnbqk1nr/pppp1ppp/8/2b1p3/4P3/8/PPPP1PPP/RNBQKBNR b KQkq',
+			  toFen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq' },
+			{ id: 6, moveSan: 'Nf3', ownMove: true, repForWhite: true,
+			  fromFen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq',
+			  toFen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq' }
+		];
+		moves.forEach( m => m.reviewDueDate  = new Date('2023-01-21T00:00:00' ) );
+		moves.find(m=>m.id==6).reviewDueDate = new Date('2023-01-20T00:00:00' );
+		// Run multiple times since moves are picked randomly at junctions
+		for ( let i = 0; i < 100; i++ ) {
+			expect(
+				await getNextLineForStudy( moves, new Date('2023-01-21T22:00:00') )
+			).toMatchObject( {
+				line: [
+					expect.objectContaining({id:0}),
+					expect.objectContaining({id:1}),
+					expect.objectContaining({id:6})
+				],
+			} );
+		}
+	} );
+	test.todo( 'last_line: same FEN should not be repeated (cyclic move graph)' );
 });

@@ -118,35 +118,57 @@ function findContinuationWithMostDueMoves( start_move, all_moves, excluded_move_
 }
 
 // Build a line from one move by searching backwards to the initial position.
-// Prefer due moves (TODO), but only through greedy optimization
+// Prefer due moves greedily. (TODO)
+// Depth-first search with backtrack when cycle detected.
+//
+// Return line (array of moves), or null if no line found.
+//
+// It would be interesting to find the "optimal" line, i.e. with as many due moves as possible. This would be the single-pair longest path of a 0/1-weighted cyclic directed graph, which I'd guess is O(n!)? However a repertoire is small and sparse, and can surely be brute-forced reasonably.
 function buildLineBackwards( line, all_moves ) {
-	const initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq';
-	while ( line[0].fromFen !== initial_fen ) {
-		const possible_preceding_moves = all_moves.filter( m => m.toFen === line[0].fromFen );
-		if ( possible_preceding_moves.length == 0 ) {
-			throw new Error( 'no preceding moves found for Move #' + line[0].id + ' ('+line[0].moveSan+')!' );
-		}
-		// TODO check for cycles
-		line.unshift( randomMove( possible_preceding_moves ) );
+	if ( line[0].fromFen === 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq' ) {
+		return line;
 	}
-	return line;
+	const fens_in_line = line.map( m => m.toFen );
+	const preceding_moves = all_moves.filter( m =>
+		m.toFen === line[0].fromFen // leads to "current" position
+		&& ! fens_in_line.includes( m.fromFen ) // FEN not already in line (avoid move repetition)
+	);
+	shuffleArray( preceding_moves );
+	for ( const move_candidate of preceding_moves ) {
+		const found_line = buildLineBackwards( [ move_candidate, ...line ], all_moves );
+		if ( found_line ) {
+			return found_line;
+		}
+	}
+	return null;
 }
 
 // Continue a line from its last move until no more moves are found.
 // Prefer due moves (TODO), but only through greedy optimization
 function continueLineUntilEnd( line, all_moves ) {
 	while (true) {
-		const possible_succeeding_moves = all_moves.filter( m => m.fromFen === line[line.length-1].toFen );
+		const fens_in_line = line.map( m => m.fromFen );
+		const possible_succeeding_moves = all_moves.filter(
+			m => m.fromFen === line[line.length-1].toFen
+			&& ! fens_in_line.includes( m.toFen )
+		);
 		if ( possible_succeeding_moves.length == 0 ) {
 			return line;
 		}
-		// TODO check for cycles
 		line.push( randomMove( possible_succeeding_moves ) );
 	}
 }
 
 function randomMove( moves ) {
 	return moves[ Math.floor( Math.random()*moves.length ) ];
+}
+
+function shuffleArray(array) {
+	// Durstenfield
+	for (let i = array.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[array[i], array[j]] = [array[j], array[i]];
+	}
 }
 
 // Find the most due card, i.e. the one that was due first.
