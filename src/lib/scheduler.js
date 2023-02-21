@@ -30,17 +30,17 @@ export async function getNextLineForStudy( moves, now, last_line = [] ) {
 
 	moves.forEach( m => m.isDue = moveIsDue(m,now) );
 
-	const num_due_moves = moves.filter( m => m.isDue ).length;
+	const due_moves = moves.filter( m => m.isDue );
 
 	const response = {
 		line: [],
 		start_ix: 0,
-		num_due_moves: num_due_moves
+		num_due_moves: due_moves.length
 	};
 
 
 	// No due moves: nothing to practice
-	if ( num_due_moves == 0 ) {
+	if ( due_moves.length == 0 ) {
 		return response;
 	}
 
@@ -57,9 +57,9 @@ export async function getNextLineForStudy( moves, now, last_line = [] ) {
 	}
 	
 	// Else: Find the most due move, and find a line including it
-	const due_move = mostDueMove(moves);
-	const moves_same_rep = moves.filter( m => m.repForWhite == due_move.repForWhite );
-	response.line = buildLineBackwards( [due_move], moves_same_rep );
+	const most_due_move = mostDueMove(due_moves);
+	const moves_same_rep = moves.filter( m => m.repForWhite == most_due_move.repForWhite );
+	response.line = buildLineBackwards( [most_due_move], moves_same_rep );
 	response.line = continueLineUntilEnd( response.line, moves_same_rep );
 
 	return response;
@@ -151,12 +151,16 @@ function randomMove( moves ) {
 
 // Find the most due card, i.e. the one that was due first.
 // Cards in learning count as more due than those in review.
-function mostDueMove( moves ) {
+// Expects all input moves to be due.
+function mostDueMove( due_moves ) {
 	let mdm = null;
-	for ( const move of moves.filter( m => m.ownMove ) ) {
+	for ( const move of due_moves ) {
+		if ( ! move.ownMove ) {
+			continue;
+		}
 		if ( ! mdm ) {
 			mdm = move;
-		} else if ( move.learningDueTime && ( ! mdm.learningDueTime || mdm.learningDueTime && mdm.learningDueTime > move.learningDueTime ) ) {
+		} else if ( move.learningDueTime && ( ! mdm.learningDueTime || mdm.learningDueTime > move.learningDueTime ) ) {
 			mdm = move;
 		} else if ( move.reviewDueDate && mdm.reviewDueDate && mdm.reviewDueDate > move.reviewDueDate ) {
 			mdm = move;

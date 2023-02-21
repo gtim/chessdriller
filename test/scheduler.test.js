@@ -183,6 +183,32 @@ describe( 'getNextLineForStudy', () => {
 			} );
 		}
 	});
+	test( 'return the most due move, even if due review and undue learning at current date', async () => {
+		const moves = [
+			{ id: 3, moveSan: 'e4', ownMove: true, repForWhite: true,
+			  fromFen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq',
+			  toFen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq',
+			  reviewDueDate: new Date('2023-01-21T00:00:00')
+			},
+			{ id: 4, moveSan: 'd4', ownMove: true, repForWhite: true,
+			  fromFen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq',
+			  toFen: 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq',
+			  learningDueTime: new Date('2023-01-21T20:00:00')
+			}
+		];
+		expect(
+			await getNextLineForStudy( moves, new Date('2023-01-21T12:00:00') )
+		).toMatchObject( {
+			line: [ { id: 3 } ],
+			start_ix: 0
+		} );
+		expect(
+			await getNextLineForStudy( moves, new Date('2023-01-21T22:00:00') )
+		).toMatchObject( {
+			line: [ { id: 4 } ],
+			start_ix: 0
+		} );
+	} );
 	test.todo( 'no last_line: buildLineBackwards, make sure proper sane line is returned' );
 	test.todo( 'no last_line: continueLineUntilEnd, make sure proper sane line is returned' );
 	test.todo( 'last_line: make sure latest due deviation is returned' );
