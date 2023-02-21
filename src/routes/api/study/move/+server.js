@@ -15,7 +15,7 @@ const prisma = new PrismaClient();
 
 export async function POST({ request }) {
 	const userId = 1; // TODO
-	const { move_id, correct, guess } = await request.json();
+	const { move_id, correct, guess, line_study_id } = await request.json();
 
 	try {
 
@@ -53,16 +53,16 @@ export async function POST({ request }) {
 		if ( move.learningDueTime ) {
 			// promote correct moves in Learning regardless of whether they were due or not
 			if ( move.learningStep == 0 ) {
-				update.learningDueTime = datetime_in_n_minutes(1);
+				update.learningDueTime = datetime_in_n_minutes( fuzzed_minutes( 1,     line_study_id ) );
 				update.learningStep = 1;
 			} else if ( move.learningStep == 1 ) {
-				update.learningDueTime = datetime_in_n_minutes(10);
+				update.learningDueTime = datetime_in_n_minutes( fuzzed_minutes( 10,    line_study_id ) );
 				update.learningStep = 2;
 			} else if ( move.learningStep == 2 ) {
-				update.learningDueTime = datetime_in_n_minutes(8*60);
+				update.learningDueTime = datetime_in_n_minutes( fuzzed_minutes( 8*60,  line_study_id ) );
 				update.learningStep = 3;
 			} else if ( move.learningStep == 3 ) {
-				update.learningDueTime = datetime_in_n_minutes(16*60);
+				update.learningDueTime = datetime_in_n_minutes( fuzzed_minutes( 16*60, line_study_id ) );
 				update.learningStep = 4;
 			} else if ( move.learningStep == 4 ) {
 				// graduate
@@ -78,10 +78,11 @@ export async function POST({ request }) {
 			// move in review
 			if ( moveIsDue( move, now ) ) {
 				update.reviewInterval = move.reviewInterval * move.reviewEase;
-				update.reviewDueDate  = date_in_n_days( Math.ceil( update.reviewInterval ) );
+				const fuzzed_interval = fuzzed_days( update.reviewInterval, line_study_id ); // maybe reviewInterval should be fuzzed too? what does anki do?
+				update.reviewDueDate  = date_in_n_days( Math.ceil(fuzzed_interval) );
 			} else {
 				// not due: don't increase interval
-				update.reviewDueDate  = date_in_n_days( Math.ceil( move.reviewInterval ) );
+				update.reviewDueDate  = date_in_n_days( Math.ceil( fuzzed_days(move.reviewInterval,line_study_id) ) );
 			}
 		}
 	}
@@ -108,6 +109,27 @@ export async function POST({ request }) {
 	}
 
 	return json( { success: true} );
+}
+
+function fuzzed_days( days_prefuzz, line_study_id ) {
+	// expect line_study_id to be a random float [0,1)
+	console.assert( line_study_id >= 0 && line_study_id < 1);
+	if ( days_prefuzz < 2.5 ) {
+		// lower interval than 2.5 days: no fuzz
+		return days_prefuzz;
+	}
+	// fuzz by up to 1 day + 10% of interval in either direction
+	const min_fuzz = - ( 1 + 0.1 * days_prefuzz );
+	const max_fuzz =   ( 1 + 0.1 * days_prefuzz );
+	const fuzz = min_fuzz + line_study_id * ( max_fuzz - min_fuzz ) ;
+	return days_prefuzz + fuzz;
+}
+
+function fuzzed_minutes( minutes_prefuzz, line_study_id ) {
+	console.assert( line_study_id >= 0 && line_study_id < 1);
+	// just add 0-5 min (but don't increase by more than 100%)
+	const fuzz = line_study_id * Math.min(5,minutes_prefuzz);
+	return minutes_prefuzz + fuzz;
 }
 
 function datetime_in_n_minutes( n ) {

@@ -10,6 +10,7 @@
 	nocache_headers.append('cache-control', 'no-cache');
 	
 	let line;
+	let line_study_id;
 	$: progress_line = JSON.parse( JSON.stringify( line || [] ) ); // deep copy
 	let start_move_ix;
 	async function studyNextLine( last_line_move_ids = [] ) {
@@ -23,6 +24,9 @@
 				line = data.line;
 				start_move_ix = data.start_ix;
 				last_progress_move_ix = Math.max( start_move_ix - 1, 0 );
+				// line-study ID is only used to fuzz intervals from the same line and session equally
+				// expected to be random float [0,1)
+				line_study_id = Math.random(); 
 			} else {
 				review_finished = true;
 			}
@@ -58,7 +62,8 @@
 			body: JSON.stringify({
 				move_id: e.detail.move_id,
 				correct: e.detail.correct,
-				guess:   e.detail.guess
+				guess:   e.detail.guess,
+				line_study_id: line_study_id
 			})
 		})
 		.then( (res) => res.json() )
