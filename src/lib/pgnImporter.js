@@ -3,8 +3,6 @@ import { PrismaClient } from '@prisma/client';
 
 export async function importPgn( pgn_content, pgn_filename, prisma, user_id, repForWhite ) {
 
-	const pgntexts = split_pgndb_into_pgns( pgn_content );
-
 	const pgn = await prisma.pgn.create({ data: {
 		userId: user_id,
 		repForWhite: repForWhite,
@@ -12,16 +10,63 @@ export async function importPgn( pgn_content, pgn_filename, prisma, user_id, rep
 		content: pgn_content
 	} });
 
-	let total_moves_parsed = 0;
+	// parse (multi-game) PGN into moves-list
+	const pgntexts = split_pgndb_into_pgns( pgn_content );
+	const moves = [];
 	for ( const pgntext of pgntexts ) {
 		const pgntext_fixed = pgntext.replace(/\*\s*$/, '\n'); // remove final '*', maybe cm-chess/chess.js bug makes it cause parser issues?
-		const chess = new Chess();
-		chess.loadPgn( pgntext_fixed ); // TODO: handle unparsable PGNs
-		total_moves_parsed += await insert_all_moves( prisma, user_id, pgn.id, repForWhite, chess.history() );
+		const these_moves = singlePgnToMoves( pgntext_fixed, repForWhite );
+		moves.push( ...these_moves );
 	}
 
-	return total_moves_parsed;
+	// insert moves into db
+	for ( const move of moves ) {
+		move.userId = user_id;
+		move.pgns = { connect: [{ id: pgn.id }] };
+		await prisma.move.upsert( {
+			where: {
+				userId_repForWhite_fromFen_toFen: {
+					userId: user_id,
+					repForWhite: move.repForWhite,
+					fromFen: move.fromFen,
+					toFen: move.toFen
+				}
+			},
+			create: move,
+			update: { pgns: move.pgns }
+		});
+	}
 
+	return moves.length;
+}
+
+// Converts text from single PGN game to a moves-list.
+// Exported only as a test utility.
+export function singlePgnToMoves( pgn_content, repForWhite ) {
+	const chess = new Chess();
+	chess.loadPgn( pgn_content ); // TODO: handle unparsable PGNs
+	return chessHistoryToMoves( chess.history(), repForWhite );
+}
+
+// Traverse all cm-chess moves, including variations, and returns moves-list
+function chessHistoryToMoves( history, repForWhite ) {
+	const moves = [];
+	for ( const move of history ) {
+		const ownMove = ( repForWhite && move.color == 'w' || !repForWhite && move.color == 'b' );
+		moves.push( {
+			repForWhite: repForWhite,
+			ownMove: repForWhite && move.color == 'w' || !repForWhite && move.color == 'b',
+			fromFen: normalize_fen( move.previous ? move.previous.fen : 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' ),
+			toFen:   normalize_fen(move.fen),
+			moveSan: move.san,
+		} );
+		// traverse variations
+		for ( const variation of move.variations ) {
+			const variation_moves = chessHistoryToMoves( variation, repForWhite );
+			moves.push( ...variation_moves );
+		}
+	}
+	return moves;
 }
 
 // A PGN database file can contain multiple PGNs: http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm#c8
@@ -35,44 +80,4 @@ function split_pgndb_into_pgns( pgn_db ) {
 // Canonicalise FEN by removing last three elements: en passant square, half-move clock and fullmove number. see README
 function normalize_fen( fen ) {
 	return fen.replace(/ (-|[a-h][1-8]) \d+ \d+$/, '' );
-}
-
-// Traverse all variations and insert each move into database.
-// Returns the number of moves parsed.
-async function insert_all_moves( prisma, user_id, pgn_id, repForWhite, moves ) {
-	let num_moves_parsed = 0;
-	for ( const move of moves ) {
-		const from_fen = normalize_fen( move.previous ? move.previous.fen : 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' );
-		const to_fen   = normalize_fen(move.fen);
-		const ownMove = ( repForWhite && move.color == 'w' || !repForWhite && move.color == 'b' );
-		await prisma.move.upsert( {
-			where: {
-				userId_repForWhite_fromFen_toFen: {
-					userId: user_id,
-					repForWhite: repForWhite,
-					fromFen: from_fen,
-					toFen: to_fen
-				}
-			},
-			create: {
-				userId: user_id,
-				repForWhite: repForWhite,
-				ownMove: ownMove,
-				fromFen: from_fen,
-				toFen:   to_fen,
-				moveSan: move.san,
-				pgns: { connect: [{ id: pgn_id }] }
-			},
-			update: {
-				pgns: { connect: [{ id: pgn_id }] }
-			}
-		});
-		num_moves_parsed++;
-		// traverse variations.
-		// await required to avoid race conditions triggering Prisma Sqlite bug: https://github.com/prisma/prisma/issues/11789
-		for ( const variation of move.variations ) {
-			num_moves_parsed += await insert_all_moves( prisma, user_id, pgn_id, repForWhite, variation );
-		}
-	}
-	return num_moves_parsed;
 }
