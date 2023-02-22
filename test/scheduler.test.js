@@ -4,11 +4,11 @@ import { PrismaClient } from '@prisma/client';
 
 describe( 'moveIsDue', () => {
 	test('not-own moves', () => {
-		const date = new Date('2023-02-19T12:00:00');
+		const date = new Date('2023-02-19T12:00:00Z');
 		expect(
 			moveIsDue( {
 				ownMove: false, 
-				learningDueTime: new Date('2023-02-18T10:00:00'),
+				learningDueTime: new Date('2023-02-18T10:00:00Z'),
 				reviewDueDate: null
 			}, date )
 		).toBe(false);
@@ -16,7 +16,7 @@ describe( 'moveIsDue', () => {
 			moveIsDue( {
 				ownMove: false, 
 				learningDueTime: null,
-				reviewDueDate: new Date('2023-02-17T00:00:00')
+				reviewDueDate: new Date('2023-02-17')
 			}, date )
 		).toBe(false);
 	});
@@ -24,41 +24,41 @@ describe( 'moveIsDue', () => {
 	test('moves in learning', () => {
 		const move230218T10 = {
 			ownMove: true, 
-			learningDueTime: new Date('2023-02-18T10:00:00'),
+			learningDueTime: new Date('2023-02-18T10:00:00Z'),
 			reviewDueDate: null
 		};
-		expect( moveIsDue( move230218T10, new Date('2022-02-18T10:00:00') ) ).toBe( false );
-		expect( moveIsDue( move230218T10, new Date('2022-02-18T23:00:00') ) ).toBe( false );
-		expect( moveIsDue( move230218T10, new Date('2023-02-17T10:00:00') ) ).toBe( false );
-		expect( moveIsDue( move230218T10, new Date('2023-02-17T23:00:00') ) ).toBe( false );
-		expect( moveIsDue( move230218T10, new Date('2023-02-18T00:00:00') ) ).toBe( false );
-		expect( moveIsDue( move230218T10, new Date('2023-02-18T09:59:59') ) ).toBe( false );
-		expect( moveIsDue( move230218T10, new Date('2023-02-18T10:00:01') ) ).toBe( true );
-		expect( moveIsDue( move230218T10, new Date('2023-02-18T23:00:00') ) ).toBe( true );
-		expect( moveIsDue( move230218T10, new Date('2023-02-19T00:00:00') ) ).toBe( true );
-		expect( moveIsDue( move230218T10, new Date('2023-02-19T10:00:00') ) ).toBe( true );
-		expect( moveIsDue( move230218T10, new Date('2023-03-19T00:00:00') ) ).toBe( true );
-		expect( moveIsDue( move230218T10, new Date('2024-02-19T00:00:00') ) ).toBe( true );
+		expect( moveIsDue( move230218T10, new Date('2022-02-18T10:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218T10, new Date('2022-02-18T23:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218T10, new Date('2023-02-17T10:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218T10, new Date('2023-02-17T23:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218T10, new Date('2023-02-18T00:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218T10, new Date('2023-02-18T09:59:59Z') ) ).toBe( false );
+		expect( moveIsDue( move230218T10, new Date('2023-02-18T10:00:01Z') ) ).toBe( true );
+		expect( moveIsDue( move230218T10, new Date('2023-02-18T23:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218T10, new Date('2023-02-19T00:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218T10, new Date('2023-02-19T10:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218T10, new Date('2023-03-19T00:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218T10, new Date('2024-02-19T00:00:00Z') ) ).toBe( true );
 	} );
 
 	test('moves in review', () => {
 		const move230218 = {
 			ownMove: true, 
 			learningDueTime: null,
-			reviewDueDate: new Date('2023-02-18T00:00:00')
+			reviewDueDate: new Date('2023-02-18')
 		};
-		expect( moveIsDue( move230218, new Date('2022-02-18T10:00:00') ) ).toBe( false );
-		expect( moveIsDue( move230218, new Date('2022-02-18T23:00:00') ) ).toBe( false );
-		expect( moveIsDue( move230218, new Date('2023-02-17T10:00:00') ) ).toBe( false );
-		expect( moveIsDue( move230218, new Date('2023-02-17T23:00:00') ) ).toBe( false );
-		expect( moveIsDue( move230218, new Date('2023-02-18T00:00:00') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2023-02-18T09:59:59') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2023-02-18T10:00:01') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2023-02-18T23:00:00') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2023-02-19T00:00:00') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2023-02-19T10:00:00') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2023-03-19T00:00:00') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2024-02-19T00:00:00') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2022-02-18T10:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218, new Date('2022-02-18T23:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218, new Date('2023-02-17T10:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218, new Date('2023-02-17T23:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218, new Date('2023-02-18T00:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2023-02-18T09:59:59Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2023-02-18T10:00:01Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2023-02-18T23:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2023-02-19T00:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2023-02-19T10:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2023-03-19T00:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2024-02-19T00:00:00Z') ) ).toBe( true );
 	} );
 });
 
@@ -94,7 +94,7 @@ describe( 'getNextLineForStudy', () => {
 		// all moves in review
 		moves.forEach( m => {
 			m.learningDueTime = null;
-			m.reviewDueDate = new Date('2023-01-22T00:00:00' )
+			m.reviewDueDate = new Date('2023-01-22' )
 		} );
 		expect(
 			await getNextLineForStudy( moves, new Date('2023-01-21T12:34:55') )
@@ -112,14 +112,14 @@ describe( 'getNextLineForStudy', () => {
 			{ id: 0, moveSan: 'e4', ownMove: false, repForWhite: false,
 			  fromFen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq',
 			  toFen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq',
-			  learningDueTime: new Date( '2023-01-21T12:34:56' ) },
+			  learningDueTime: new Date( '2023-01-21T12:34:56Z' ) },
 			{ id: 1, moveSan: 'd4', ownMove: false, repForWhite: false,
 			  fromFen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq',
 			  toFen: 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq',
-			  learningDueTime: new Date( '2023-01-21T12:34:56' ) },
+			  learningDueTime: new Date( '2023-01-21T12:34:56Z' ) },
 		];
 		expect(
-			await getNextLineForStudy( moves, new Date('2023-01-28T00:00:00') )
+			await getNextLineForStudy( moves, new Date('2023-01-28T00:00:00Z') )
 		).toMatchObject( empty_response );
 	} );
 
@@ -156,9 +156,9 @@ describe( 'getNextLineForStudy', () => {
 			// review only
 			moves.forEach( m => {
 				m.learningDueTime = null;
-				m.reviewDueDate = new Date('2023-01-21T00:00:00' );
+				m.reviewDueDate = new Date('2023-01-21' );
 			} );
-			moves[i].reviewDueDate = new Date('2023-01-20T00:00:00' );
+			moves[i].reviewDueDate = new Date('2023-01-20' );
 			expect(
 				await getNextLineForStudy( moves, new Date('2023-01-21T12:34:57') )
 			).toMatchObject( {
@@ -174,7 +174,7 @@ describe( 'getNextLineForStudy', () => {
 			moves[(i+2)%moves.length].learningDueTime = new Date('2023-01-21T13:34:56' );
 			moves[(i+2)%moves.length].reviewDueDate = null;
 			moves[(i+3)%moves.length].learningDueTime = null;
-			moves[(i+3)%moves.length].reviewDueDate = new Date('2023-01-20T00:00:00');
+			moves[(i+3)%moves.length].reviewDueDate = new Date('2023-01-20');
 			expect(
 				await getNextLineForStudy( moves, new Date('2023-01-21T12:34:58') )
 			).toMatchObject( {
@@ -188,22 +188,22 @@ describe( 'getNextLineForStudy', () => {
 			{ id: 3, moveSan: 'e4', ownMove: true, repForWhite: true,
 			  fromFen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq',
 			  toFen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq',
-			  reviewDueDate: new Date('2023-01-21T00:00:00')
+			  reviewDueDate: new Date('2023-01-21')
 			},
 			{ id: 4, moveSan: 'd4', ownMove: true, repForWhite: true,
 			  fromFen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq',
 			  toFen: 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq',
-			  learningDueTime: new Date('2023-01-21T20:00:00')
+			  learningDueTime: new Date('2023-01-21T20:00:00Z')
 			}
 		];
 		expect(
-			await getNextLineForStudy( moves, new Date('2023-01-21T12:00:00') )
+			await getNextLineForStudy( moves, new Date('2023-01-21T12:00:00Z') )
 		).toMatchObject( {
 			line: [ { id: 3 } ],
 			start_ix: 0
 		} );
 		expect(
-			await getNextLineForStudy( moves, new Date('2023-01-21T22:00:00') )
+			await getNextLineForStudy( moves, new Date('2023-01-21T22:00:00Z') )
 		).toMatchObject( {
 			line: [ { id: 4 } ],
 			start_ix: 0
@@ -239,18 +239,18 @@ describe( 'getNextLineForStudy', () => {
 			  fromFen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq',
 			  toFen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq' }
 		];
-		moves.forEach( m => m.reviewDueDate  = new Date('2023-01-21T00:00:00' ) );
-		moves.find(m=>m.id==6).reviewDueDate = new Date('2023-01-20T00:00:00' );
+		moves.forEach( m => m.reviewDueDate  = new Date('2023-01-21' ) );
+		moves.find(m=>m.id==6).reviewDueDate = new Date('2023-01-20' );
 		// Run multiple times since moves are picked randomly at junctions
 		for ( let i = 0; i < 100; i++ ) {
 			expect(
-				await getNextLineForStudy( moves, new Date('2023-01-21T22:00:00') )
+				await getNextLineForStudy( moves, new Date('2023-01-21T22:00:00Z') )
 			).toMatchObject( {
 				line: [
 					expect.objectContaining({id:0}),
 					expect.objectContaining({id:1}),
 					expect.objectContaining({id:6})
-				],
+				]
 			} );
 		}
 	} );
