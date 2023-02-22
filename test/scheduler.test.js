@@ -253,6 +253,21 @@ describe( 'getNextLineForStudy', () => {
 				]
 			} );
 		}
+		moves.find(m=>m.id==4).reviewDueDate = new Date('2023-01-19' );
+		for ( let i = 0; i < 100; i++ ) {
+			expect(
+				await getNextLineForStudy( moves, new Date('2023-01-21T22:00:00Z') )
+			).toMatchObject( {
+				line: [
+					expect.objectContaining({id:0}),
+					expect.objectContaining({id:1}),
+					expect.objectContaining({id:2}),
+					expect.objectContaining({id:3}),
+					expect.objectContaining({id:4}),
+					expect.objectContaining({id:5})
+				]
+			} );
+		}
 	} );
 	test.todo( 'last_line: same FEN should not be repeated (cyclic move graph)' );
 });

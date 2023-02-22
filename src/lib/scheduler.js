@@ -147,15 +147,16 @@ function buildLineBackwards( line, all_moves ) {
 // Prefer due moves (TODO), but only through greedy optimization
 function continueLineUntilEnd( line, all_moves ) {
 	while (true) {
-		const fens_in_line = line.map( m => m.fromFen );
-		const possible_succeeding_moves = all_moves.filter(
-			m => m.fromFen === line[line.length-1].toFen
-			&& ! fens_in_line.includes( m.toFen )
-		);
+		const possible_succeeding_moves = all_moves.filter( m => m.fromFen === line[line.length-1].toFen );
 		if ( possible_succeeding_moves.length == 0 ) {
 			return line;
 		}
+		const fens_in_line = line.map( m => m.fromFen );
 		line.push( randomMove( possible_succeeding_moves ) );
+		if ( fens_in_line.includes( line[line.length-1].toFen ) ) {
+			// repeated position: end
+			return line;
+		}
 	}
 }
 
