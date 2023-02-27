@@ -41,7 +41,6 @@
 	let last_progress_move_ix = 0;
 
 	async function onMove(e) {
-		updateStats();
 		if ( e.detail.correct ) {
 			console.log('yes! move ID: ' + e.detail.move_id);
 			last_progress_move_ix = e.detail.move_ix;
@@ -73,6 +72,7 @@
 			} else { 
 				error_text = 'API call failed: ' + data.error;
 			}
+			updateStats();
 		} );
 	}
 	function lineFinished(e) {
