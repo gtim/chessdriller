@@ -8,7 +8,6 @@
 * identify leeches (keep count of lapses?)
 * incorrect answer decreases move ease, but when to increase?
 * undo button for pgn upload
-* fuzzing: fuzz +/- 1 day (or +/-x%) per line, not per move, or the entire line will be scheduled at the line-minimum anyway
 * line-scheduling issues
     - a short transposition / move-order swap will lead to the entire line being quized twice, with each variation.
     - possible solution: just quiz until the last due move, not to the end of the line 
@@ -18,3 +17,6 @@
     - warn if it seems the PGN was added to the wrong side
     - just have a single "upload PGN to rep" and let the user confirm auto-detected side
 * "skip end of line" button if no other moves are due or in learning
+    - also "skip to first due move" button
+    - maybe "always skip" checkbox
+* moves "reviewed early" are simply pushed forward at the current interval. should be handled better, maybe increase the interval (proportionally?) if they're reviewed >50% through.
