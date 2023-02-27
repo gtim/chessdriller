@@ -1,6 +1,5 @@
 ## Random future thoughts
 
-* delay opponent moves slightly
 * animation feedback on: correct/wrong move, variation done, entire variation correct
     - different-sized feedback depending on whether move was due or not (e.g. big star, small star)
 * keep W/B rep on the same study page, just distinguish them through board orientation. also force going through one color first, before switching to the other.

@@ -6,6 +6,9 @@
 
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
+
+	const Delay_before_opponent_move = 250;
+	const Delay_before_wrong_move_undo = 250;
 	
 	export let line; // line is an array of moves
 	export let start_move_ix; // move index (of line[]) for the first move to show; fast-forward to that one
@@ -83,12 +86,14 @@
 			guess: chess_move.san
 		} );
 		if ( ! correct ) {
-			chess.undo();
-			chessground.set({
-				fen: chess.fen(),
-				lastMove: undefined,
-			});
-			allowBoardInput();
+			setTimeout( ()=>{
+				chess.undo();
+				chessground.set({
+					fen: chess.fen(),
+					lastMove: undefined,
+				});
+				allowBoardInput();
+			}, Delay_before_wrong_move_undo );
 		} else {
 			const turnColor = chess.turn() === 'w' ? 'white' : 'black';
 			chessground.set({ turnColor: turnColor });
@@ -96,7 +101,7 @@
 			if ( current_move_i == line.length ) {
 				lineFinished();
 			} else {
-				playOpponentMove();
+				setTimeout( playOpponentMove, Delay_before_opponent_move );
 			}
 		}
 	}
