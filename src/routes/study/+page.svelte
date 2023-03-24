@@ -71,6 +71,10 @@
 			if ( data.success ) {
 				error_text = '';
 				if ( data.interval.increased ) {
+					if ( data.interval.value >= 110 && data.interval.unit == 'm' ) {
+						data.interval.value = Math.round(data.interval.value/60);
+						data.interval.unit = 'h';
+					}
 					const mfs = new MoveFeedbackStar({
 						target: document.body,
 						props: { content: '+' + data.interval.value + data.interval.unit },
