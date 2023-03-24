@@ -17,6 +17,10 @@ export async function POST({ request }) {
 	const userId = 1; // TODO
 	const { move_id, correct, guess, line_study_id } = await request.json();
 
+	let interval_value = null;
+	let interval_unit = null;
+	let interval_increased = null; // interval can be increased from correctly guessing a due move, or from correctly guessing any move in review
+
 	try {
 
 	const move = await prisma.Move.findUniqueOrThrow({
@@ -25,6 +29,7 @@ export async function POST({ request }) {
 			id: true,
 			userId: true,
 			ownMove: true,
+			moveSan: true, // for debug only
 			learningDueTime: true,
 			learningStep: true,
 			reviewDueDate: true,
@@ -49,21 +54,21 @@ export async function POST({ request }) {
 		update.reviewDueDate  = null;
 		update.reviewInterval = null;
 		update.reviewEase     = move.reviewEase ? Math.min( 1.3, move.reviewEase - 0.2 ) : null;
+		interval_value = 0;
+		interval_unit = 'm';
+		interval_increased = false;
+		console.log( 'move ' + move.moveSan + ' wrong' );
 	} else {
 		if ( move.learningDueTime ) {
 			// promote correct moves in Learning regardless of whether they were due or not
-			if ( move.learningStep == 0 ) {
-				update.learningDueTime = datetime_in_n_minutes( fuzzed_minutes( 1,     line_study_id ) );
-				update.learningStep = 1;
-			} else if ( move.learningStep == 1 ) {
-				update.learningDueTime = datetime_in_n_minutes( fuzzed_minutes( 10,    line_study_id ) );
-				update.learningStep = 2;
-			} else if ( move.learningStep == 2 ) {
-				update.learningDueTime = datetime_in_n_minutes( fuzzed_minutes( 8*60,  line_study_id ) );
-				update.learningStep = 3;
-			} else if ( move.learningStep == 3 ) {
-				update.learningDueTime = datetime_in_n_minutes( fuzzed_minutes( 16*60, line_study_id ) );
-				update.learningStep = 4;
+			const step_minutes = [ 0, 1, 10, 8*60, 16*60 ]; // number of minutes' delay in each learning step
+			if ( move.learningStep < 4 ) {
+				update.learningStep = move.learningStep + 1;
+				const minutes_delay = Math.ceil( fuzzed_minutes( step_minutes[update.learningStep], line_study_id ) );
+				update.learningDueTime = datetime_in_n_minutes( minutes_delay );
+				interval_value = minutes_delay;
+				interval_unit = 'm';
+				interval_increased = true;
 			} else if ( move.learningStep == 4 ) {
 				// graduate
 				update.learningDueTime = null;
@@ -71,6 +76,9 @@ export async function POST({ request }) {
 				update.reviewInterval  = 1;
 				update.reviewDueDate   = date_in_n_days( update.reviewInterval );
 				update.reviewEase      = move.reviewEase || 2.5;
+				interval_value = update.reviewInterval;
+				interval_unit = 'd';
+				interval_increased = true;
 			} else {
 				throw new Error( 'invalid learning step for move '+move.id+': '+move.learningStep );
 			}
@@ -78,13 +86,21 @@ export async function POST({ request }) {
 			// move in review
 			if ( moveIsDue( move, now ) ) {
 				update.reviewInterval = move.reviewInterval * move.reviewEase;
-				const fuzzed_interval = fuzzed_days( update.reviewInterval, line_study_id ); // maybe reviewInterval should be fuzzed too? what does anki do?
-				update.reviewDueDate  = date_in_n_days( Math.ceil(fuzzed_interval) );
+				const fuzzed_interval = Math.ceil( fuzzed_days( update.reviewInterval, line_study_id ) ); // maybe reviewInterval should be fuzzed too? what does anki do?
+				update.reviewDueDate  = date_in_n_days( fuzzed_interval );
+				interval_value = fuzzed_interval;
+				interval_unit = 'd';
+				interval_increased = true;
 			} else {
 				// not due: don't increase interval
-				update.reviewDueDate  = date_in_n_days( Math.ceil( fuzzed_days(move.reviewInterval,line_study_id) ) );
+				const fuzzed_interval = Math.ceil( fuzzed_days(move.reviewInterval,line_study_id) );
+				update.reviewDueDate  = date_in_n_days( fuzzed_interval );
+				interval_value = fuzzed_interval;
+				interval_unit = 'd';
+				interval_increased = false;
 			}
 		}
+		console.log( 'move ' + move.moveSan + ' correct, next due ' + ( update.learningDueTime || update.reviewDueDate ) );
 	}
 
 	await prisma.Move.update({
@@ -108,7 +124,17 @@ export async function POST({ request }) {
 		} );
 	}
 
-	return json( { success: true} );
+	console.assert( interval_value !== null );
+	console.assert( interval_unit !== null );
+	console.assert( interval_increased !== null );
+	return json( {
+		success: true,
+		interval: {
+			value: interval_value, 
+			unit: interval_unit,
+			increased: interval_increased
+		}
+	} );
 }
 
 function fuzzed_days( days_prefuzz, line_study_id ) {

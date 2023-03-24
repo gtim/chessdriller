@@ -1,7 +1,9 @@
 <script>
 
 	import StudyBoard from '$lib/StudyBoard.svelte';
+	import MoveFeedbackStar from '$lib/MoveFeedbackStar.svelte';
 	import { onMount } from 'svelte';
+	import { fade, fly } from 'svelte/transition';
 
 	const delay_after_line_ms = 500;
 
@@ -37,7 +39,6 @@
 	let stats;
 	let review_finished = false;
 
-
 	let last_progress_move_ix = 0;
 
 	async function onMove(e) {
@@ -69,6 +70,16 @@
 		.then( (data) => {
 			if ( data.success ) {
 				error_text = '';
+				if ( data.interval.increased ) {
+					const mfs = new MoveFeedbackStar({
+						target: document.body,
+						props: { content: '+' + data.interval.value + data.interval.unit },
+						intro: true
+					});
+					mfs.$on('done', event => {
+						mfs.$destroy();
+					});
+				}
 			} else { 
 				error_text = 'API call failed: ' + data.error;
 			}
