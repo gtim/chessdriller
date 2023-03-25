@@ -1,6 +1,6 @@
 import { json, error } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
-import { getNextLineForStudy } from '$lib/scheduler.js';
+import { getLineForStudy, getClosestLineForStudy } from '$lib/scheduler.js';
 
 export async function GET({ url }) {
 	const user_id = 1; // TODO
@@ -12,7 +12,9 @@ export async function GET({ url }) {
 		where: { userId: user_id }
 	});
 
-	const response = await getNextLineForStudy( moves, new Date(), last_line );
+	const response = last_line.length == 0
+	                 ? await getLineForStudy( moves, new Date() )
+	                 : await getClosestLineForStudy( moves, new Date(), last_line );
 
 	return json(response);
 }

@@ -1,4 +1,4 @@
-import { getNextLineForStudy, moveIsDue } from '$lib/scheduler.js';
+import { getLineForStudy, moveIsDue } from '$lib/scheduler.js';
 import { importPgn } from '$lib/pgnImporter.js';
 import { PrismaClient } from '@prisma/client';
 
@@ -62,7 +62,7 @@ describe( 'moveIsDue', () => {
 	} );
 });
 
-describe( 'getNextLineForStudy', () => {
+describe( 'getLineForStudy', () => {
 	const empty_response = {
 		line: [],
 		start_ix: 0,
@@ -89,7 +89,7 @@ describe( 'getNextLineForStudy', () => {
 		// all moves in learning
 		moves.forEach( m => m.learningDueTime = new Date('2023-01-21T12:34:56' ) );
 		expect(
-			await getNextLineForStudy( moves, new Date('2023-01-21T12:34:55') )
+			await getLineForStudy( moves, new Date('2023-01-21T12:34:55') )
 		).toMatchObject( empty_response );
 		// all moves in review
 		moves.forEach( m => {
@@ -97,13 +97,13 @@ describe( 'getNextLineForStudy', () => {
 			m.reviewDueDate = new Date('2023-01-22' )
 		} );
 		expect(
-			await getNextLineForStudy( moves, new Date('2023-01-21T12:34:55') )
+			await getLineForStudy( moves, new Date('2023-01-21T12:34:55') )
 		).toMatchObject( empty_response );
 	} );
 
 	test( 'with no moves at all, empty response should be returned', async () => {
 		expect(
-			await getNextLineForStudy( [], new Date('2023-01-21T12:34:56') )
+			await getLineForStudy( [], new Date('2023-01-21T12:34:56') )
 		).toMatchObject( empty_response );
 	} );
 
@@ -119,11 +119,11 @@ describe( 'getNextLineForStudy', () => {
 			  learningDueTime: new Date( '2023-01-21T12:34:56Z' ) },
 		];
 		expect(
-			await getNextLineForStudy( moves, new Date('2023-01-28T00:00:00Z') )
+			await getLineForStudy( moves, new Date('2023-01-28T00:00:00Z') )
 		).toMatchObject( empty_response );
 	} );
 
-	test( 'with no last_line, the most due move should be returned', async () => {
+	test( 'the most due move should be returned', async () => {
 		const moves = [
 			{ id: 0, moveSan: 'e4', ownMove: true, repForWhite: true,
 			  fromFen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq',
@@ -147,7 +147,7 @@ describe( 'getNextLineForStudy', () => {
 			} );
 			moves[i].learningDueTime = new Date('2023-01-21T12:34:55' );
 			expect(
-				await getNextLineForStudy( moves, new Date('2023-01-21T12:34:57') )
+				await getLineForStudy( moves, new Date('2023-01-21T12:34:57') )
 			).toMatchObject( {
 				line: [ { id: i } ],
 				start_ix: 0
@@ -160,7 +160,7 @@ describe( 'getNextLineForStudy', () => {
 			} );
 			moves[i].reviewDueDate = new Date('2023-01-20' );
 			expect(
-				await getNextLineForStudy( moves, new Date('2023-01-21T12:34:57') )
+				await getLineForStudy( moves, new Date('2023-01-21T12:34:57') )
 			).toMatchObject( {
 				line: [ { id: i } ],
 				start_ix: 0
@@ -176,7 +176,7 @@ describe( 'getNextLineForStudy', () => {
 			moves[(i+3)%moves.length].learningDueTime = null;
 			moves[(i+3)%moves.length].reviewDueDate = new Date('2023-01-20');
 			expect(
-				await getNextLineForStudy( moves, new Date('2023-01-21T12:34:58') )
+				await getLineForStudy( moves, new Date('2023-01-21T12:34:58') )
 			).toMatchObject( {
 				line: [ { id: i } ],
 				start_ix: 0
@@ -197,25 +197,25 @@ describe( 'getNextLineForStudy', () => {
 			}
 		];
 		expect(
-			await getNextLineForStudy( moves, new Date('2023-01-21T12:00:00Z') )
+			await getLineForStudy( moves, new Date('2023-01-21T12:00:00Z') )
 		).toMatchObject( {
 			line: [ { id: 3 } ],
 			start_ix: 0
 		} );
 		expect(
-			await getNextLineForStudy( moves, new Date('2023-01-21T22:00:00Z') )
+			await getLineForStudy( moves, new Date('2023-01-21T22:00:00Z') )
 		).toMatchObject( {
 			line: [ { id: 4 } ],
 			start_ix: 0
 		} );
 	} );
-	test.todo( 'no last_line: buildLineBackwards, make sure proper sane line is returned' );
-	test.todo( 'no last_line: continueLineUntilEnd, make sure proper sane line is returned' );
-	test.todo( 'last_line: make sure latest due deviation is returned' );
-	test.todo( 'last_line: make sure latest due deviation is returned when a later non-due deviation exists' );
-	test.todo( 'last_line: with no more moves in same rep, make sure most due move is returned' );
+	test.todo( 'getLineForStudy: buildLineBackwards, make sure proper sane line is returned' );
+	test.todo( 'getLineForStudy: continueLineUntilEnd, make sure proper sane line is returned' );
+	test.todo( 'getClosestLineForStudy: make sure latest due deviation is returned' );
+	test.todo( 'getClosestLineForStudy: make sure latest due deviation is returned when a later non-due deviation exists' );
+	test.todo( 'getClosestLineForStudy: with no more moves in same rep, make sure most due move is returned' );
 
-	test( 'no last_line: same FEN should not be repeated (cyclic move graph)', async () => {
+	test( 'same FEN should not be repeated (cyclic move graph)', async () => {
 		const moves = [
 			{ id: 0, moveSan: 'e4', ownMove: true, repForWhite: true,
 			  fromFen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq',
@@ -244,7 +244,7 @@ describe( 'getNextLineForStudy', () => {
 		// Run multiple times since moves are picked randomly at junctions
 		for ( let i = 0; i < 100; i++ ) {
 			expect(
-				await getNextLineForStudy( moves, new Date('2023-01-21T22:00:00Z') )
+				await getLineForStudy( moves, new Date('2023-01-21T22:00:00Z') )
 			).toMatchObject( {
 				line: [
 					expect.objectContaining({id:0}),
@@ -256,7 +256,7 @@ describe( 'getNextLineForStudy', () => {
 		moves.find(m=>m.id==4).reviewDueDate = new Date('2023-01-19' );
 		for ( let i = 0; i < 100; i++ ) {
 			expect(
-				await getNextLineForStudy( moves, new Date('2023-01-21T22:00:00Z') )
+				await getLineForStudy( moves, new Date('2023-01-21T22:00:00Z') )
 			).toMatchObject( {
 				line: [
 					expect.objectContaining({id:0}),
@@ -269,5 +269,5 @@ describe( 'getNextLineForStudy', () => {
 			} );
 		}
 	} );
-	test.todo( 'last_line: same FEN should not be repeated (cyclic move graph)' );
+	test.todo( 'getClosestLineForStudy: same FEN should not be repeated (cyclic move graph)' );
 });

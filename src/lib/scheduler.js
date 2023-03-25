@@ -9,64 +9,81 @@
 
 
 /*
- * getNextLineForStudy( prisma, user_id, last_line )
+ * getLineForStudy( prisma, user_id, last_line )
  *
  * Next line scheduled for study
  *
  * Input:
  *   movs: all moves belonging to user ID (handled by caller to avoid prisma dependency here)
  *   now: current datetime (new Date())
- *   last_line?: array of move IDs for the last line practiced
  *
  * Output: {
  *   line: array of moves (not just move IDs), starting from the first move 
- *   start_ix: line[start_ix] is the first move to be quizzed (prior moves were part of last line)
+ *   start_ix: line[start_ix] is the first move to be quized (prior moves were part of last line)
  *   num_due_moves: total number of due moves
  * }
  *
  * TODO: handle multiple ownMoves
  */
-export async function getNextLineForStudy( moves, now, last_line = [] ) {
+export async function getLineForStudy( moves, now ) {
 
-	console.log( 'getNextLineForStudy, last_line = ' + last_line.join(', ') );
+	console.log( 'getLineForStudy' );
 
 	moves.forEach( m => m.isDue = moveIsDue(m,now) );
-
 	const due_moves = moves.filter( m => m.isDue );
-
-	const response = {
-		line: [],
-		start_ix: 0,
-		num_due_moves: due_moves.length
-	};
-
 
 	// No due moves: nothing to practice
 	if ( due_moves.length == 0 ) {
-		return response;
-	}
-
-
-	// Just finished another line: find the closest line with a due move
-	if ( last_line.length ) {
-		const last_line_repForWhite = moves.find( m => m.id === last_line[0] ).repForWhite;
-		const moves_same_rep_as_last = moves.filter( m => m.repForWhite == last_line_repForWhite );
-		if ( moves_same_rep_as_last.filter( m => m.isDue ).length ) {
-			// there are more due moves for that color's repertoire
-			[ response.line, response.start_ix ] = findDueLineWithLatestDeviation( last_line, moves_same_rep_as_last );
-			console.log( 'returning line: ' + response.line.map( m => m.moveSan + (m.isDue?'*':'') ).join(', ') );
-			return response;
-		}
+		return { line: [], start_ix: 0, num_due_moves: 0 };
 	}
 	
-	// Else: Find the most due move, and find a line including it
+	// Find the most due move, and find a line including it
 	const most_due_move = mostDueMove(due_moves);
 	const moves_same_rep = moves.filter( m => m.repForWhite == most_due_move.repForWhite );
-	response.line = buildLineBackwards( [most_due_move], moves_same_rep );
-	response.line = continueLineUntilEnd( response.line, moves_same_rep );
+	let line = buildLineBackwards( [most_due_move], moves_same_rep );
+	line = continueLineUntilEnd( line, moves_same_rep );
 
-	console.log( 'returning line: ' + response.line.map( m => m.moveSan + (m.isDue?'*':'') ).join(', ') );
-	return response;
+	console.log( 'returning line: ' + line.map( m => m.moveSan + (m.isDue?'*':'') ).join(', ') );
+
+	return { line: line, start_ix: 0, num_due_moves: due_moves.length };
+}
+
+/*
+ * getClosestLineForStudy( prisma, user_id, last_line )
+ *
+ * Next line scheduled for study, that is closest to the last line
+ *
+ * Input:
+ *   movs: all moves belonging to user ID (handled by caller to avoid prisma dependency here)
+ *   now: current datetime (new Date())
+ *   last_line: array of move IDs for the last line studied
+ *
+ * Output: same as for getLineForStudy
+ */
+export async function getClosestLineForStudy( moves, now, last_line ) {
+	
+	console.log( 'getClosestLineForStudy' );
+
+	moves.forEach( m => m.isDue = moveIsDue(m,now) );
+	const due_moves = moves.filter( m => m.isDue );
+
+	// No due moves: nothing to practice
+	if ( due_moves.length == 0 ) {
+		return { line: [], start_ix: 0, num_due_moves: 0 };
+	}
+
+	const last_line_repForWhite = moves.find( m => m.id === last_line[0] ).repForWhite;
+	const moves_same_rep_as_last = moves.filter( m => m.repForWhite == last_line_repForWhite );
+	if ( moves_same_rep_as_last.filter( m => m.isDue ).length ) {
+		// there are more due moves for that color's repertoire
+		let line;
+		let start_ix;
+		[ line, start_ix ] = findDueLineWithLatestDeviation( last_line, moves_same_rep_as_last );
+		console.log( 'returning line: ' + line.map( m => m.moveSan + (m.isDue?'*':'') ).join(', ') );
+		return { line: line, start_ix: start_ix, num_due_moves: due_moves.length };
+	} else {
+		return getLineForStudy( moves, now );
+	}
 }
 
 /*
