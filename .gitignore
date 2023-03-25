@@ -9,6 +9,7 @@ node_modules
 !.env.test
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+/prisma/bu.db
 /prisma/dev.db
 /prisma/test.db
 /coverage

@@ -53,7 +53,7 @@ export async function POST({ request }) {
 		update.learningStep = 0;
 		update.reviewDueDate  = null;
 		update.reviewInterval = null;
-		update.reviewEase     = move.reviewEase ? Math.min( 1.3, move.reviewEase - 0.2 ) : null;
+		update.reviewEase     = move.reviewEase ? Math.max( 1.3, move.reviewEase - 0.2 ) : null;
 		interval_value = 0;
 		interval_unit = 'm';
 		interval_increased = false;
