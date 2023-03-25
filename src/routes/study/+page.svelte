@@ -117,8 +117,6 @@
 	
 </script>
 
-<h2>Study Repertoire</h2>
-
 {#if review_finished}
 
 	<p>You're done reviewing!</p>
@@ -126,7 +124,9 @@
 {:else}
 
 	{#if line}
-		<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} />
+		<div style="display:flex;justify-content:center;align-items:center;margin-top:100px;">
+			<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} />
+		</div>
 	{/if}
 
 	{#if line}

@@ -157,7 +157,7 @@
 	}
 </script>
 
-<div style="width:512px;height:512px;">
+<div style="width:100%;max-width:512px;aspect-ratio:1;">
 	<Chessground {config} bind:chessground />
 </div>
 
