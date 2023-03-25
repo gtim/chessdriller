@@ -148,6 +148,10 @@
 		<p>{stats.moves_due} move{stats.moves_due==1?'':'s'} due</p>
 	{/if}
 
+	{#if line && line.slice(last_progress_move_ix+1).filter(m=>m.isDue).length == 0}
+		<p style="text-align:right;">line reviewed!</p>
+	{/if}
+
 {/if}
 
 <style>
