@@ -84,7 +84,8 @@
 			move_id: line[current_move_i].id,
 			move_ix: current_move_i,
 			correct: correct,
-			guess: chess_move.san
+			guess: chess_move.san,
+			dest: dest
 		} );
 		if ( ! correct ) {
 			setTimeout( ()=>{

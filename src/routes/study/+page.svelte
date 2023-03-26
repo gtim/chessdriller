@@ -77,7 +77,11 @@
 					}
 					const mfs = new MoveFeedbackStar({
 						target: document.body,
-						props: { content: '+' + data.interval.value + data.interval.unit },
+						props: { 
+							content: '+' + data.interval.value + data.interval.unit,
+							x: m.x,
+							y: m.y
+						},
 						intro: true
 					});
 					mfs.$on('done', event => {
@@ -110,6 +114,12 @@
 		} );
 	}
 
+	let m = { x: 0, y: 0 };
+	function trackMouse(e) {
+		m.x = e.clientX;
+		m.y = e.clientY;
+	}
+
 	onMount( () => {
 		studyNextLine();
 		updateStats();
@@ -124,7 +134,7 @@
 {:else}
 
 	{#if line}
-		<div style="display:flex;justify-content:center;align-items:center;margin-top:100px;">
+		<div on:mousemove={trackMouse} style="display:flex;justify-content:center;align-items:center;margin-top:100px;">
 			<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} />
 		</div>
 	{/if}
