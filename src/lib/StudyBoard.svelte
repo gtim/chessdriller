@@ -14,6 +14,7 @@
 	export let start_move_ix; // move index (of line[]) for the first move to show; fast-forward to that one
 	let current_move_i = 0;
 	let is_mounted = false;
+	$: orientation = line && line[0].ownMove ? 'white' : 'black';
 	let container;
 	
 
@@ -44,7 +45,7 @@
 		chess.load( line[current_move_i].fromFen + ' - 1 1'); 
 		console.assert( chess.turn() === 'w' );
 		chessground.set({
-			orientation: line[0].ownMove ? 'white' : 'black',
+			orientation: orientation,
 			fen: chess.fen(), 
 			turnColor: chess.turn() === 'w' ? 'white' : 'black',
 		});
@@ -167,7 +168,11 @@
 		const square_side = container.clientWidth / 8;
 		const x = ( key.charCodeAt(0) - 97 + 0.5 ) * square_side;
 		const y = ( 8 - key.charAt(1) + 0.5 ) * square_side;
-		return [x, y];
+		if ( orientation == 'white' ) {
+			return [x, y];
+		} else {
+			return [ container.clientWidth - x, container.clientWidth - y ];
+		}
 	}
 </script>
 
