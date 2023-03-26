@@ -14,6 +14,7 @@
 	export let start_move_ix; // move index (of line[]) for the first move to show; fast-forward to that one
 	let current_move_i = 0;
 	let is_mounted = false;
+	let container;
 	
 
 	// Chess logic from chess.js 
@@ -80,12 +81,14 @@
 	function checkMove( orig, dest ) {
 		const chess_move = chess.move( { from: orig, to: dest } );
 		const correct = chess_move.san === line[current_move_i].moveSan;
+		const container_rect = container.getBoundingClientRect();
+		const [ relX, relY ] = keyToRelPos( dest );
 		dispatch( 'move', {
 			move_id: line[current_move_i].id,
 			move_ix: current_move_i,
 			correct: correct,
 			guess: chess_move.san,
-			dest: dest
+			dest_pos: { x: container_rect.x + relX, y: container_rect.y + relY }
 		} );
 		if ( ! correct ) {
 			setTimeout( ()=>{
@@ -157,9 +160,18 @@
 		});
 		return dests;
 	}
+
+	// turn square key (e.g. e4) to relative px position on the board.
+	// expects valid input, returns center of the square
+	function keyToRelPos( key ) {
+		const square_side = container.clientWidth / 8;
+		const x = ( key.charCodeAt(0) - 97 + 0.5 ) * square_side;
+		const y = ( 8 - key.charAt(1) + 0.5 ) * square_side;
+		return [x, y];
+	}
 </script>
 
-<div style="width:100%;max-width:512px;aspect-ratio:1;">
+<div style="width:100%;max-width:512px;aspect-ratio:1;" bind:this={container}>
 	<Chessground {config} bind:chessground />
 </div>
 

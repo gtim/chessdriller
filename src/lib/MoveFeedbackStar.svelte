@@ -31,7 +31,7 @@
 			},
 		 );
 		tl.to( stamp, { scale:1, duration: 0.1, ease: "power1.inOut" } );
-		tl.to( stamp, {opacity:0, duration:2, delay: 1, ease: "power2.in"} );
+		tl.to( stamp, {opacity:0, duration:2, delay: 0.5, ease: "power2.in"} );
 	} );
 </script>
 
@@ -46,6 +46,7 @@
 <style>
 	div {
 		position:absolute;
+		white-space:nowrap;
 		font-weight:bold;
 		font-size:18px;
 		color:rgba(164, 97, 91);

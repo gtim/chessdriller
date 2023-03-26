@@ -35,6 +35,7 @@
 		});
 	}
 
+	let studyBoard;
 	let error_text = "";
 	let stats;
 	let review_finished = false;
@@ -80,8 +81,8 @@
 						props: { 
 							value: data.interval.value,
 							unit: data.interval.unit,
-							x: m.x,
-							y: m.y
+							x: e.detail.dest_pos.x,
+							y: e.detail.dest_pos.y
 						},
 						intro: true
 					});
@@ -136,7 +137,7 @@
 
 	{#if line}
 		<div on:mousemove={trackMouse} style="display:flex;justify-content:center;align-items:center;margin-top:100px;">
-			<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} />
+			<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} bind:this={studyBoard} />
 		</div>
 	{/if}
 
