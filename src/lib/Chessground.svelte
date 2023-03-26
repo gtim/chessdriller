@@ -2,7 +2,7 @@
 	import { Chessground } from 'chessground';
 	import './chessground.base.css';
 	import './chessground.brown.css';
-	import './chessground.cburnett.css';
+	import './chessground-pieces.css';
 	import { onMount } from 'svelte';
 
 	export let config = {};
