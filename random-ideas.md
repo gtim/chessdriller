@@ -1,8 +1,12 @@
 ## Random future thoughts
 
-* animation feedback on: correct/wrong move, variation done, entire variation correct
-    - different-sized feedback depending on whether move was due or not (e.g. big star, small star)
-* keep W/B rep on the same study page, just distinguish them through board orientation. also force going through one color first, before switching to the other.
+* animation feedback on
+    - correct move: little star? 
+        - different-sized feedback depending on whether move was due or not (e.g. big star, small star)
+        - (or simply no feedback if move was not due)
+    - wrong move: board/piece shake, flash background red?
+    - variation done, entire variation correct
+    - turning the board: actually turn the board?
 * pretend that there's no due moves if number of moves is <10 and another one will be due in a couple minutes
 * identify leeches (keep count of lapses?)
 * incorrect answer decreases move ease, but when to increase?
@@ -15,7 +19,8 @@
 * auto-detect if a PGN is for white or black based on number of alternative moves for either
     - warn if it seems the PGN was added to the wrong side
     - just have a single "upload PGN to rep" and let the user confirm auto-detected side
-* "skip end of line" button if no other moves are due or in learning
+* "skip end of line" button if no other moves are due or in learning (done)
     - also "skip to first due move" button
     - maybe "always skip" checkbox
+    - make "skip end of line" play it through quickly
 * moves "reviewed early" are simply pushed forward at the current interval. should be handled better, maybe increase the interval (proportionally?) if they're reviewed >50% through.

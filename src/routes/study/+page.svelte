@@ -149,7 +149,10 @@
 	{/if}
 
 	{#if line && line.slice(last_progress_move_ix+1).filter(m=>m.isDue).length == 0}
-		<p style="text-align:right;">line reviewed!</p>
+		<p style="text-align:right;">
+			line reviewed!
+		</p>
+		<button on:click|once={()=>studyNextLine(line.map(m=>m.id))}>skip</button>
 	{/if}
 
 {/if}
