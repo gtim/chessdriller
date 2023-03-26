@@ -78,7 +78,8 @@
 					const mfs = new MoveFeedbackStar({
 						target: document.body,
 						props: { 
-							content: '+' + data.interval.value + data.interval.unit,
+							value: data.interval.value,
+							unit: data.interval.unit,
 							x: m.x,
 							y: m.y
 						},

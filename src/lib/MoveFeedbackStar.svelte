@@ -1,44 +1,60 @@
 <script>
-	import { fade, fly } from 'svelte/transition';
-	export let content;
-	export let x;
-	export let y;
+	import { onMount, createEventDispatcher } from 'svelte';
+	import gsap from 'gsap';
+	export let x, y;
+	export let value, unit;
+	let w, h;
 
-	import { createEventDispatcher } from 'svelte';
+	$: content = '+' + value + '&thinsp;' + unit;
+
+
+	const rotation = 10+Math.random()*50; // 10-60
+
 	const dispatch = createEventDispatcher();
-	console.log(x + ", "+y);
 
-	function floatAway(node) {
-		return {
-			duration: 2000,
-			css: (t,u) => {
-				let opacity = 1;
-				if ( t < 0.03 ) {
-					opacity = t/0.03;
-				} else if ( t > 0.7 ) {
-					opacity = (1-t)/0.3;
-				}
-				return `opacity: ${opacity}; transform: translateY(${-300*(t)}px)`	
-			}
-		};
-	}
+	let stamp;
+
+	onMount( () => {
+		let tl = gsap.timeline({onComplete: ()=>dispatch('done')});
+		tl.fromTo( stamp,
+			{
+				scale:0,
+				rotation: rotation - 90 + 180*Math.random(),
+				x:-25, y:20,
+			},
+			{
+				scale:1.3,
+				rotation: rotation,
+				x:0, y:0,
+				duration:0.2,
+				ease: "power1.out"
+			},
+		 );
+		tl.to( stamp, { scale:1, duration: 0.1, ease: "power1.inOut" } );
+		tl.to( stamp, {opacity:0, duration:2, delay: 1, ease: "power2.in"} );
+	} );
 </script>
 
 <div
-	style="left:{x-16}px;top:{y-16}px;"
-	in:floatAway
-	on:introend="{()=>dispatch('done')}"
+	style="left:{x-w/2+25}px;top:{y-h/2-20}px;rotate:{rotation}deg;"
+	bind:clientWidth={w} bind:clientHeight={h}
+	bind:this={stamp}
 >
-	{content}
+	{@html content}
 </div>
 
 <style>
 	div {
 		position:absolute;
-		top:200px;
-		width:32px;
-		height:32px;
-		background-color:cyan;
+		font-weight:bold;
+		font-size:18px;
+		color:rgba(164, 97, 91);
+		background-color:rgba(255,235,205,0.9);
+		border-width:2px 0;
+		border-color:rgba(164, 97, 91);
+		border-style:solid;
+		padding:0 2px;
+		line-height:16px;
 		z-index:100;
 	}
 </style>
