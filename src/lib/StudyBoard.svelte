@@ -23,6 +23,7 @@
 	let chessground;
 	const config = {
 		premovable: { enabled: false },
+		coordinates: false,
 	};
 
 	// Reset board when line is changed
