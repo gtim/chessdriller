@@ -114,7 +114,7 @@ function findDueLineWithLatestDeviation( last_line_ids, all_moves ) {
 		let [num_due_moves, line] = findContinuationWithMostDueMoves( last_line_moves[move_ix], all_moves, excluded_move_ids );
 		if ( num_due_moves > 0 ) {
 			const full_line = last_line_moves.slice(0,move_ix).concat( line );
-			return [ full_line, move_ix ];
+			return [ full_line, move_ix + 1 ];
 		}
 	}
 	throw new Error( 'no due moves found' );
