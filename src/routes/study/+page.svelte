@@ -136,6 +136,13 @@
 		</div>
 	{/if}
 
+	{#if error_text}
+		<div class="error"><p>
+			<span style="font-weight:bold;">Error:</span>
+			{error_text}
+		</p></div>
+	{/if}
+
 	{#if line}
 		<div class="sheet">
 			{#each move_pairs_to_display as pair, pair_ix}
@@ -148,10 +155,6 @@
 				</div>
 			{/each}
 		</div>
-	{/if}
-
-	{#if error_text}
-		<p class="error">{error_text}</p>
 	{/if}
 
 	{#if stats}
@@ -187,7 +190,15 @@
 	}
 
 	.error {
-		color:red;
+		border:solid 2px #93877E;
+		color:#8B0000;
 		font-weight:bold;
+		width:fit-content;
+		margin:16px auto 0 auto;
+		padding:12px 16px;
+	}
+	.error p {
+		margin:0;
+		padding:0;
 	}
 </style>
