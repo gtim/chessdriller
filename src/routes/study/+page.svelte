@@ -155,7 +155,9 @@
 	{/if}
 
 	{#if stats}
-		<p>{stats.moves_due} move{stats.moves_due==1?'':'s'} due</p>
+		<p id="stats">
+			{stats.moves_due} move{stats.moves_due==1?'':'s'} due
+		</p>
 	{/if}
 
 	{#if line && line.slice(last_move_ix+1).filter(m=>m.isDue).length == 0}
@@ -168,6 +170,11 @@
 {/if}
 
 <style>
+	#stats {
+		position:absolute;
+		top:20px;
+		right:20px;
+	}
 	.sheet {
 		margin:30px 20px 0 20px;
 		display: flex;
