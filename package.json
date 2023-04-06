@@ -12,7 +12,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^1.0.0",
-		"@sveltejs/kit": "^1.0.0",
+		"@sveltejs/kit": "^1.15.1",
 		"@vitest/coverage-c8": "^0.28.5",
 		"dotenv": "^16.0.3",
 		"env-cmd": "^10.1.0",
