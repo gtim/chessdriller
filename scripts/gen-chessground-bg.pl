@@ -2,7 +2,7 @@ use 5.30.0;
 
 my $Side = 240;
 my $Color_Dark  = '#93877E';
-my $Color_Light = '#FFEBCD';
+my $Color_Light = '#FAF0E6';
 
 my $Square_Side = $Side / 8;
 

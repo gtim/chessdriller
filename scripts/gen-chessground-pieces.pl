@@ -3,9 +3,9 @@ use warnings;
 
 use MIME::Base64;
 
-my $Color_White = '#FFEBCD';
+my $Color_White = '#FAF0E6';
 my $Color_Black = '#282B28';
-my $Color_Aura = '#FFEBCD'; # color of the background, for "aura" around pieces on dark squares
+my $Color_Aura = '#FAF0E6'; # color of the background, for "aura" around pieces on dark squares
 my $Aura_Width = 6; # actual width is 6-1.5 due to outline stroke width 1.5
 
 open STDOUT, '>', 'src/lib/chessground-pieces.css';
