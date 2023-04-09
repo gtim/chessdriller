@@ -1,8 +1,12 @@
 <script>
 
-	import Chessground from '$lib/Chessground.svelte';
+	import { Chessground } from 'svelte-chessground';
 	import { Chess } from 'chess.js'; // Chess logic for finding valid moves
 	import { onMount } from 'svelte';
+
+	import './chessground.base.css';
+	import './chessground.brown.css';
+	import './chessground-pieces.css';
 
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
@@ -177,6 +181,6 @@
 </script>
 
 <div style="width:100%;max-width:512px;aspect-ratio:1;" bind:this={container}>
-	<Chessground {config} bind:chessground />
+	<Chessground className="cg-print" {config} bind:this={chessground} />
 </div>
 
