@@ -50,7 +50,7 @@
 		font-weight:bold;
 		font-size:18px;
 		color:rgba(164, 97, 91);
-		background-color:rgba(255,235,205,0.9);
+		background-color:rgba(250,240,230,0.9); /* #FAF0E6 (+alpha) */
 		border-width:2px 0;
 		border-color:rgba(164, 97, 91);
 		border-style:solid;
