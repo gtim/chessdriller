@@ -196,7 +196,7 @@
 		width:20px;
 	}
 	.sheet .move {
-		width:40px;
+		width:50px;
 	}
 	.sheet .move_pair {
 		width:fit-content;
