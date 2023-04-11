@@ -25,11 +25,13 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@lucia-auth/adapter-prisma": "^1.0.0",
 		"@prisma/client": "^4.8.0",
 		"chess.js": "^1.0.0-beta.3",
 		"chessground": "^8.3.7",
 		"cm-chess": "github:gtim/cm-chess",
 		"gsap": "^3.11.5",
+		"lucia-auth": "^1.0.0",
 		"svelte-chessground": "^0.2.0"
 	}
 }
