@@ -1,13 +1,21 @@
-import { json, error } from '@sveltejs/kit';
+import { json, error, fail } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 import { moveIsDue } from '$lib/scheduler.js';
+import { auth } from "$lib/server/lucia";
+
 const prisma = new PrismaClient();
 
-export async function GET({ url }) {
-	const userId = 1; // TODO
+export async function GET({ url, locals }) {
+
+	// session
+	const { user } = await locals.auth.validateUser();
+	if (!user) return json({ success: false, message: 'not logged in' });
+	const userId = user.cdUserId;
+
+	// get moves
 	const moves = await prisma.Move.findMany({
 		where: {
-			userId: userId,
+			userId,
 			ownMove: true
 		},
 		select: {

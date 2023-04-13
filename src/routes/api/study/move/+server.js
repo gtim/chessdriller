@@ -13,8 +13,13 @@ const prisma = new PrismaClient();
  *   4: 16h (move to review when done)
  */
 
-export async function POST({ request }) {
-	const userId = 1; // TODO
+export async function POST({ request, locals }) {
+
+	// session
+	const { user } = await locals.auth.validateUser();
+	if (!user) return json({ success: false, message: 'not logged in' });
+	const userId = user.cdUserId;
+
 	const { move_id, correct, guess, line_study_id } = await request.json();
 
 	let interval_value = null;
