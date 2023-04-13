@@ -3,27 +3,34 @@ import { importPgn } from '$lib/pgnImporter.js';
 const prisma = new PrismaClient();
 
 export const actions = {
-	default: async ({cookies,request}) => {
+	default: async ({cookies,request,locals}) => {
+
+		// session
+		const { user } = await locals.auth.validateUser();
+		if (!user) return json({ success: false, message: 'not logged in' });
+		const userId = user.cdUserId;
+
 		const formData = await request.formData();
 		const file = formData.get('pgn');
 		const repForWhite = formData.get('color') == 'w';
-		const user_id = 1; // TODO
+
+
 		// TODO: check file size
 
 		const rep_moves_before = await prisma.move.count({
-			where: { userId: user_id, repForWhite: repForWhite } 
+			where: { userId, repForWhite: repForWhite } 
 		});
 
 		const total_moves_parsed = await importPgn(
 			await file.text(),
 			file.name,
 			prisma,
-			user_id,
+			userId,
 			repForWhite
 		);
 
 		const rep_moves_after = await prisma.move.count({
-			where: { userId: user_id, repForWhite: repForWhite }
+			where: { userId, repForWhite: repForWhite }
 		});
 
 		return {
