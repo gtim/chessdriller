@@ -1,50 +1,56 @@
 generator client {
-  provider = "prisma-client-js"
+	provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+	provider = "sqlite"
+	url      = env("DATABASE_URL")
 }
 
-// Auth* tables managed by Lucia
+//
+// Auth* tables managed by Lucia. Only used for authentication.
+//
 
 model AuthUser {
-	id           String    @id @unique
+	id           String        @id @unique
 	auth_session AuthSession[]
 	auth_key     AuthKey[]
-	username     String @unique
-	cdUser         User @relation( fields: [cdUserId], references: [id], onDelete: Cascade )
-	cdUserId       Int @unique
+	username     String        @unique
+	cdUser       User          @relation( fields: [cdUserId], references: [id], onDelete: Cascade )
+	cdUserId     Int           @unique
 
 	@@map("auth_user")
 }
 
 model AuthSession {
-  id             String	@id @unique
-  user_id        String
-  active_expires BigInt
-  idle_expires   BigInt
-  auth_user      AuthUser   @relation(references: [id], fields: [user_id], onDelete: Cascade)
+	id             String	@id @unique
+	user_id        String
+	active_expires BigInt
+	idle_expires   BigInt
+	auth_user      AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
 
-  @@index([user_id])
-  @@map("auth_session")
+	@@index([user_id])
+	@@map("auth_session")
 }
 
 model AuthKey {
-	id              String  @id @unique
+	id              String   @id @unique
 	hashed_password String?
 	user_id         String
 	primary_key     Boolean
 	expires         BigInt?
-	auth_user       AuthUser    @relation(references: [id], fields: [user_id], onDelete: Cascade)
+	auth_user       AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
 
 	@@index([user_id])
 	@@map("auth_key")
 }
 
+//
+// 
+//
+
 model User {
-	id         Int    @id @default(autoincrement())
+	id         Int           @id @default(autoincrement())
 	authUser   AuthUser?
 	moves      Move[]
 	pgns       Pgn[]
@@ -52,8 +58,8 @@ model User {
 }
 
 model Move {
-	id              Int    @id @default(autoincrement())
-	user            User   @relation( fields: [userId], references: [id] )
+	id              Int       @id @default(autoincrement())
+	user            User      @relation( fields: [userId], references: [id] )
 	userId          Int
 	repForWhite     Boolean // true if move(+pgn) belong to White repertoire. white/black enum would have been preferred, but is not supported by prisma+sqlite.
 	fromFen         String
@@ -62,7 +68,7 @@ model Move {
 	pgns            Pgn[]
 	ownMove         Boolean // true if this is a move by the user, e.g. 1. e4 in a White repertoire
 	learningDueTime DateTime? @default(now())
-	learningStep    Int?  @default(0)
+	learningStep    Int?      @default(0)
 	reviewDueDate   DateTime? // only date, at midnight (UTC?)
 	reviewInterval  Float?
 	reviewEase      Float?
