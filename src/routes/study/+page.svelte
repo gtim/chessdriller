@@ -184,8 +184,8 @@
 		margin:30px 20px 0 20px;
 		display: flex;
 		flex-wrap: wrap;
-		flex-direction: column;
-		height:150px;
+		flex-direction: row;
+		align-content:flex-start;
 	}
 	.sheet .move, .sheet .move_number {
 		display:inline-block;
@@ -201,10 +201,10 @@
 	.sheet .move_pair {
 		width:fit-content;
 		padding:0 8px;
-		border-color:rgba(40,43,40,0.5); /* #282B28 */
+		border-color:rgba(40,43,40,0.3); /* #282B28 */
 		border-style:solid;
 		border-width:0 0 1px 0;
-		margin-bottom:2px;
+		margin:0 8px 2px 8px;
 	}
 
 	.error {
