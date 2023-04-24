@@ -21,5 +21,5 @@ export const auth = lucia({
 export const lichessAuth = lichess( auth, {
 	clientId:    'chessdriller.org (tim@gurka.se)',
 	redirectUri: 'http://139.162.141.167:5173/lichess/callback', // TODO very hard-coded
-	scope: []
+	scope: ['study:read']
 } );
