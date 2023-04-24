@@ -1,5 +1,6 @@
 import lucia from "lucia-auth";
 import { sveltekit } from "lucia-auth/middleware";
+import { lichess } from '@lucia-auth/oauth/providers';
 import prisma from "@lucia-auth/adapter-prisma";
 import { PrismaClient } from "@prisma/client";
 import { dev } from "$app/environment";
@@ -16,3 +17,9 @@ export const auth = lucia({
 		};
 	}
 });
+
+export const lichessAuth = lichess( auth, {
+	clientId:    'chessdriller.org',
+	redirectUri: 'http://139.162.141.167:5173/lichess/callback', // TODO very hard-coded
+	scope: []
+} );

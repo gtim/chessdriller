@@ -26,7 +26,7 @@
 	"type": "module",
 	"dependencies": {
 		"@lucia-auth/adapter-prisma": "^1.0.0",
-		"@lucia-auth/oauth": "^1.0.0",
+		"@lucia-auth/oauth": "file:../dev/lucia/packages/integration-oauth/dist",
 		"@prisma/client": "^4.8.0",
 		"chess.js": "^1.0.0-beta.3",
 		"chessground": "^8.3.7",
