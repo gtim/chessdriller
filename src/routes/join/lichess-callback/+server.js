@@ -25,14 +25,12 @@ export async function GET({ cookies, url, locals }) {
 			// new account: first create a new Chessdriller user (authenticated by the Auth user)
 			const newCdUser = await prismaClient.user.create({ data: {} });
 			// then, create Auth user
-			const username = Math.random().toFixed(12); // TODO remove this vestigial column
 			return await auth.createUser({
 				primaryKey: {
 					providerId: 'lichess',
 					providerUserId
 				},
 				attributes: {
-					username: username,
 					cdUserId: newCdUser.id
 				}
 			});

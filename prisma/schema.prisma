@@ -15,7 +15,6 @@ model AuthUser {
 	id           String        @id @unique
 	auth_session AuthSession[]
 	auth_key     AuthKey[]
-	username     String        @unique
 	cdUser       User          @relation( fields: [cdUserId], references: [id], onDelete: Cascade )
 	cdUserId     Int           @unique
 
