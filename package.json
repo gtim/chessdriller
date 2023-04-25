@@ -12,6 +12,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^1.0.0",
+		"@sveltejs/adapter-node": "^1.2.3",
 		"@sveltejs/kit": "^1.15.2",
 		"@vitest/coverage-c8": "^0.28.5",
 		"dotenv": "^16.0.3",
@@ -31,6 +32,7 @@
 		"chess.js": "^1.0.0-beta.3",
 		"chessground": "^8.3.7",
 		"cm-chess": "github:gtim/cm-chess",
+		"express": "^4.18.2",
 		"gsap": "^3.11.5",
 		"lucia-auth": "^1.0.0",
 		"svelte-chessground": "^0.2.0"

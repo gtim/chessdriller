@@ -51,5 +51,4 @@
     - possible solution: just quiz until the last due move, not to the end of the line 
     - counter-issue: when in learning, a line will "trickle in" to the due-queue, and if reviewed before it's finished trickling, stopping at the last due move would leave the rest for the due-queue in a couple minutes.
 * moves "reviewed early" are simply pushed forward at the current interval. should be handled better, maybe increase the interval (proportionally?) if they're reviewed >50% through.
-* deploy 
 * keep track of user's lichess games and notify on out-of-repertoire moves
