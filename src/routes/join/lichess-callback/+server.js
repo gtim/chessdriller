@@ -23,7 +23,7 @@ export async function GET({ cookies, url, locals }) {
 			if ( existingUser )
 				return existingUser;
 			// new account: first create a new Chessdriller user (authenticated by the Auth user)
-			const newCdUser = await prismaClient.user.create({ data: {} });
+			const newCdUser = await prismaClient.user.create({ data: { } });
 			// then, create Auth user
 			return await auth.createUser({
 				primaryKey: {
@@ -36,6 +36,14 @@ export async function GET({ cookies, url, locals }) {
 			});
 		};
 		const user = await getUser();
+		await prismaClient.user.update({
+			where: { id: user.cdUserId },
+			data: {
+				lichessAccessToken: tokens.accessToken,
+				lichessAccessTokenExpiresIn: tokens.accessTokenExpiresIn,
+				lichessAccessTokenFetchedAt: new Date()
+			}
+		});
 		const session = await auth.createSession(user.userId);
 		locals.auth.setSession(session);
 	} catch (e) {

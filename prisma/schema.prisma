@@ -49,11 +49,14 @@ model AuthKey {
 //
 
 model User {
-	id         Int           @id @default(autoincrement())
-	authUser   AuthUser?
-	moves      Move[]
-	pgns       Pgn[]
-	history    StudyHistory[]
+	id                          Int           @id @default(autoincrement())
+	authUser                    AuthUser?
+	moves                       Move[]
+	pgns                        Pgn[]
+	history                     StudyHistory[]
+	lichessAccessToken          String?
+	lichessAccessTokenFetchedAt DateTime?
+	lichessAccessTokenExpiresIn Int?
 }
 
 model Move {
