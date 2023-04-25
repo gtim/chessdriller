@@ -22,6 +22,7 @@
         - also "skip to first due move" button
         - maybe "always skip" checkbox
         - make "skip end of line" play it through quickly instead of jumping
+    - "variations due" (in addition to "moves due")
 * user management
     - lucia?
 * profile page (not started)
