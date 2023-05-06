@@ -31,4 +31,6 @@
 	with {form.num_moves_parsed} move{form.num_moves_parsed==1?'':'s'}.
 	Added {form.num_moves_added} new move{form.num_moves_added==1?'':'s'} to your repertoire.
 	</p>
+{:else if form?.error_message}
+	<p><span style="font-weight:bold;color:red;">Error parsing the PGN file.</span> Error message: {form.error_message}</p>
 {/if}
