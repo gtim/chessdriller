@@ -2,6 +2,7 @@
 
 	import StudyBoard from '$lib/StudyBoard.svelte';
 	import MoveFeedbackStar from '$lib/MoveFeedbackStar.svelte';
+	import MoveSheet from '$lib/MoveSheet.svelte';
 	import { onMount } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
 
@@ -13,10 +14,10 @@
 	
 	let line;
 	let line_study_id;
-	$: move_pairs = line ? pair_moves( line ) : [];
-	$: move_pairs_to_display = !line || last_move_ix == -1 && line[0].ownMove ? []
-	                           : move_pairs.slice(0, Math.ceil(last_move_ix/2)+1 );
 	let start_move_ix;
+
+
+	// MoveSheet logic: TODO move pair_moves and move_pairs* into lib/MoveSheet.svelte (and simplify)
 	function pair_moves( line ) {
 		let pairs = [];
 		for ( let i = 0; i < line.length; i += 2 ) {
@@ -24,6 +25,11 @@
 		}
 		return pairs;
 	}
+	$: move_pairs = line ? pair_moves( line ) : [];
+	$: move_pairs_to_display = !line || last_move_ix == -1 && line[0].ownMove ? []
+	                           : move_pairs.slice(0, Math.ceil(last_move_ix/2)+1 );
+
+
 	async function studyNextLine( last_line_move_ids = [] ) {
 		fetch( '/api/study?' + new URLSearchParams({
 			last: JSON.stringify(last_line_move_ids),
@@ -144,19 +150,7 @@
 	{/if}
 
 	{#if line}
-		<div class="sheet">
-			{#each move_pairs_to_display as pair, pair_ix}
-				<div class="move_pair">
-					<span class="move_number">{pair_ix+1}.</span>
-					<span class="move">{pair[0].moveSan}</span>
-					<span class="move">
-					{#if pair.length == 2 && ! ( pair_ix == move_pairs_to_display.length - 1 && pair[1].ownMove ) }
-						{pair[1].moveSan}
-					{/if}
-					</span>
-				</div>
-			{/each}
-		</div>
+		<MoveSheet move_pairs={move_pairs_to_display}/>
 	{/if}
 
 	{#if stats}
@@ -179,32 +173,6 @@
 		position:absolute;
 		top:20px;
 		right:20px;
-	}
-	.sheet {
-		margin:30px 20px 0 20px;
-		display: flex;
-		flex-wrap: wrap;
-		flex-direction: row;
-		align-content:flex-start;
-	}
-	.sheet .move, .sheet .move_number {
-		display:inline-block;
-		position:relative;
-		top:2px;
-	}
-	.sheet .move_number {
-		width:20px;
-	}
-	.sheet .move {
-		width:50px;
-	}
-	.sheet .move_pair {
-		width:fit-content;
-		padding:0 8px;
-		border-color:rgba(40,43,40,0.3); /* #282B28 */
-		border-style:solid;
-		border-width:0 0 1px 0;
-		margin:0 8px 2px 8px;
 	}
 
 	.error {
