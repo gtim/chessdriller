@@ -150,7 +150,9 @@
 	{/if}
 
 	{#if line}
-		<MoveSheet move_pairs={move_pairs_to_display}/>
+		<div style="text-align:center;">
+			<MoveSheet move_pairs={move_pairs_to_display}/>
+		</div>
 	{/if}
 
 	{#if stats}

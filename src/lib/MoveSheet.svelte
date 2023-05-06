@@ -19,24 +19,28 @@
 <style>
 	.sheet {
 		margin:30px 20px 0 20px;
-		display: flex;
+		display: inline-flex;
 		flex-wrap: wrap;
-		flex-direction: row;
+		flex-direction: column;
 		align-content:flex-start;
+		/* TODO: fill vertical space responsively and then add columns. Currently just keeps adding moves to bottom  */
 	}
-	.sheet .move, .sheet .move_number {
+	.move, .move_number {
 		display:inline-block;
 		position:relative;
 		top:2px;
 	}
-	.sheet .move_number {
+	.move_number {
+		text-align:left;
 		width:20px;
 	}
-	.sheet .move {
+	.move {
+		text-align:left;
 		width:50px;
 	}
-	.sheet .move_pair {
+	.move_pair {
 		width:fit-content;
+		white-space:nowrap;
 		padding:0 8px;
 		border-color:rgba(40,43,40,0.3); /* #282B28 */
 		border-style:solid;
