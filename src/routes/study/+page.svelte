@@ -136,8 +136,14 @@
 
 {:else}
 
+	{#if stats}
+		<p id="stats">
+			{stats.moves_due} move{stats.moves_due==1?'':'s'} due
+		</p>
+	{/if}
+
 	{#if line}
-		<div style="display:flex;justify-content:center;align-items:center;margin-top:100px;">
+		<div style="display:flex;justify-content:center;align-items:center;">
 			<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} bind:this={studyBoard} />
 		</div>
 	{/if}
@@ -155,12 +161,6 @@
 		</div>
 	{/if}
 
-	{#if stats}
-		<p id="stats">
-			{stats.moves_due} move{stats.moves_due==1?'':'s'} due
-		</p>
-	{/if}
-
 	{#if line && line.slice(last_move_ix+1).filter(m=>m.isDue).length == 0}
 		<div style="text-align:right;">
 			<p>line reviewed!</p>
@@ -172,9 +172,7 @@
 
 <style>
 	#stats {
-		position:absolute;
-		top:20px;
-		right:20px;
+		text-align:center;
 	}
 
 	.error {

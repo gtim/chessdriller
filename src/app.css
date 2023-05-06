@@ -17,3 +17,11 @@ body {
 	background-color: #FAF0E6;
 	color: #282B28;
 }
+
+a { 
+	text-decoration:none;
+	color:rgba(164, 97, 91);
+}
+a:hover {
+	text-decoration:underline;
+}
