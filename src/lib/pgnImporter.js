@@ -11,14 +11,11 @@ export async function importPgn( pgn_content, pgn_filename, prisma, user_id, rep
 	} });
 
 	// parse (multi-game) PGN into moves-list
-	console.log( pgn_content.length );
 	pgn_content = pgn_content.replaceAll( /\r/g, "" );
-	console.log( pgn_content.length );
 	const pgntexts = split_pgndb_into_pgns( pgn_content );
 	const moves = [];
 	for ( const pgntext of pgntexts ) {
-		const pgntext_fixed = pgntext.replace(/\*\s*$/, '\n'); // remove final '*', maybe cm-chess/chess.js bug makes it cause parser issues?
-		const these_moves = singlePgnToMoves( pgntext_fixed, repForWhite );
+		const these_moves = singlePgnToMoves( pgntext, repForWhite );
 		moves.push( ...these_moves );
 	}
 
@@ -46,6 +43,13 @@ export async function importPgn( pgn_content, pgn_filename, prisma, user_id, rep
 // Converts text from single PGN game to a moves-list.
 // Exported only as a test utility.
 export function singlePgnToMoves( pgn_content, repForWhite ) {
+
+	// remove comment before '*', TODO investigate whether this is a cm-pgn bug (unit test "two comments after final move")
+	pgn_content = pgn_content.replace(/\{[^{}]*\}\s*\*/, '');
+
+	// remove final '*', maybe cm-chess/chess.js bug makes it cause parser issues?
+	pgn_content = pgn_content.replace(/\*\s*$/, '\n');
+
 	const chess = new Chess();
 	chess.loadPgn( pgn_content ); // TODO: handle unparsable PGNs
 	return chessHistoryToMoves( chess.history(), repForWhite );

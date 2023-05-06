@@ -143,7 +143,7 @@ test('transposition', async () => {
 });
 
 
-// cm-pgn 2.1.11 fails to parse this.
+// cm-pgn 2.3.1 seems to fail parsing this PGN
 test('two comments after final move', async () => {
 	const pgn_content = fs.readFileSync( './test/pgn/end-two-comments.pgn', 'utf8' );
 	await importPgn( pgn_content, 'end-two-comments.pgn', prisma, 1, true );
