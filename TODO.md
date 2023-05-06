@@ -36,6 +36,7 @@
     - visual bug: en passant leaves the captured pawn
     - correct-move "stamp" on the a/h files makes the board zoom out slightly
     - actually rotate the board when moving between white and black reportoires?
+    - when there's nothing in the repertoire, don't show "you're done reviewing" but a helpful message on how to upload PGN.
 * /me view 
     - lichess username
     - settings
