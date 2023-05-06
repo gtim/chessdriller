@@ -141,3 +141,13 @@ test('transposition', async () => {
 		where: { toFen: 'rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/5N2/PP2PPPP/RNBQKB1R b KQkq' }
 	} )).toEqual( 1 );
 });
+
+
+// cm-pgn 2.1.11 fails to parse this.
+test('two comments after final move', async () => {
+	const pgn_content = fs.readFileSync( './test/pgn/end-two-comments.pgn', 'utf8' );
+	await importPgn( pgn_content, 'end-two-comments.pgn', prisma, 1, true );
+	expect( await prisma.move.count() ).toEqual( 2 );
+	expect( await prisma.move.count({ where: { moveSan: 'd4' } } )).toEqual( 1 );
+	expect( await prisma.move.count({ where: { moveSan: 'Nf6' } } )).toEqual( 1 );
+});
