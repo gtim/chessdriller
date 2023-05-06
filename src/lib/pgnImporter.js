@@ -11,6 +11,9 @@ export async function importPgn( pgn_content, pgn_filename, prisma, user_id, rep
 	} });
 
 	// parse (multi-game) PGN into moves-list
+	console.log( pgn_content.length );
+	pgn_content = pgn_content.replaceAll( /\r/g, "" );
+	console.log( pgn_content.length );
 	const pgntexts = split_pgndb_into_pgns( pgn_content );
 	const moves = [];
 	for ( const pgntext of pgntexts ) {
