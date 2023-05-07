@@ -13,6 +13,8 @@ const prisma = new PrismaClient();
  *   4: 16h (move to review when done)
  */
 
+const Max_Review_Interval = 100;
+
 export async function POST({ request, locals }) {
 
 	// session
@@ -25,6 +27,7 @@ export async function POST({ request, locals }) {
 	let interval_value = null;
 	let interval_unit = null;
 	let interval_increased = null; // interval can be increased from correctly guessing a due move, or from correctly guessing any move in review
+	let interval_maxed = false;
 
 	try {
 
@@ -91,7 +94,12 @@ export async function POST({ request, locals }) {
 			// move in review
 			if ( moveIsDue( move, now ) ) {
 				update.reviewInterval = move.reviewInterval * move.reviewEase;
-				const fuzzed_interval = Math.ceil( fuzzed_days( update.reviewInterval, line_study_id ) ); // maybe reviewInterval should be fuzzed too? what does anki do?
+				if ( update.reviewInterval > Max_Review_Interval ) {
+					update.reviewInterval = Max_Review_Interval;
+					interval_maxed = true;
+				}
+				// Maybe reviewInterval should be fuzzed too? How does Anki do it?
+				const fuzzed_interval = Math.ceil( fuzzed_days( update.reviewInterval, line_study_id ) );
 				update.reviewDueDate  = date_in_n_days( fuzzed_interval );
 				interval_value = fuzzed_interval;
 				interval_unit = 'd';
@@ -137,7 +145,8 @@ export async function POST({ request, locals }) {
 		interval: {
 			value: interval_value, 
 			unit: interval_unit,
-			increased: interval_increased
+			increased: interval_increased,
+			maxed: interval_maxed
 		}
 	} );
 }
