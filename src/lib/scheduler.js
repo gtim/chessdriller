@@ -79,6 +79,10 @@ export async function getClosestLineForStudy( moves, now, last_line ) {
 		let line;
 		let start_ix;
 		[ line, start_ix ] = findDueLineWithLatestDeviation( last_line, moves_same_rep_as_last );
+		if ( line.length == 0 ) {
+			console.log( 'findDueLineWithLatestDeviation found no line; start from scratch' );
+			return getLineForStudy( moves, now );
+		}
 		console.log( 'returning line: ' + line.map( m => m.moveSan + (m.isDue?'*':'') ).join(', ') );
 		return { line: line, start_ix: start_ix, num_due_moves: due_moves.length };
 	} else {
@@ -117,7 +121,8 @@ function findDueLineWithLatestDeviation( last_line_ids, all_moves ) {
 			return [ full_line, move_ix + 1 ];
 		}
 	}
-	throw new Error( 'no due moves found' );
+	console.log('    warning: no due moves found' );
+	return [ [], 0 ];
 }
 function findContinuationWithMostDueMoves( start_move, all_moves, excluded_move_ids ) {
 	// Assume no cycles (TODO): directed acyclic graph -> single-path shortest path is straight-forward
