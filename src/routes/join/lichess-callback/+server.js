@@ -39,6 +39,7 @@ export async function GET({ cookies, url, locals }) {
 		await prismaClient.user.update({
 			where: { id: user.cdUserId },
 			data: {
+				lichessUsername: providerUserId,
 				lichessAccessToken: tokens.accessToken,
 				lichessAccessTokenExpiresIn: tokens.accessTokenExpiresIn,
 				lichessAccessTokenFetchedAt: new Date()

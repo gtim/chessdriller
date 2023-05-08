@@ -54,6 +54,7 @@ model User {
 	moves                       Move[]
 	pgns                        Pgn[]
 	history                     StudyHistory[]
+	lichessUsername             String?
 	lichessAccessToken          String?
 	lichessAccessTokenFetchedAt DateTime?
 	lichessAccessTokenExpiresIn Int?
