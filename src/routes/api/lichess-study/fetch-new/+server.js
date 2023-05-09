@@ -34,6 +34,7 @@ export async function GET({ url, locals }) {
 
 		let num_new_studies = 0;
 		for ( const lichess_study_id of lichess_study_ids ) {
+			if ( lichess_study_id == 'xPgSbG6U' ) { continue; } // XXX temp fix for specific study until there's a reliable way of getting study ID
 			if ( ! existing_study_ids.has( lichess_study_id ) ) {
 				// new study: insert into database
 				console.log( 'new study found: ' + cdUser.lichessUsername + '/' + lichess_study_id );
