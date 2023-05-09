@@ -40,16 +40,17 @@
 	{/await}
 
 
-	<p><button on:click={lookForNewStudies}>Check for new studies</button></p>
 	{#if new_studies_promise}
 		{#await new_studies_promise}
 			<p>Checking for new studies...</p>
 		{:then new_studies}
-			<p>found {new_studies.num_new_studies} new {new_studies.num_new_studies==1?'study':'studies'}.</p>
+			<p>Found {new_studies.num_new_studies} new {new_studies.num_new_studies==1?'study':'studies'}.</p>
 		{:catch error}
 			<p style="color:red;">{error}</p>
 		{/await}
 	{:else}
-		bla
+		<button on:click={lookForNewStudies}>Check for new studies</button>
 	{/if}
+
+	<p>(Note: these Lichess study connections are a work in progress and not yet actually used.)</p>
 </div>
