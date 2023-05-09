@@ -52,6 +52,7 @@ model User {
 	id                          Int           @id @default(autoincrement())
 	authUser                    AuthUser?
 	moves                       Move[]
+	studies                     LichessStudy[]
 	pgns                        Pgn[]
 	history                     StudyHistory[]
 	lichessUsername             String?
@@ -78,6 +79,21 @@ model Move {
 	history         StudyHistory[]
 
 	@@unique([ userId, repForWhite, fromFen, toFen ])
+}
+
+model LichessStudy {
+	id                         Int @id @default(autoincrement())
+	lichessId                  String
+	user                       User @relation( fields: [userId], references: [id] )
+	userId                     Int
+	lastModifiedOnLichess      DateTime
+	lastFetched                DateTime @default(now())
+	pgn                        String
+	included                   Boolean @default(false) // true if included in repertoire
+	repForWhite                Boolean? // true if pgn belongs to White repertoire
+	hidden                     Boolean @default(false) // true if hidden from the "studies" list
+
+	@@unique([ userId, lichessId ])
 }
 
 model Pgn {
