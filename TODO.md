@@ -3,11 +3,12 @@
 ## by view
 
 * /repertoire view (not started)
-    - list account's lichess studies 
+    - list account's lichess studies
+        - auto-updated on log-in
         - "hide from list" button 
         - included / not included
-        - last updated? 
-        - "check for updates" button
+        - last updated, last fetched 
+        - "update now" button
         - study name
     - practice specific study/PGN/chapter (whether due or not)
         - should errors here always affect scheduling? or only if the move was due?
@@ -37,6 +38,7 @@
     - correct-move "stamp" on the a/h files makes the board zoom out slightly
     - actually rotate the board when moving between white and black reportoires?
     - when there's nothing in the repertoire, don't show "you're done reviewing" but a helpful message on how to upload PGN.
+    - "show move" button after two tries
 * /me view 
     - lichess username
     - settings
