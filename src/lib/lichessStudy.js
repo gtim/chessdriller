@@ -40,7 +40,8 @@ export async function fetchStudy( study_id, lichess_username, lichess_access_tok
 		return resp.text().then( (resp_text) => { 
 			return {
 				pgn: resp_text,
-				lastModified: resp.headers.get('last-modified')
+				lastModified: resp.headers.get('last-modified'),
+				name: pgnToStudyName( resp_text )
 			}
 		} );
 	});
@@ -62,4 +63,9 @@ export async function fetchStudyLastModified( study_id, lichess_username, liches
 		}
 		return resp.headers.get('last-modified');
 	});
+}
+
+function pgnToStudyName( pgn ) {
+	const match = [...pgn.match( /^\[Event "(.*?):.*"\]/m )];
+	return match[1];
 }

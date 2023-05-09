@@ -37,12 +37,13 @@ export async function GET({ url, locals }) {
 			if ( ! existing_study_ids.has( lichess_study_id ) ) {
 				// new study: insert into database
 				console.log( 'new study found: ' + cdUser.lichessUsername + '/' + lichess_study_id );
-				const { pgn, lastModified } = await fetchStudy( lichess_study_id, cdUser.lichessUsername, cdUser.lichessAccessToken );
+				const { pgn, lastModified, name } = await fetchStudy( lichess_study_id, cdUser.lichessUsername, cdUser.lichessAccessToken );
 				await prisma.LichessStudy.create({ data: {
 					lichessId: lichess_study_id,
 					userId: user.cdUserId,
 					lastModifiedOnLichess: new Date(lastModified),
-					pgn
+					pgn,
+					name
 				} } );
 				num_new_studies++;
 			}
