@@ -10,7 +10,14 @@
 	async function getNewStudies() {
 		const res = await fetch( '/api/lichess-study/fetch-new' );
 		const json = await res.json();
-		if ( json.success && json.num_new_studies > 0 ) {
+		if ( ! res.ok ) {
+			throw new Error( 'Request failed' );
+		}
+		if ( ! json.success ) {
+			throw new Error( 'Request failed: ' + json.message );
+		}
+
+		if ( json.num_new_studies > 0 ) {
 			studies_promise = getStudies();
 		}
 		return json;
@@ -36,9 +43,11 @@
 	<p><button on:click={lookForNewStudies}>Check for new studies</button></p>
 	{#if new_studies_promise}
 		{#await new_studies_promise}
-			<p>...</p>
+			<p>Checking for new studies...</p>
 		{:then new_studies}
 			<p>found {new_studies.num_new_studies} new {new_studies.num_new_studies==1?'study':'studies'}.</p>
+		{:catch error}
+			<p style="color:red;">{error}</p>
 		{/await}
 	{:else}
 		bla
