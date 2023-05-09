@@ -66,6 +66,12 @@ export async function fetchStudyLastModified( study_id, lichess_username, liches
 }
 
 function pgnToStudyName( pgn ) {
-	const match = [...pgn.match( /^\[Event "(.*?):.*"\]/m )];
+	// Try to find a name of the form "X: Y" (lichess default unless Event is overwritten)
+	let match = pgn.match( /^\[Event "(.*?):.*"\]/m );
+	if ( match ) {
+		return match[1];
+	}
+	// Otherwise, just take the first event name
+	match = pgn.match( /^\[Event "(.*?)"\]/m );
 	return match[1];
 }
