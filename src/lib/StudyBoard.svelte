@@ -107,6 +107,7 @@
 		} else {
 			const turnColor = chess.turn() === 'w' ? 'white' : 'black';
 			chessground.set({ turnColor: turnColor });
+			chessground.setAutoShapes( [] );
 			current_move_i++;
 			if ( current_move_i == line.length ) {
 				lineFinished();
@@ -139,6 +140,16 @@
 			'lineFinished',
 			{move_ids:line.map(m=>m.id)}
 		);
+	}
+
+	export function showAnswer() {
+		const chess_clone = new Chess( chess.fen() );
+		const move = chess_clone.move( line[current_move_i].moveSan );
+		chessground.setAutoShapes( [ {
+			orig: move.from,
+			dest: move.to,
+			brush: 'green' // TODO: nicer color
+		} ] );
 	}
 
 	function colorToMove( fen ) {

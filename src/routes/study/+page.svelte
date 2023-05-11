@@ -12,6 +12,8 @@
 	nocache_headers.append('pragma', 'no-cache');
 	nocache_headers.append('cache-control', 'no-cache');
 	
+	let num_wrongs_this_move = 0;
+
 	let line;
 	let line_study_id;
 	let start_move_ix;
@@ -41,6 +43,7 @@
 				line = data.line;
 				start_move_ix = data.start_ix;
 				last_move_ix = start_move_ix - 1;
+				num_wrongs_this_move = 0;
 				// line-study ID is only used to fuzz intervals from the same line and session equally
 				// expected to be random float [0,1)
 				line_study_id = Math.random(); 
@@ -61,8 +64,10 @@
 		if ( e.detail.correct ) {
 			console.log('yes! move ID: ' + e.detail.move_id);
 			last_move_ix = e.detail.move_ix;
+			num_wrongs_this_move = 0;
 		} else {
 			console.log('no:( move ID: ' + e.detail.move_id);
+			num_wrongs_this_move++;
 		}
 		fetch( '/api/study/move', {
 			method: 'POST',
@@ -127,7 +132,7 @@
 		studyNextLine();
 		updateStats();
 	} );
-	
+
 </script>
 
 {#if review_finished}
@@ -138,15 +143,23 @@
 
 	{#if stats}
 		<p id="stats">
-			{stats.moves_due} move{stats.moves_due==1?'':'s'} due
+			{stats.moves_due} move{stats.moves_due==1?'':'s'} due.
 		</p>
 	{/if}
 
 	{#if line}
 		<div style="display:flex;justify-content:center;align-items:center;">
-			<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} bind:this={studyBoard} />
+			<div style="position:relative;width:100%;max-width:512px;">
+				<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} bind:this={studyBoard} />
+				{#if num_wrongs_this_move >= 2}
+					<!-- TODO: transition button in/out, highlight on multiple wrongs -->
+					<button on:click={()=>{studyBoard.showAnswer()}} class="show_answer">Show answer</button>
+				{/if}
+			</div>
 		</div>
 	{/if}
+
+
 
 	{#if error_text}
 		<div class="error"><p>
@@ -186,5 +199,11 @@
 	.error p {
 		margin:0;
 		padding:0;
+	}
+
+	.show_answer {
+		position:absolute;
+		left:0;
+		margin-top:8px;
 	}
 </style>
