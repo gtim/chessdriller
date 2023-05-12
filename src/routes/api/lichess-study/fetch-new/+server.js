@@ -1,6 +1,7 @@
 import { json, error } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 import { fetchStudiesMetadata, fetchStudyPGN } from '$lib/lichessStudy.js';
+import { guessColor } from '$lib/pgnImporter.js';
 
 export async function GET({ url, locals }) {
 
@@ -37,12 +38,14 @@ export async function GET({ url, locals }) {
 				// new study: insert into database
 				console.log( 'new study found: ' + cdUser.lichessUsername + '/' + lichess_study.id );
 				const pgn = await fetchStudyPGN( lichess_study.id, cdUser.lichessUsername, cdUser.lichessAccessToken );
+				const guessedColor = guessColor(pgn);
 				await prisma.LichessStudy.create({ data: {
 					lichessId: lichess_study.id,
 					userId: user.cdUserId,
 					lastModifiedOnLichess: new Date(lichess_study.updatedAt),
 					name: lichess_study.name,
-					pgn
+					pgn,
+					guessedColor
 				} } );
 				num_new_studies++;
 			}

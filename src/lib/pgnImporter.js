@@ -88,3 +88,34 @@ function split_pgndb_into_pgns( pgn_db ) {
 function normalize_fen( fen ) {
 	return fen.replace(/ (-|[a-h][1-8]) \d+ \d+$/, '' );
 }
+
+// Guess whether PGN is for white or black.
+// Returns w (white), b (black) or u (unknown)
+export function guessColor( pgn_db ) {
+	const pgntexts = split_pgndb_into_pgns( pgn_db );
+	let moves_as_white, moves_as_black;
+	try {
+		moves_as_white = pgntexts.map( (pgn) => singlePgnToMoves( pgn, true  ) ).flat();
+		moves_as_black = pgntexts.map( (pgn) => singlePgnToMoves( pgn, false ) ).flat();
+	} catch (e) {
+		console.log( 'warning: guessColor failed, returning unknown. ' + e.message );
+		return 'u';
+	}
+	const num_splits_as_white = num_own_splits(moves_as_white);
+	const num_splits_as_black = num_own_splits(moves_as_black);
+	if ( num_splits_as_white > num_splits_as_black ) {
+		return 'b';
+	} else if ( num_splits_as_black > num_splits_as_white ) {
+		return 'w';
+	} else {
+		return 'u';
+	}
+}
+function num_own_splits(moves) {
+	let num_moves_from_fen = {};
+	for ( const move of moves.filter( (m) => m.ownMove ) ) {
+		num_moves_from_fen[ move.fromFen ] = ( num_moves_from_fen[ move.fromFen ] ?? 0 ) + 1;
+	}
+	const splits = Object.values(num_moves_from_fen).filter( (num) => num > 1 );
+	return splits.length;
+}

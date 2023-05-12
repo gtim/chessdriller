@@ -1,10 +1,18 @@
 <script>
-	let studies_promise = getStudies();
+
+	import { onMount } from 'svelte';
+
+	let studies = [];
+	$: unincluded_studies = studies.filter( (study) => !( study.included || study.hidden ) );
 	async function getStudies() {
 		const res = await fetch( '/api/lichess-study' );
 		const json = await res.json();
-		return json.studies;
+		studies = json.studies;
 	}
+
+	onMount( async () => {
+		await getStudies();
+	} );
 
 	let new_studies_promise;
 	async function getNewStudies() {
@@ -18,7 +26,7 @@
 		}
 
 		if ( json.num_new_studies > 0 ) {
-			studies_promise = getStudies();
+			getStudies();
 		}
 		return json;
 	}
@@ -26,18 +34,20 @@
 	async function lookForNewStudies() {
 		new_studies_promise = getNewStudies();
 	}
+
 </script>
 
 <h1>Repertoire</h1>
 <div>
 
-	{#await studies_promise then studies}
+	{#if unincluded_studies.length > 0}
+		<p>These studies were found on your Lichess account, but are not included in your repertoire. You can include them or hide them.</p>
 		<ul>
-		{#each studies as study (study.id) }
-			<li>{study.name} (<a href="https://lichess.org/study/{study.lichessId}">go to lichess</a>)</li>
+		{#each unincluded_studies as study (study.id) }
+			<li>{study.name} ({study.guessedColor}) (<a href="https://lichess.org/study/{study.lichessId}">go to lichess</a>)</li>
 		{/each}
 		</ul>
-	{/await}
+	{/if}
 
 
 	{#if new_studies_promise}
