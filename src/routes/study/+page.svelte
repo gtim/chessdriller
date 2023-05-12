@@ -5,6 +5,7 @@
 	import MoveSheet from '$lib/MoveSheet.svelte';
 	import { onMount } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
+	import gsap from 'gsap';
 
 	const delay_after_line_ms = 500;
 
@@ -133,6 +134,19 @@
 		updateStats();
 	} );
 
+	// animate show-answer button every third wrong
+	$: if ( num_wrongs_this_move >= 2 && num_wrongs_this_move % 3 == 1 ) {
+		gsap.to( ".show_answer", {
+			delay:0.4,
+			keyframes: [
+				{ scale: 1, duration: 0.1 },
+				{ scale: 1.15, duration: 0.1 },
+				{ scale: 0.98, duration: 0.1 },
+				{ scale: 1, duration: 0.1 }
+			]
+		} );
+	}
+
 </script>
 
 {#if review_finished}
@@ -152,8 +166,7 @@
 			<div style="position:relative;width:100%;max-width:512px;">
 				<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} bind:this={studyBoard} />
 				{#if num_wrongs_this_move >= 2}
-					<!-- TODO: transition button in/out, highlight on multiple wrongs -->
-					<button on:click={()=>{studyBoard.showAnswer()}} class="show_answer">Show answer</button>
+					<button transition:fade on:click={()=>{studyBoard.showAnswer()}} class="show_answer">Show answer</button>
 				{/if}
 			</div>
 		</div>
@@ -205,5 +218,8 @@
 		position:absolute;
 		left:0;
 		margin-top:8px;
+		background:none;
+		border:1px solid rgba(40,43,40,0.7);
+		border-radius:4px;
 	}
 </style>
