@@ -148,7 +148,7 @@
 		chessground.setAutoShapes( [ {
 			orig: move.from,
 			dest: move.to,
-			brush: 'green' // TODO: nicer color
+			brush: 'red' // TODO: custom color, shape that fits theme better
 		} ] );
 	}
 
