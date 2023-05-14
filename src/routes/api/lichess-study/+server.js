@@ -18,6 +18,7 @@ export async function GET({ url, locals }) {
 				included: true,
 				repForWhite: true,
 				guessedColor: true,
+				previewFen: true,
 				hidden: true
 			}
 		});

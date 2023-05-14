@@ -2,6 +2,8 @@
 
 	import { onMount } from 'svelte';
 
+	import LichessStudy from '$lib/LichessStudy.svelte';
+
 	let studies = [];
 	$: unincluded_studies = studies.filter( (study) => !( study.included || study.hidden ) );
 	async function getStudies() {
@@ -42,11 +44,11 @@
 
 	{#if unincluded_studies.length > 0}
 		<p>These studies were found on your Lichess account, but are not included in your repertoire. You can include them or hide them.</p>
-		<ul>
+		<div class="unincluded_studies">
 		{#each unincluded_studies as study (study.id) }
-			<li>{study.name} ({study.guessedColor}) (<a href="https://lichess.org/study/{study.lichessId}">go to lichess</a>)</li>
+			<LichessStudy {...study}/>
 		{/each}
-		</ul>
+		</div>
 	{/if}
 
 
@@ -64,3 +66,12 @@
 
 	<p>(Note: these Lichess study connections are a work in progress and not yet actually used.)</p>
 </div>
+
+<style>
+	.unincluded_studies {
+		display:flex;
+		flex-wrap:wrap;
+		gap:20px 20px;
+		justify-content:center;
+	}
+</style>
