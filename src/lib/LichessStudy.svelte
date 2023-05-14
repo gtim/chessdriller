@@ -1,15 +1,24 @@
 <script>
 
 	import { Chessground } from 'svelte-chessground';
+	import { createEventDispatcher } from 'svelte';
 
 	import './chessground.base.css';
 	import './chessground.brown.css';
 	import './chessground-pieces.css';
 
+	const dispatch = createEventDispatcher();
+
+	export let id;
 	export let name;
 	export let guessedColor;
 	export let lichessId;
 	export let previewFen;
+
+	async function hide() {
+		await fetch( '/api/lichess-study/'+id+'/hidden/true', {method:'POST'} );
+		dispatch( 'change' );
+	}
 </script>
 
 <div class="study">
@@ -20,7 +29,7 @@
 			viewOnly={true} disableContextMenu={false} config={{drawable:{enabled:false}}}
 		/>
 	</div>
-	<button class="hide" title="Remove study from this list">&#x2715;</button>
+	<button class="hide" title="Remove study from this list" on:click={hide}>&#x2715;</button>
 	<h2>{name}</h2>
 	<!--<p>(<a href="https://lichess.org/study/{lichessId}">view on lichess</a>)</p>-->
 	<button>Add to repertoire</button>
@@ -51,6 +60,7 @@
 		background:none;
 		border:none;
 		cursor:pointer;
+		color:#800020;
 	}
 	.study button.hide:hover {
 		font-weight:bold;

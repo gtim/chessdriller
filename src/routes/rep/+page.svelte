@@ -46,7 +46,7 @@
 		<p>These studies were found on your Lichess account, but are not included in your repertoire. You can include them or hide them.</p>
 		<div class="unincluded_studies">
 		{#each unincluded_studies as study (study.id) }
-			<LichessStudy {...study}/>
+			<LichessStudy {...study} on:change={getStudies}/>
 		{/each}
 		</div>
 	{/if}
