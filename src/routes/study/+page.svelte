@@ -174,8 +174,19 @@
 		<div style="display:flex;justify-content:center;align-items:center;">
 			<div style="position:relative;width:100%;max-width:512px;">
 				<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} bind:this={studyBoard} />
-				{#if num_wrongs_this_move >= 2}
-					<button transition:fade on:click={()=>{studyBoard.showAnswer()}} class="show_answer">Show answer</button>
+				{#if num_wrongs_this_move >= 2 }
+					<button
+						class="show_answer"
+						title="Show the right move"
+						transition:fade on:click={()=>{studyBoard.showAnswer()}} 
+					>Show answer</button>
+				{/if}
+				{#if line && line.slice(last_move_ix+1).filter(m=>m.isDue).length == 0}
+					<button 
+						class="skip_to_end"
+						title="All due moves are reviewed, skip the end of this line"
+						on:click|once={()=>studyNextLine(line.map(m=>m.id))}
+					>Skip to end</button>
 				{/if}
 			</div>
 		</div>
@@ -193,13 +204,6 @@
 	{#if line}
 		<div style="text-align:center;">
 			<MoveSheet move_pairs={move_pairs_to_display}/>
-		</div>
-	{/if}
-
-	{#if line && line.slice(last_move_ix+1).filter(m=>m.isDue).length == 0}
-		<div style="text-align:right;">
-			<p>line reviewed!</p>
-			<button on:click|once={()=>studyNextLine(line.map(m=>m.id))}>skip</button>
 		</div>
 	{/if}
 
@@ -223,12 +227,17 @@
 		padding:0;
 	}
 
-	.show_answer {
+	.show_answer, .skip_to_end {
 		position:absolute;
-		left:0;
-		margin-top:8px;
+		margin-top:6px;
 		background:none;
 		border:1px solid rgba(40,43,40,0.7);
 		border-radius:4px;
+	}
+	.show_answer {
+		left:0;
+	}
+	.skip_to_end {
+		right:0;
 	}
 </style>
