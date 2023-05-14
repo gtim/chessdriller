@@ -92,7 +92,8 @@ model LichessStudy {
 	pgn                        String
 	included                   Boolean @default(false) // true if included in repertoire
 	repForWhite                Boolean? // true if pgn belongs to White repertoire
-	guessedColor               String? // guess on whether repertoire is w/b/u
+	guessedColor               String // guess on whether repertoire is w/b/u
+	previewFen                 String // FEN used for board preview in repertoire view
 	hidden                     Boolean @default(false) // true if hidden from the "studies" list
 
 	@@unique([ userId, lichessId ])

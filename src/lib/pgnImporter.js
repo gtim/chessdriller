@@ -43,6 +43,11 @@ export async function importPgn( pgn_content, pgn_filename, prisma, user_id, rep
 // Converts text from single PGN game to a moves-list.
 // Exported only as a test utility.
 export function singlePgnToMoves( pgn_content, repForWhite ) {
+	const chess = singlePgnToCMChess( pgn_content );
+	return chessHistoryToMoves( chess.history(), repForWhite );
+}
+
+function singlePgnToCMChess( pgn_content ) {
 
 	// remove comment before '*', TODO investigate whether this is a cm-pgn bug (unit test "two comments after final move")
 	pgn_content = pgn_content.replace(/\{[^{}]*\}\s*\*/, '');
@@ -52,7 +57,7 @@ export function singlePgnToMoves( pgn_content, repForWhite ) {
 
 	const chess = new Chess();
 	chess.loadPgn( pgn_content ); // TODO: handle unparsable PGNs
-	return chessHistoryToMoves( chess.history(), repForWhite );
+	return chess;
 }
 
 // Traverse all cm-chess moves, including variations, and returns moves-list
@@ -118,4 +123,18 @@ function num_own_splits(moves) {
 	}
 	const splits = Object.values(num_moves_from_fen).filter( (num) => num > 1 );
 	return splits.length;
+}
+
+// Generate the preview FEN from move n of the first chapter
+export function makePreviewFen( pgn_db ) {
+	const pgntexts = split_pgndb_into_pgns( pgn_db );
+	const pgn_first_chapter = pgntexts[0];
+	try {
+		const chess = singlePgnToCMChess( pgn_first_chapter );
+		const preview_move_i = Math.min( 6, chess.pgn.history.moves.length ) - 1;
+		return chess.pgn.history.moves[ preview_move_i ].fen;
+	} catch (e) {
+		console.log( 'warning: makePreviewFen failed, returning origin position. ' + e.message );
+		return 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+	}
 }
