@@ -131,7 +131,7 @@ export function makePreviewFen( pgn_db ) {
 	const pgn_first_chapter = pgntexts[0];
 	try {
 		const chess = singlePgnToCMChess( pgn_first_chapter );
-		const preview_move_i = Math.min( 6, chess.pgn.history.moves.length ) - 1;
+		const preview_move_i = Math.min( 4, chess.pgn.history.moves.length ) - 1;
 		return chess.pgn.history.moves[ preview_move_i ].fen;
 	} catch (e) {
 		console.log( 'warning: makePreviewFen failed, returning origin position. ' + e.message );
