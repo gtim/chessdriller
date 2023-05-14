@@ -155,7 +155,6 @@
 		studyBoard.showAnswer();
 	}
 
-
 </script>
 
 {#if review_finished}
@@ -181,10 +180,11 @@
 						transition:fade on:click={()=>{studyBoard.showAnswer()}} 
 					>Show answer</button>
 				{/if}
-				{#if line && line.slice(last_move_ix+1).filter(m=>m.isDue).length == 0}
+				{#if line && line.slice(last_move_ix+1).length > 0 && line.slice(last_move_ix+1).filter(m=>m.isDue).length == 0}
 					<button 
 						class="skip_to_end"
 						title="All due moves are reviewed, skip the end of this line"
+						transition:fade
 						on:click|once={()=>studyNextLine(line.map(m=>m.id))}
 					>Skip to end</button>
 				{/if}
