@@ -71,14 +71,6 @@
 		margin-right:16px;
 	}
 	
-	button.add {
-		padding:3px 8px;
-		background: none;
-		border:none;
-	}
-	button.add:hover {
-		background-color: #FAF0E6;
-	}
 	button.add_white, button.add_black {
 		cursor:pointer;
 		padding:3px 6px;
