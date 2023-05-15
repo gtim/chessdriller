@@ -30,8 +30,7 @@
 		/>
 	</div>
 	<button class="hide" title="Remove study from this list" on:click={hide}>&#x2715;</button>
-	<h2>{name}</h2>
-	<!--<p>(<a href="https://lichess.org/study/{lichessId}">view on lichess</a>)</p>-->
+	<h2><a href="https://lichess.org/study/{lichessId}" target="_blank" rel="noopener noreferrer" title="Open study on Lichess">{name}</a></h2>
 	<button>Add to repertoire</button>
 	<br style="clear:both;"/>
 </div>
@@ -54,7 +53,7 @@
 	}
 	.study button.hide {
 		position:absolute;
-		top:4px;
+		top:3px;
 		right:6px;
 		padding:0;
 		background:none;
@@ -69,8 +68,5 @@
 		font-size:16px;
 		font-weight:bold;
 		margin:8px 0;
-	}
-	.study p {
-		margin:0;
 	}
 </style>
