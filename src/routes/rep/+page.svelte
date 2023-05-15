@@ -1,11 +1,13 @@
 <script>
 
 	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 
 	import LichessStudy from '$lib/LichessStudy.svelte';
 
 	let studies = [];
 	$: unincluded_studies = studies.filter( (study) => !( study.included || study.hidden ) );
+	$: hidden_studies     = studies.filter( (study) => study.hidden );
 	async function getStudies() {
 		const res = await fetch( '/api/lichess-study' );
 		const json = await res.json();
@@ -37,6 +39,11 @@
 		new_studies_promise = getNewStudies();
 	}
 
+	async function unhide(studyId) {
+		await fetch( '/api/lichess-study/'+studyId+'/hidden/false', {method:'POST'} );
+		getStudies();
+	}
+
 </script>
 
 <h1>Repertoire</h1>
@@ -65,6 +72,15 @@
 	{/if}
 
 	<p>(Note: these Lichess study connections are a work in progress and not yet actually used.)</p>
+
+	{#if hidden_studies.length > 0}
+		<p>Your hidden studies:
+		{#each hidden_studies as study, i}
+			{study.name}
+			(<a href="#" on:click={()=>unhide(study.id)}>unhide</a>){i<hidden_studies.length-1?', ':''}
+		{/each}
+		</p>
+	{/if}
 </div>
 
 <style>
