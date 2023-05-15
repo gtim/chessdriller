@@ -1,4 +1,4 @@
-import { text,json, error } from '@sveltejs/kit';
+import { json, error } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 
 export async function POST({ url, locals, params }) {
@@ -6,7 +6,7 @@ export async function POST({ url, locals, params }) {
 	if (!user) return json({ success: false, message: 'not logged in' });
 
 	let new_value;
-	if ( params.column === 'hidden' || params.column === 'included' || params.column === 'repForWhite' ) {
+	if ( params.column === 'hidden' ) {
 		// boolean
 		if ( params.newValue === 'true' ) {
 			new_value = true;
@@ -32,7 +32,6 @@ export async function POST({ url, locals, params }) {
 		});
 		return json({ success: true });
 	} catch(e) {
-		return text(e.message);
 		return json({
 			success: false,
 			message: e.message

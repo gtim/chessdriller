@@ -9,6 +9,7 @@
 
 	let studies = [];
 	$: unincluded_studies = studies.filter( (study) => !( study.included || study.hidden ) );
+	$: included_studies   = studies.filter( (study) => study.included );
 	$: hidden_studies     = studies.filter( (study) => study.hidden );
 	async function getStudies() {
 		const res = await fetch( '/api/lichess-study' );
@@ -56,7 +57,7 @@
 		<div class="unincluded_studies">
 		{#each unincluded_studies as study (study.id) }
 			<div animate:flip={{duration:750, easing: cubicInOut }} in:fade|local out:slide|local={{duration:500,axis:'x'}}>
-			<LichessStudy {...study} on:change={getStudies}/>
+			<LichessStudy {...study} on:change={getStudies} on:included={getStudies}/>
 			</div>
 		{/each}
 		</div>

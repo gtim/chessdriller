@@ -22,12 +22,30 @@
 	}
 
 	let adding_state = 0;
-	function add( repForWhite ) {
+	let including_promise;
+	function addWhite() {
+		including_promise = add(true);
+	}
+	function addBlack() {
+		including_promise = add(false);
+	}
+	async function add( repForWhite ) {
 		if ( adding_state != 1 ) {
 			return;
 		}
-		adding_state = 2;
 		console.log('adding..' + repForWhite );
+		adding_state = 2;
+		const res = await fetch(
+			'/api/lichess-study/'+id+'/include/' + ( repForWhite ? 'white' : 'black' ),
+			{method:'POST'}
+		);
+		const json = await res.json();
+		if ( json.success ) {
+			dispatch( 'included' );
+			return json;
+		} else {
+			throw new Error(json.message);
+		}
 	}
 </script>
 
@@ -45,11 +63,17 @@
 		<p><a href="#" class="add" on:click|preventDefault={()=>adding_state=1}>+ Add to repertoire</a></p>
 	{:else if adding_state == 1}
 		<p in:slide|local>Which color?
-			<button class="add_white" on:click|once={()=>add(true)}>White</button>
-			<button class="add_black" on:click|once={()=>add(false)}>Black</button>
+			<button class="add_white" on:click|once={addWhite}>White</button>
+			<button class="add_black" on:click|once={addBlack}>Black</button>
 		</p>
-	{:else}
-		<p in:slide|local>(not implemented)</p>
+	{:else if adding_state == 2}
+		{#await including_promise}
+			<p in:slide|local>Adding to repertoire...</p>
+		{:then json}
+			<p in:slide|local>Done!</p>
+		{:catch error}
+			<p in:slide|local style="color:red;"><span style="font-weight:bold;">Error</span>: {error.message}</p>
+		{/await}
 	{/if}
 	<br style="clear:both;"/>
 </div>

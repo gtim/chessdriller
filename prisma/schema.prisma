@@ -70,6 +70,7 @@ model Move {
 	toFen           String
 	moveSan         String
 	pgns            Pgn[]
+	studies         LichessStudy[]
 	ownMove         Boolean // true if this is a move by the user, e.g. 1. e4 in a White repertoire
 	learningDueTime DateTime? @default(now())
 	learningStep    Int?      @default(0)
@@ -90,6 +91,7 @@ model LichessStudy {
 	lastModifiedOnLichess      DateTime
 	lastFetched                DateTime @default(now())
 	pgn                        String
+	moves                      Move[]
 	included                   Boolean @default(false) // true if included in repertoire
 	repForWhite                Boolean? // true if pgn belongs to White repertoire
 	guessedColor               String // guess on whether repertoire is w/b/u

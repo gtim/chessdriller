@@ -1,6 +1,51 @@
 import { Chess } from '../../node_modules/cm-chess/src/cm-chess/Chess.js';
 import { PrismaClient } from '@prisma/client';
 
+
+export async function includeStudy( study_id, prisma, user_id, repForWhite ) {
+	const study = await prisma.LichessStudy.findUniqueOrThrow({
+		where: { id: study_id }
+	});
+	if ( study.userId != user_id ) 
+		throw new Error( 'Adding Lichess study failed: user ID does not match' );
+	if ( study.hidden )
+		throw new Error( 'Adding Lichess study failed: can\'t import hidden study, unhide it first' );
+	if ( study.included )
+		throw new Error( 'Adding Lichess study failed: study is already included' );
+	
+	// parse PGN
+	const pgntexts = split_pgndb_into_pgns( study.pgn );
+	const moves = pgntexts.map( (pgn) => singlePgnToMoves( pgn, repForWhite ) ).flat();
+
+	// insert moves
+	for ( const move of moves ) {
+		move.userId = user_id;
+		move.studies = { connect: [{ id: study_id }] };
+		await prisma.move.upsert( {
+			where: {
+				userId_repForWhite_fromFen_toFen: {
+					userId: user_id,
+					repForWhite: move.repForWhite,
+					fromFen: move.fromFen,
+					toFen: move.toFen
+				}
+			},
+			create: move,
+			update: { studies: move.study_id }
+		});
+	}
+
+	// update study
+	await prisma.LichessStudy.update({
+		where: { id: study_id },
+		data: {
+			included: true,
+			repForWhite
+		}
+
+	});
+}
+
 export async function importPgn( pgn_content, pgn_filename, prisma, user_id, repForWhite ) {
 
 	const pgn = await prisma.pgn.create({ data: {
@@ -11,7 +56,6 @@ export async function importPgn( pgn_content, pgn_filename, prisma, user_id, rep
 	} });
 
 	// parse (multi-game) PGN into moves-list
-	pgn_content = pgn_content.replaceAll( /\r/g, "" );
 	const pgntexts = split_pgndb_into_pgns( pgn_content );
 	const moves = [];
 	for ( const pgntext of pgntexts ) {
@@ -84,6 +128,7 @@ function chessHistoryToMoves( history, repForWhite ) {
 // A PGN database file can contain multiple PGNs: http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm#c8
 // Since chess.js and cm-chess don't support multiple PGNs, the file is split here. The spec points out that it is simple enough that a full-blown parser is not needed, but it remains to be seen whether kinda-complying PGNs in the wild will cause trouble. Ideally, this would be solved in cm-chess (or chess.js).
 function split_pgndb_into_pgns( pgn_db ) {
+	pgn_db = pgn_db.replaceAll( /\r/g, "" );
 	const regex = /(\[.*?\n\n *\S.*?\n\n)/gs; // Should fail on PGNs with comments with empty lines
 	const found = pgn_db.match(regex);
 	return found;
