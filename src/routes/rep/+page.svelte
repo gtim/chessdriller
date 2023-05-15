@@ -76,7 +76,13 @@
 		<button on:click={lookForNewStudies}>Check for new studies</button>
 	{/if}
 
-	<p>(Note: these Lichess study connections are a work in progress and not yet actually used.)</p>
+	{#if included_studies.length > 0}
+		<p>Your included studies:
+		{#each included_studies as study, i}
+			{study.name}{i<included_studies.length-1?', ':''}
+		{/each}
+		</p>
+	{/if}
 
 	{#if hidden_studies.length > 0}
 		<p>Your hidden studies:
