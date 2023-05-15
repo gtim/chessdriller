@@ -5,32 +5,45 @@
 	export let form;
 </script>
 
-<h2>Upload PGN</h2>
+<div class="container">
+	<h2>PGN files</h2>
 
-<h3>Black Repertoire</h3>
+	<p><a href="/rep">Connecting Lichess studies</a> is the main way to use Chessdriller. If you'd like to, though, you can use this page to upload PGNs directly. Your repertoire can contain both PGNs and connected Lichess studies.</p>
 
-<form method="POST" use:enhance>
-	<input type="file" name="pgn" accept=".pgn" />
-	<input type="hidden" name="color" value="b" />
-	<input type="submit" value="Upload Black Repertoire"/>
-</form>
+	<h3>Upload new PGN file</h3>
 
-<h3>White Repertoire</h3>
+	<form method="POST" use:enhance>
+		<p>
+			<label for="pgn_input">PGN file:</label>
+			<input type="file" id="pgn_input" name="pgn" accept=".pgn" />
+		</p>
+		<p>
+			Repertoire for which color?
+			<input type="radio" id="radio_white" name="color" value="w" />
+			<label for="radio_white">White</label>
+			or
+			<input type="radio" id="radio_black" name="color" value="b" />
+			<label for="radio_black">Black</label>
+		</p>
+		<input type="submit" value="Upload PGN"/>
+	</form>
 
-<form method="POST" use:enhance>
-	<input type="file" name="pgn" accept=".pgn" />
-	<input type="hidden" name="color" value="w" />
-	<input type="submit" value="Upload White Repertoire"/>
-</form>
+	{#if form?.success}
+		<p>
+		Success!
+		Parsed one file
+		with {form.num_moves_parsed} move{form.num_moves_parsed==1?'':'s'}.
+		Added {form.num_moves_added} new move{form.num_moves_added==1?'':'s'} to your repertoire.
+		</p>
+	{:else if form?.message}
+		<p><span style="font-weight:bold;color:red;">Error uploading PGN file:</span> {form.message}</p>
+	{/if}
+</div>
 
-
-{#if form?.success}
-	<p>
-	Success!
-	Parsed one file
-	with {form.num_moves_parsed} move{form.num_moves_parsed==1?'':'s'}.
-	Added {form.num_moves_added} new move{form.num_moves_added==1?'':'s'} to your repertoire.
-	</p>
-{:else if form?.error_message}
-	<p><span style="font-weight:bold;color:red;">Error parsing the PGN file.</span> Error message: {form.error_message}</p>
-{/if}
+<style>
+	div.container {
+		width:512px;
+		max-width:100%;
+		margin:0 auto;
+	}
+</style>

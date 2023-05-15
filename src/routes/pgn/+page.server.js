@@ -12,6 +12,9 @@ export const actions = {
 
 		const formData = await request.formData();
 		const file = formData.get('pgn');
+
+		if ( ! formData.get('color') )
+			return { success: false, message: 'No color picked' };
 		const repForWhite = formData.get('color') == 'w';
 
 
@@ -29,7 +32,7 @@ export const actions = {
 		} catch ( e ) {
 			return {
 				success: false,
-				error_message: e.message
+				message: e.message
 			};
 		}
 
