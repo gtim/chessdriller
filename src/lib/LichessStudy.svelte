@@ -2,6 +2,7 @@
 
 	import { Chessground } from 'svelte-chessground';
 	import { createEventDispatcher } from 'svelte';
+	import { fade, slide } from 'svelte/transition';
 
 	import './chessground.base.css';
 	import './chessground.brown.css';
@@ -19,6 +20,15 @@
 		await fetch( '/api/lichess-study/'+id+'/hidden/true', {method:'POST'} );
 		dispatch( 'change' );
 	}
+
+	let adding_state = 0;
+	function add( repForWhite ) {
+		if ( adding_state != 1 ) {
+			return;
+		}
+		adding_state = 2;
+		console.log('adding..' + repForWhite );
+	}
 </script>
 
 <div class="study">
@@ -31,7 +41,16 @@
 	</div>
 	<button class="hide" title="Remove study from this list" on:click={hide}>&#x2715;</button>
 	<h2><a href="https://lichess.org/study/{lichessId}" target="_blank" rel="noopener noreferrer" title="Open study on Lichess">{name}</a></h2>
-	<button>Add to repertoire</button>
+	{#if adding_state == 0}
+		<p><a href="#" class="add" on:click|preventDefault={()=>adding_state=1}>+ Add to repertoire</a></p>
+	{:else if adding_state == 1}
+		<p in:slide|local>Which color?
+			<button class="add_white" on:click|once={()=>add(true)}>White</button>
+			<button class="add_black" on:click|once={()=>add(false)}>Black</button>
+		</p>
+	{:else}
+		<p in:slide|local>(not implemented)</p>
+	{/if}
 	<br style="clear:both;"/>
 </div>
 
@@ -51,6 +70,36 @@
 		width:96px;
 		margin-right:16px;
 	}
+	
+	button.add {
+		padding:3px 8px;
+		background: none;
+		border:none;
+	}
+	button.add:hover {
+		background-color: #FAF0E6;
+	}
+	button.add_white, button.add_black {
+		cursor:pointer;
+		padding:3px 6px;
+		border:1px solid black;
+		border-radius:4px;
+	}
+	button.add_white {
+		background-color:#fff;
+		color:black;
+	}
+	button.add_white:hover {
+		background-color:#eee;
+	}
+	button.add_black {
+		background-color:#000;
+		color:white;
+	}
+	button.add_black:hover {
+		background-color:#333;
+	}
+
 	.study button.hide {
 		position:absolute;
 		top:3px;
@@ -65,8 +114,11 @@
 		font-weight:bold;
 	}
 	.study h2 {
-		font-size:16px;
+		font-size:18px;
 		font-weight:bold;
 		margin:8px 0;
+	}
+	p {
+		margin:0;
 	}
 </style>

@@ -17,6 +17,9 @@ body {
 	background-color: #FAF0E6;
 	color: #282B28;
 }
+button {
+	font-family: 'Schibsted Grotesk', sans-serif;
+}
 
 a { 
 	text-decoration:none;
