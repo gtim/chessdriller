@@ -1,7 +1,9 @@
 <script>
 
 	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
+	import { fade, slide } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 
 	import LichessStudy from '$lib/LichessStudy.svelte';
 
@@ -53,7 +55,9 @@
 		<p>These studies were found on your Lichess account, but are not included in your repertoire. You can include them or hide them.</p>
 		<div class="unincluded_studies">
 		{#each unincluded_studies as study (study.id) }
+			<div animate:flip={{duration:400, easing: cubicOut }} in:fade|local out:slide|local={{axis:'x'}}>
 			<LichessStudy {...study} on:change={getStudies}/>
+			</div>
 		{/each}
 		</div>
 	{/if}
