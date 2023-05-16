@@ -31,7 +31,10 @@ export async function includeStudy( study_id, prisma, user_id, repForWhite ) {
 				}
 			},
 			create: move,
-			update: { studies: move.study_id }
+			update: {
+				studies: move.studies,
+				deleted: false
+			}
 		});
 	}
 
