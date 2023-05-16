@@ -1,6 +1,11 @@
 <script>
 
 	import { fade, slide } from 'svelte/transition';
+	import { tweened } from 'svelte/motion';
+	import { cubicInOut } from 'svelte/easing';
+
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 
 	import RelativeTime from '@yaireo/relative-time';
 	const relativeTime = new RelativeTime();
@@ -13,22 +18,51 @@
 	export let _count;
 
 	let show_content = false;
+
+	let deleted = false;
+	let num_deleted_moves;
+	let deletion_error;
+	async function deletePgn() {
+		const res = await fetch( '/api/pgn/'+id+'/delete', {method:'POST'} );
+		const json = await res.json();
+
+		if ( ! res.ok ) {
+			deletion_error = 'Deletion request failed ('+res.status+')';
+		} else if ( ! json.success ) {
+			deletion_error = 'Deletion failed: ' + json.message;
+		} else {
+			deleted = true;
+			num_deleted_moves = json.num_deleted_moves;
+			opacity.set(0.5);
+			dispatch( 'delete' );
+		}
+	}
+	let opacity = tweened(1,{duration:1000,easing:cubicInOut});
 </script>
 
-<div class="pgn">
-	<p class="filename">{filename}</p>
-	<button class="delete" title="Delete PGN" on:click={()=>alert('not implemented yet')}>&#x2715;</button>
-	<p>
+<div class="pgn" style="opacity:{$opacity};">
+	<p class="filename" title="Internal ID: {id}" class:deleted>{filename}</p>
+	{#if ! deleted}
+		<button class="delete" title="Delete PGN" on:click|once={deletePgn}>&#x2715;</button>
+	{/if}
+	<p class:deleted>
 		{repForWhite?'White':'Black'} repertoire.
 		{_count.moves} move{_count.moves==1?'':'s'}.
 		Uploaded <span title="{uploaded}">{relativeTime.from((uploaded))}</span>.
 	</p>
-	{#if content.length == 0}
-		<p>This file is empty.</p>
+	{#if deletion_error}
+		<p style="color:red;" transition:fade|local>{deletion_error}</p>
+	{/if}
+	{#if deleted}
+		<p><span style="font-weight:bold;">Deleted</span>: Removed {num_deleted_moves} move{num_deleted_moves==1?'':'s'} from your repertoire.</p>
 	{:else}
-		<p><a href="#" on:click|preventDefault="{()=>show_content=!show_content}">{show_content?'Hide':'Show'} file contents</a></p>
-		{#if show_content}
-			<div class="pgn_content" transition:slide|local>{content}</div>
+		{#if content.length == 0}
+			<p>This file is empty.</p>
+		{:else}
+			<p><a href="#" on:click|preventDefault="{()=>show_content=!show_content}">{show_content?'Hide':'Show'} file contents</a></p>
+			{#if show_content}
+				<div class="pgn_content" transition:slide|local>{content}</div>
+			{/if}
 		{/if}
 	{/if}
 </div>
@@ -68,5 +102,9 @@
 	}
 	button.delete:hover {
 		font-weight:bold;
+	}
+
+	p.deleted {
+		text-decoration:line-through;
 	}
 </style>

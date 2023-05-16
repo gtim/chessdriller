@@ -77,7 +77,10 @@ export async function importPgn( pgn_content, pgn_filename, prisma, user_id, rep
 				}
 			},
 			create: move,
-			update: { pgns: move.pgns }
+			update: {
+				pgns: move.pgns,
+				deleted: false
+			}
 		});
 	}
 

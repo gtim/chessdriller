@@ -14,7 +14,7 @@ export async function GET({ url, locals }) {
 	const last_line = url.searchParams.has('last') ? JSON.parse( url.searchParams.get('last') ) : [];
 
 	const moves = await prisma.Move.findMany({
-		where: { userId }
+		where: { userId, deleted: false }
 	});
 
 	const response = last_line.length == 0

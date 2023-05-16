@@ -16,7 +16,8 @@ export async function GET({ url, locals }) {
 	const moves = await prisma.Move.findMany({
 		where: {
 			userId,
-			ownMove: true
+			ownMove: true,
+			deleted: false
 		},
 		select: {
 			ownMove: true,

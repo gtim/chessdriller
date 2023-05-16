@@ -77,6 +77,7 @@ model Move {
 	reviewDueDate   DateTime? // only date, at midnight (UTC?)
 	reviewInterval  Float?
 	reviewEase      Float?
+	deleted         Boolean @default(false)
 	history         StudyHistory[]
 
 	@@unique([ userId, repForWhite, fromFen, toFen ])

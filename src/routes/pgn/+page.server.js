@@ -52,7 +52,7 @@ export const actions = {
 		// TODO: check file max size
 
 		const rep_moves_before = await prisma.move.count({
-			where: { userId, repForWhite: repForWhite } 
+			where: { userId, repForWhite: repForWhite, deleted: false } 
 		});
 
 		let total_moves_parsed;
@@ -68,7 +68,7 @@ export const actions = {
 		}
 
 		const rep_moves_after = await prisma.move.count({
-			where: { userId, repForWhite: repForWhite }
+			where: { userId, repForWhite: repForWhite, deleted: false }
 		});
 
 		return {

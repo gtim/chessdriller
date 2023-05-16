@@ -38,6 +38,7 @@ export async function POST({ request, locals }) {
 			userId: true,
 			ownMove: true,
 			moveSan: true, // for debug only
+			deleted: true,
 			learningDueTime: true,
 			learningStep: true,
 			reviewDueDate: true,
@@ -50,6 +51,8 @@ export async function POST({ request, locals }) {
 		throw new Error( "can't practice move belonging to another user ID" ); // TODO return error message
 	if ( ! move.ownMove )
 		throw new Error( "can't practice opponent's move" ); // TODO return error message
+	if ( move.deleted )
+		throw new Error( "this move has been deleted, you should not be able to practice it ("+move.id+")" );
 
 	// find next step
 
