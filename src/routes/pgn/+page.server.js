@@ -37,14 +37,19 @@ export const actions = {
 		const userId = user.cdUserId;
 
 		const formData = await request.formData();
+
+		if ( ! formData.get('pgn') )
+			return { success: false, message: 'No PGN file submitted' };
 		const file = formData.get('pgn');
+		if ( ! file.size )
+			return { success: false, message: 'No PGN file selected' };
 
 		if ( ! formData.get('color') )
 			return { success: false, message: 'No color picked' };
 		const repForWhite = formData.get('color') == 'w';
 
 
-		// TODO: check file size
+		// TODO: check file max size
 
 		const rep_moves_before = await prisma.move.count({
 			where: { userId, repForWhite: repForWhite } 
