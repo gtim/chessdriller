@@ -8,11 +8,11 @@
 </script>
 
 <div class="narrow_container">
-	<h2>PGN files</h2>
+	<h1>PGN files</h1>
 
 	<p><a href="/rep">Connecting Lichess studies</a> is the main way to use Chessdriller. If you'd like to, though, you can use this page to upload PGNs directly. Your repertoire can contain both PGNs and connected Lichess studies.</p>
 
-	<h3>Upload new PGN file</h3>
+	<h2>Upload new PGN file</h2>
 
 	<form method="POST" use:enhance>
 		<div style="margin-left:16px;">
@@ -43,7 +43,7 @@
 	{/if}
 
 	{#if data.pgns.length > 0}
-		<h3>Your uploaded PGNs</h3>
+		<h2>Your uploaded PGNs</h2>
 
 		<p>
 			These are all your uploaded PGNs. You can delete the PGNs ones you don't need, e.g. if you've uploaded a newer version or made a mistake.
@@ -66,7 +66,7 @@
 		max-width:100%;
 		margin:0 auto;
 	}
-	h3 {
+	h2 {
 		margin-top:32px;
 	}
 	div.pgn_list {
