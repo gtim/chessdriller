@@ -2,6 +2,32 @@ import { PrismaClient } from '@prisma/client';
 import { importPgn } from '$lib/pgnImporter.js';
 const prisma = new PrismaClient();
 
+// data loader for PGN table
+
+export const load = async ({locals}) => {
+	// session
+	const { user } = await locals.auth.validateUser();
+	if (!user) throw redirect(302, "/join"); // force login
+
+	// get PGNs
+	const pgns = await prisma.Pgn.findMany({
+		where: { userId: user.cdUserId },
+		select: {
+			id: true,
+			repForWhite: true,
+			filename: true,
+			uploaded: true,
+			content: true,
+			_count: 'moves'
+		},
+		orderBy: { uploaded: 'desc' }
+	});
+	return {pgns};
+
+}
+
+// form action for uploading PGN
+
 export const actions = {
 	default: async ({cookies,request,locals}) => {
 

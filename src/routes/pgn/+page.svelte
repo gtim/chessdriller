@@ -1,11 +1,13 @@
 <script>
 
 	import { enhance } from '$app/forms';
+	import Pgn from '$lib/Pgn.svelte';
 
+	export let data;
 	export let form;
 </script>
 
-<div class="container">
+<div class="narrow_container">
 	<h2>PGN files</h2>
 
 	<p><a href="/rep">Connecting Lichess studies</a> is the main way to use Chessdriller. If you'd like to, though, you can use this page to upload PGNs directly. Your repertoire can contain both PGNs and connected Lichess studies.</p>
@@ -13,19 +15,20 @@
 	<h3>Upload new PGN file</h3>
 
 	<form method="POST" use:enhance>
-		<p>
-			<label for="pgn_input">PGN file:</label>
-			<input type="file" id="pgn_input" name="pgn" accept=".pgn" />
-		</p>
-		<p>
-			Repertoire for which color?
-			<input type="radio" id="radio_white" name="color" value="w" />
-			<label for="radio_white">White</label>
-			or
-			<input type="radio" id="radio_black" name="color" value="b" />
-			<label for="radio_black">Black</label>
-		</p>
-		<input type="submit" value="Upload PGN"/>
+		<div style="margin-left:16px;">
+			<p>
+				<label for="pgn_input">PGN file:</label>
+				<input type="file" id="pgn_input" name="pgn" accept=".pgn" />
+			</p>
+			<p>
+				Repertoire for which color?<br/>
+				<input type="radio" id="radio_white" name="color" value="w" />
+				<label for="radio_white" style="margin-right:8px;">White</label>
+				<input type="radio" id="radio_black" name="color" value="b" />
+				<label for="radio_black">Black</label>
+			</p>
+			<input type="submit" value="Upload PGN"/>
+		</div>
 	</form>
 
 	{#if form?.success}
@@ -38,12 +41,37 @@
 	{:else if form?.message}
 		<p><span style="font-weight:bold;color:red;">Error uploading PGN file:</span> {form.message}</p>
 	{/if}
+
+	{#if data.pgns.length > 0}
+		<h3>Your uploaded PGNs</h3>
+
+		<p>
+			These are all your uploaded PGNs. You can delete the PGNs ones you don't need, e.g. if you've uploaded a newer version or made a mistake.
+			Moves in deleted PGNs are removed from your repertoire, unless the same moves exist in another PGN or connected Lichess study.
+			Move progress is remembered and will be restored when you upload a PGN or connect a Lichess study with those moves.
+		</p>
+
+		<div class="pgn_list">
+			{#each data.pgns as pgn}
+				<Pgn {...pgn} />
+			{/each}
+		</div>
+		
+	{/if}
 </div>
 
 <style>
-	div.container {
+	div.narrow_container {
 		width:512px;
 		max-width:100%;
 		margin:0 auto;
+	}
+	h3 {
+		margin-top:32px;
+	}
+	div.pgn_list {
+		display:flex;
+		flex-direction:column;
+		gap:20px;
 	}
 </style>
