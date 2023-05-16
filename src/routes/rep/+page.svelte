@@ -49,11 +49,11 @@
 
 </script>
 
-<h1>Repertoire</h1>
-<div>
-
+<div class="narrow_container">
+	<h1>Repertoire</h1>
+</div>
 	{#if unincluded_studies.length > 0}
-		<p>These studies were found on your Lichess account, but are not included in your repertoire. You can include them or hide them.</p>
+		<div class="narrow_container"><p>These studies were found on your Lichess account, but are not included in your repertoire. You can include them or hide them.</p></div>
 		<div class="unincluded_studies">
 		{#each unincluded_studies as study (study.id) }
 			<div animate:flip={{duration:750, easing: cubicInOut }} in:fade|local out:slide|local={{duration:500,axis:'x'}}>
@@ -64,6 +64,7 @@
 	{/if}
 
 
+<div class="narrow_container">
 	{#if new_studies_promise}
 		{#await new_studies_promise}
 			<p>Checking for new studies...</p>
@@ -95,10 +96,16 @@
 </div>
 
 <style>
+	.narrow_container {
+		width:512px;
+		max-width:100%;
+		margin:0 auto;
+	}
 	.unincluded_studies {
 		display:flex;
 		flex-wrap:wrap;
 		gap:20px 20px;
 		justify-content:center;
+		margin-bottom:20px;
 	}
 </style>
