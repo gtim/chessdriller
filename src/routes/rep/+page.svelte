@@ -52,6 +52,7 @@
 
 <div class="narrow_container">
 	<h1>Repertoire</h1>
+	<p><span style="font-weight:bold;">Note:</span> The Repertoire tab is a work in progress. It can be used fine, but two features are not yet implemented: removing studies from the repertoire, and updating studies when they change on Lichess.</p>
 </div>
 
 
