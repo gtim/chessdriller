@@ -59,16 +59,6 @@
 		<div class="narrow_container">
 			<p>No studies were found in your Lichess account. To use Chessdriller, <a href="https://lichess.org/study">create a Lichess study</a>, input the moves you're memorizing, and refresh this page.</p>
 		</div>
-	{:else if included_studies !== null && included_studies.length == 0 }
-		<div class="narrow_container">
-			<p>
-			{#if studies.length == 1}
-				A study was found in your Lichess account. Add it to your repertoire to practice the moves with Chessdriller.
-			{:else}
-				{studies.length} studies were found in your Lichess account. Add one or more of them to your repertoire to practice the moves with Chessdriller.
-			{/if}
-			</p>
-		</div>
 	{/if}
 
 	{#if included_studies !== null && included_studies.length > 1}
@@ -86,6 +76,16 @@
 <!-- unincluded studies -->
 
 	{#if unincluded_studies !== null && unincluded_studies.length > 0}
+		<div class="narrow_container">
+			<p>
+			{#if unincluded_studies.length == 1}
+				The below study has not been added to your repertoire. You can either add it, or hide it (&#x2715;). 
+			{:else}
+				The below {unincluded_studies.length} studies have not been added to your repertoire. You can either add them, or hide them (&#x2715;).
+			{/if}
+			Hidden studies can always be unhidden later.
+			</p>
+		</div>
 		<div class="studies_container">
 			<div class="unincluded_studies">
 			{#each unincluded_studies as study (study.id) }
@@ -111,20 +111,17 @@
 		{/if}
 	</div>
 
-<div class="narrow_container">
-	<p class="hidden_studies"><small>
-	{#if unincluded_studies !== null && unincluded_studies.length > 0 }
-		You can hide the Lichess studies that you don't want to add to your repertoire. They can always be unhidden later.
-	{/if}
 	{#if hidden_studies !== null && hidden_studies.length > 0}
-		Hidden Lichess studies, not part of your repertoire:
-		{#each hidden_studies as study, i}
-			{study.name}
-			(<a href="#" on:click|preventDefault={()=>unhide(study.id)}>unhide</a>){i<hidden_studies.length-1?', ':''}
-		{/each}
+		<div class="narrow_container">
+			<p class="hidden_studies"><small>
+				Hidden Lichess studies, not part of your repertoire:
+				{#each hidden_studies as study, i}
+					{study.name}
+					(<a href="#" on:click|preventDefault={()=>unhide(study.id)}>unhide</a>){i<hidden_studies.length-1?', ':''}
+				{/each}
+			</small></p>
+		</div>
 	{/if}
-	</small></p>
-</div>
 
 <style>
 	.narrow_container {
