@@ -1,12 +1,9 @@
 <script>
 
-	import { Chessground } from 'svelte-chessground';
+	import LStudyCard from '$lib/LStudyCard.svelte';
+
 	import { createEventDispatcher } from 'svelte';
 	import { fade, slide } from 'svelte/transition';
-
-	import './chessground.base.css';
-	import './chessground.brown.css';
-	import './chessground-pieces.css';
 
 	const dispatch = createEventDispatcher();
 
@@ -47,18 +44,15 @@
 			throw new Error(json.message);
 		}
 	}
+	let title = '<a href="https://lichess.org/study/'+lichessId+'" target="_blank" rel="noopener noreferrer" title="Open study on Lichess">'+name+'</a>';
 </script>
 
-<div class="study">
-	<div class="board">
-		<Chessground
-			className="cg-print" coordinates={false}
-			fen={previewFen} orientation={guessedColor=='b'?'black':'white'}
-			viewOnly={true} disableContextMenu={false} config={{drawable:{enabled:false}}}
-		/>
-	</div>
+<LStudyCard
+	fen={previewFen}
+	orientation={guessedColor=='b'?'black':'white'}
+	{title}
+>
 	<button class="hide" title="Remove study from this list" on:click={hide}>&#x2715;</button>
-	<h2><a href="https://lichess.org/study/{lichessId}" target="_blank" rel="noopener noreferrer" title="Open study on Lichess">{name}</a></h2>
 	{#if adding_state == 0}
 		<p><a href="#" class="add" on:click|preventDefault={()=>adding_state=1}>+ Add to repertoire</a></p>
 	{:else if adding_state == 1}
@@ -75,26 +69,9 @@
 			<p in:slide|local style="color:red;"><span style="font-weight:bold;">Error</span>: {error.message}</p>
 		{/await}
 	{/if}
-	<br style="clear:both;"/>
-</div>
+</LStudyCard>
 
 <style>
-	.study {
-		position:relative;
-		width:350px;
-		max-width:100%;
-		background-color:#FFF6ED;
-		border-radius:4px;
-		border-color:rgba(40,43,40,0.3); /* #282B28 */
-		border-style:solid;
-		border-width:1px;
-	}
-	.board {
-		float: left;
-		width:96px;
-		margin-right:16px;
-	}
-	
 	button.add_white, button.add_black {
 		cursor:pointer;
 		padding:3px 6px;
@@ -116,7 +93,7 @@
 		background-color:#333;
 	}
 
-	.study button.hide {
+	button.hide {
 		position:absolute;
 		top:3px;
 		right:6px;
@@ -126,13 +103,8 @@
 		cursor:pointer;
 		color:#800020;
 	}
-	.study button.hide:hover {
+	button.hide:hover {
 		font-weight:bold;
-	}
-	.study h2 {
-		font-size:18px;
-		font-weight:bold;
-		margin:8px 0;
 	}
 	p {
 		margin:0;

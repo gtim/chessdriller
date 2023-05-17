@@ -5,12 +5,13 @@
 	import { fade, slide } from 'svelte/transition';
 	import { cubicInOut } from 'svelte/easing';
 
-	import LichessStudy from '$lib/LichessStudy.svelte';
+	import NewLStudy from '$lib/NewLStudy.svelte';
+	import RepLStudy from '$lib/RepLStudy.svelte';
 
-	let studies = [];
-	$: unincluded_studies = studies.filter( (study) => !( study.included || study.hidden ) );
-	$: included_studies   = studies.filter( (study) => study.included );
-	$: hidden_studies     = studies.filter( (study) => study.hidden );
+	let studies = null;
+	$: unincluded_studies = studies === null ? null : studies.filter( (study) => !( study.included || study.hidden ) );
+	$: included_studies   = studies === null ? null : studies.filter( (study) => study.included );
+	$: hidden_studies     = studies === null ? null : studies.filter( (study) => study.hidden );
 	async function getStudies() {
 		const res = await fetch( '/api/lichess-study' );
 		const json = await res.json();
@@ -52,47 +53,77 @@
 <div class="narrow_container">
 	<h1>Repertoire</h1>
 </div>
-	{#if unincluded_studies.length > 0}
-		<div class="narrow_container"><p>These studies were found on your Lichess account, but are not included in your repertoire. You can include them or hide them.</p></div>
-		<div class="unincluded_studies">
-		{#each unincluded_studies as study (study.id) }
-			<div animate:flip={{duration:750, easing: cubicInOut }} in:fade|local out:slide|local={{duration:500,axis:'x'}}>
-			<LichessStudy {...study} on:change={getStudies} on:included={getStudies}/>
-			</div>
-		{/each}
+
+
+	{#if studies !== null && studies.length == 0}
+		<div class="narrow_container">
+			<p>No studies were found in your Lichess account. To use Chessdriller, <a href="https://lichess.org/study">create a Lichess study</a>, input the moves you're memorizing, and refresh this page.</p>
+		</div>
+	{:else if included_studies !== null && included_studies.length == 0 }
+		<div class="narrow_container">
+			<p>
+			{#if studies.length == 1}
+				A study was found in your Lichess account. Add it to your repertoire to practice the moves with Chessdriller.
+			{:else}
+				{studies.length} studies were found in your Lichess account. Add one or more of them to your repertoire to practice the moves with Chessdriller.
+			{/if}
+			</p>
 		</div>
 	{/if}
 
+	{#if included_studies !== null && included_studies.length > 1}
+		<div class="studies_container">
+			<div class="included_studies">
+			{#each included_studies as study (study.id) }
+				<div animate:flip={{duration:750, easing: cubicInOut }} in:fade|local>
+					<RepLStudy {...study}/>
+				</div>
+			{/each}
+			</div>
+		</div>
+	{/if}
+
+<!-- unincluded studies -->
+
+	{#if unincluded_studies !== null && unincluded_studies.length > 0}
+		<div class="studies_container">
+			<div class="unincluded_studies">
+			{#each unincluded_studies as study (study.id) }
+				<div animate:flip={{duration:750, easing: cubicInOut }} in:fade|local out:slide|local={{duration:500,axis:'x'}}>
+				<NewLStudy {...study} on:change={getStudies} on:included={getStudies}/>
+				</div>
+			{/each}
+			</div>
+		</div>
+	{/if}
+
+	<div class="narrow_container">
+		{#if new_studies_promise}
+			{#await new_studies_promise}
+				<p>Checking for new studies...</p>
+			{:then new_studies}
+				<p>Found {new_studies.num_new_studies} new {new_studies.num_new_studies==1?'study':'studies'}.</p>
+			{:catch error}
+				<p style="color:red;">{error}</p>
+			{/await}
+		{:else}
+			<button on:click={lookForNewStudies}>Check for new studies</button>
+		{/if}
+	</div>
 
 <div class="narrow_container">
-	{#if new_studies_promise}
-		{#await new_studies_promise}
-			<p>Checking for new studies...</p>
-		{:then new_studies}
-			<p>Found {new_studies.num_new_studies} new {new_studies.num_new_studies==1?'study':'studies'}.</p>
-		{:catch error}
-			<p style="color:red;">{error}</p>
-		{/await}
-	{:else}
-		<button on:click={lookForNewStudies}>Check for new studies</button>
+	<p class="hidden_studies"><small>
+	{#if unincluded_studies !== null && unincluded_studies.length > 0 }
+		You can hide the Lichess studies that you don't want to add to your repertoire. They can always be unhidden later.
 	{/if}
-
-	{#if included_studies.length > 0}
-		<p>Your included studies:
-		{#each included_studies as study, i}
-			{study.name}{i<included_studies.length-1?', ':''}
-		{/each}
-		</p>
-	{/if}
-
-	{#if hidden_studies.length > 0}
-		<p>Your hidden studies:
+	{#if hidden_studies !== null && hidden_studies.length > 0}
+		Hidden Lichess studies, not part of your repertoire:
 		{#each hidden_studies as study, i}
 			{study.name}
 			(<a href="#" on:click|preventDefault={()=>unhide(study.id)}>unhide</a>){i<hidden_studies.length-1?', ':''}
 		{/each}
-		</p>
 	{/if}
+	</small></p>
 </div>
 
 <style>
@@ -101,11 +132,22 @@
 		max-width:100%;
 		margin:0 auto;
 	}
-	.unincluded_studies {
-		display:flex;
-		flex-wrap:wrap;
-		gap:20px 20px;
-		justify-content:center;
+	.studies_container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.unincluded_studies, .included_studies {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(350px,1fr)); /* 350px: LStudyCard width */
+		max-width: min(100%, 1100px ); /* 1100px =~ 3*350px */
+		grid-gap: 20px;
 		margin-bottom:20px;
+		justify-content: center;
+	}
+	.unincluded_studies { }
+	.included_studies { }
+	.hidden_studies {
+		margin-top:32px;
 	}
 </style>

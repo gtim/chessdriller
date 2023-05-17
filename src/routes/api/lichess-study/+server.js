@@ -19,7 +19,8 @@ export async function GET({ url, locals }) {
 				repForWhite: true,
 				guessedColor: true,
 				previewFen: true,
-				hidden: true
+				hidden: true,
+				_count: { select: { moves: true } }
 			}
 		});
 		return json({
