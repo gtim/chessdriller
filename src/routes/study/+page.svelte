@@ -159,7 +159,14 @@
 
 {#if review_finished}
 
-	<p>You're done reviewing!</p>
+	<div class="narrow_container">
+		<h1>Study</h1>
+		{#if stats && stats.moves_total == 0}
+			<p>There are no moves to practice. Go to the <a href="/rep">repertoire tab</a> to start building your repertoire.</p>
+		{:else}
+			<p>You're done reviewing!</p>
+		{/if}
+	</div>
 
 {:else}
 
@@ -210,6 +217,11 @@
 {/if}
 
 <style>
+	.narrow_container {
+		width:512px;
+		max-width:100%;
+		margin:0 auto;
+	}
 	#stats {
 		text-align:center;
 	}
