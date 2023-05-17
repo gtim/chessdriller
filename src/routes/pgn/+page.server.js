@@ -1,3 +1,4 @@
+import { redirect } from "@sveltejs/kit";
 import { PrismaClient } from '@prisma/client';
 import { importPgn } from '$lib/pgnImporter.js';
 const prisma = new PrismaClient();
