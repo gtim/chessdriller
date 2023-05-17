@@ -20,7 +20,11 @@ export async function GET({ url, locals }) {
 				guessedColor: true,
 				previewFen: true,
 				hidden: true,
-				_count: { select: { moves: true } }
+				_count: {
+					select: { 
+						moves: { where: { ownMove: true } }
+					}
+				}
 			}
 		});
 		return json({

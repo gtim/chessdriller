@@ -27,7 +27,7 @@
 	orientation={repForWhite?'white':'black'}
 	title={name}
 >
-<p>{_count.moves} moves.</p>
+<p>{_count.moves} {repForWhite?'white':'black'} move{_count.moves==1?'':'s'}.</p>
 <p>Updated <span title="{lastModifiedOnLichess}">{updated_ago}</span>.</p>
 </LStudyCard>
 
