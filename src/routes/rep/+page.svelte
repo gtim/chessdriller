@@ -79,9 +79,9 @@
 		<div class="narrow_container">
 			<p>
 			{#if unincluded_studies.length == 1}
-				The below study has not been added to your repertoire. You can either add it, or hide it (&#x2715;). 
+				The below study has not been added to your repertoire. You can either add it (+), or hide it (&#x2715;). 
 			{:else}
-				The below {unincluded_studies.length} studies have not been added to your repertoire. You can either add them, or hide them (&#x2715;).
+				The below {unincluded_studies.length} studies have not been added to your repertoire. You can either add them (+), or hide them (&#x2715;).
 			{/if}
 			Hidden studies can always be unhidden later.
 			</p>

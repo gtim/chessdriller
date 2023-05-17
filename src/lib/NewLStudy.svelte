@@ -54,7 +54,7 @@
 >
 	<button class="hide" title="Remove study from this list" on:click={hide}>&#x2715;</button>
 	{#if adding_state == 0}
-		<p><a href="#" class="add" on:click|preventDefault={()=>adding_state=1}>+ Add to repertoire</a></p>
+		<p><a href="#" class="add" on:click|preventDefault={()=>adding_state=1}>+ add to repertoire</a></p>
 	{:else if adding_state == 1}
 		<p in:slide|local>Which color?
 			<button class="add_white" on:click|once={addWhite}>White</button>
