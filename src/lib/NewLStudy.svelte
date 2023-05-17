@@ -44,13 +44,13 @@
 			throw new Error(json.message);
 		}
 	}
-	let title = '<a href="https://lichess.org/study/'+lichessId+'" target="_blank" rel="noopener noreferrer" title="Open study on Lichess">'+name+'</a>';
 </script>
 
 <LStudyCard
 	fen={previewFen}
 	orientation={guessedColor=='b'?'black':'white'}
-	{title}
+	title={name}
+	included={false}
 >
 	<button class="hide" title="Remove study from this list" on:click={hide}>&#x2715;</button>
 	{#if adding_state == 0}

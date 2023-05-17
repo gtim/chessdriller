@@ -8,10 +8,12 @@
 	export let fen;
 	export let orientation;
 	export let title;
+
+	export let included = true; // different style for not-included
 </script>
 
 
-<div class="study">
+<div class="study" class:unincluded={!included}>
 	<div class="board">
 		<Chessground
 			className="cg-print" coordinates={false}
@@ -44,6 +46,24 @@
 		font-size:16px;
 		font-weight:bold;
 		margin:8px 0;
+	}
+
+	/* styling for unincluded-study cards */
+
+	.study.unincluded {
+		border-style:dashed;
+	}
+	.study.unincluded:hover {
+		border-style:solid;
+	}
+	.study.unincluded { 
+		opacity:0.8;
+	}
+	.unincluded .board {
+		opacity:0.7;
+	}
+	.unincluded:hover .board, .unincluded:hover {
+		opacity:1;
 	}
 	
 </style>
