@@ -58,7 +58,7 @@
 
 	{#if studies !== null && studies.length == 0}
 		<div class="narrow_container">
-			<p>No studies were found in your Lichess account. To use Chessdriller, <a href="https://lichess.org/study">create a Lichess study</a>, input the moves you're memorizing, and refresh this page.</p>
+			<p>No studies were found in your Lichess account. To use Chessdriller, <a href="https://lichess.org/study" target="_blank" rel="noopener noreferrer">create a Lichess study</a>, input the moves you're memorizing, and refresh this page.</p>
 		</div>
 	{/if}
 
