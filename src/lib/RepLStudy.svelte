@@ -49,21 +49,22 @@
 			dispatch( 'remove' );
 		}
 	}
+	$: title = removed ? '<span style="text-decoration:line-through;">'+name+'</span>' : name;
 
 </script>
 
 <LStudyCard
 	fen={previewFen}
 	orientation={repForWhite?'white':'black'}
-	title={name}
+	{title}
 >
 	{#if removed}
 		<p>Removed.</p>
 	{:else}
 		<p>{moves_string}.</p>
 		<p>Updated <span title="{lastModifiedOnLichess}">{updated_ago}</span>.</p>
+		<button class="remove" title="Remove study from repertoire" on:click={confirmRemoval}>&#x2715;</button>
 	{/if}
-	<button class="remove" title="Remove study from repertoire" on:click={confirmRemoval}>&#x2715;</button>
 	{#if removal_error}
 		<p style="color:red;"><b>Error:</b> {removal_error}</p>
 	{/if}
