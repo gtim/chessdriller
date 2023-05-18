@@ -46,7 +46,7 @@
 			removal_error = 'Removal failed: ' + json.message;
 		} else {
 			removed = true;
-			dispatch( 'remove' );
+			dispatch( 'change' );
 		}
 	}
 	$: title = removed ? '<span style="text-decoration:line-through;">'+name+'</span>' : name;

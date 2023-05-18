@@ -67,7 +67,7 @@
 			<div class="included_studies">
 			{#each included_studies as study (study.id) }
 				<div animate:flip={{duration:750, easing: cubicInOut }} in:fade|local>
-					<RepLStudy {...study}/>
+					<RepLStudy {...study} on:change={getStudies} />
 				</div>
 			{/each}
 			</div>
