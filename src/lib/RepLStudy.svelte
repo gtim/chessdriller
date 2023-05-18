@@ -28,11 +28,26 @@
 	function confirmRemoval(){
 		openModal( ConfirmModal, {
 			title: 'Remove study?',
-			message: 'Remove the study <i>'+name+'</i> from your repertoire? Chessdriller remembers how well you knew the moves, in case you add them back later.',
+			message: 'Remove the study <b>'+name+'</b> from your repertoire? Chessdriller remembers how well you knew the moves, in case you add them back later.',
 
-			confirm: () => { alert('not implemented'); },
+			confirm: removeStudy,
 			confirmLabel: 'Remove'
 		} );
+	}
+
+	let removed = false;
+	let removal_error;
+	async function removeStudy() {
+		const res = await fetch( '/api/lichess-study/'+id+'/uninclude', {method:'POST'} );
+		const json = await res.json();
+		if ( ! res.ok ) {
+			removal_error = 'Removal failed ('+res.status+')';
+		} else if ( ! json.success ) {
+			removal_error = 'Removal failed: ' + json.message;
+		} else {
+			removed = true;
+			dispatch( 'remove' );
+		}
 	}
 
 </script>
@@ -42,9 +57,16 @@
 	orientation={repForWhite?'white':'black'}
 	title={name}
 >
-	<p>{moves_string}</p>
-	<p>Updated <span title="{lastModifiedOnLichess}">{updated_ago}</span>.</p>
+	{#if removed}
+		<p>Removed.</p>
+	{:else}
+		<p>{moves_string}.</p>
+		<p>Updated <span title="{lastModifiedOnLichess}">{updated_ago}</span>.</p>
+	{/if}
 	<button class="remove" title="Remove study from repertoire" on:click={confirmRemoval}>&#x2715;</button>
+	{#if removal_error}
+		<p style="color:red;"><b>Error:</b> {removal_error}</p>
+	{/if}
 </LStudyCard>
 
 <style>
@@ -60,5 +82,8 @@
 		border:none;
 		cursor:pointer;
 		color:#800020;
+	}
+	button.remove:hover {
+		font-weight:bold;
 	}
 </style>

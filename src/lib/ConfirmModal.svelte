@@ -7,6 +7,11 @@
 	export let message;
 	export let confirm;
 	export let confirmLabel = "OK";
+
+	function confirmAndClose() {
+		confirm();
+		closeModal();
+	}
 </script>
 
 {#if isOpen}
@@ -17,7 +22,7 @@
 			<p>{@html message}</p>
 			<div class="actions">
 				<button on:click={closeModal}>Cancel</button>
-				<button on:click={confirm}>{confirmLabel}</button>				
+				<button on:click={confirmAndClose}>{confirmLabel}</button>				
 			</div>
 		</div>
 	</div>

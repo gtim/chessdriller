@@ -131,36 +131,14 @@ export async function deletePgn( pgn_id, user_id, prisma ) {
 	if ( pgn.userId != user_id )
 		throw new Error( 'PGN does not belong to this account (are you logged in?)' );
 	
-	// Find moves that should be soft-deleted
-	let queries = [];
-	let num_deleted_moves = 0;
-	for ( const move of pgn.moves ) {
-		if ( move.pgns.length == 1 && move.studies.length == 0 ) {
-			// no other PGNs/studies contain this move: soft-delete it
-			if ( move.pgns[0].id != pgn_id ) {
-				console.log( 'Assertion failed in PGN deletion: bad PGN ID ('+pgn_id+','+move.pgns[0].id+')' );
-				throw new Error( 'Bad PGN ID ('+pgn_id+','+move.pgns[0].id+')' );
-			}
-			queries.push( prisma.Move.update({
-				where: { id: move.id },
-				data: { 
-					deleted: true,
-					pgns: { disconnect: [{id:pgn_id}] }
-				}
-			}) );
-			num_deleted_moves++;
-		} else if ( move.pgns.length == 0 ) {
-			console.log( 'Assertion failed in PGN deletion: move not in PGN (move '+move.id+', PGN '+pgn_id+')' );
-			throw new Error( 'Move not in PGN (move '+move.id+', PGN '+pgn_id+')' );
-		} else {
-			// Other PGNs/studies contain this move: just disconnect this PGN
-		}
-	}
+	// Soft-delete moves
+	let queries = orphanMoveSoftDeletionsQueries( pgn.moves, prisma );
+	const num_deleted_moves = queries.length;
 
-	// delete the PGN row
+	// Delete the PGN
 	queries.push( prisma.Pgn.delete({ where: { id: pgn.id } }) );
 
-	// run transaction
+	// Run transaction
 	try {
 		await prisma.$transaction(queries);
 	} catch(e) {
@@ -169,6 +147,66 @@ export async function deletePgn( pgn_id, user_id, prisma ) {
 	}
 
 	return num_deleted_moves;
+}
+
+// Unincludes a PGN, so that it is no longer part of the repertoire.
+// Soft-deletes all moves that are not in another PGN/Study.
+// Returns the number of deleted moves.
+export async function unincludeStudy( study_id, user_id, prisma ) {
+	
+	// get study and all moves
+	const study = await prisma.LichessStudy.findUnique( {
+		where: { id: study_id },
+		include: {
+			moves: {
+				select: {
+					id: true,
+					pgns:    { select: {id:true} },
+					studies: { select: {id:true} }
+				}
+			},
+		}
+	});
+	if ( ! study )
+		throw new Error( 'Study #' + study_id + ' not found' );
+	if ( study.userId != user_id )
+		throw new Error( 'Study does not belong to this account (are you logged in?)' );
+	
+	// Soft-delete moves
+	let queries = orphanMoveSoftDeletionsQueries( study.moves, prisma );
+	const num_deleted_moves = queries.length;
+
+	// Set the study to not included
+	queries.push( prisma.LichessStudy.update({
+		where: { id: study_id },
+		data: { included: false }
+	}) );
+
+	// Run transaction
+	try {
+		await prisma.$transaction(queries);
+	} catch(e) {
+		console.log( 'Exception running study removal transaction: ' + e.message );
+		throw new Error( e.message );
+	}
+
+	return num_deleted_moves;
+}
+
+// orphanMoveSoftDeletionsQueries produces soft-delete queries for moves that would be orphaned from a PGN/study removal.
+// Helper function for deletePGN and unincludeStudy.
+function orphanMoveSoftDeletionsQueries( moves, prisma ) {
+	let queries = [];
+	for ( const move of moves ) {
+		if ( move.pgns.length + move.studies.length == 1 ) {
+			// no other PGNs/studies contain this move: soft-delete it
+			queries.push( prisma.Move.update({
+				where: { id: move.id },
+				data: { deleted: true }
+			}) );
+		}
+	}
+	return queries;
 }
 
 
