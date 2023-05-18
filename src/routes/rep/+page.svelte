@@ -124,6 +124,7 @@
 		</div>
 	{/if}
 
+
 <style>
 	.narrow_container {
 		width:512px;
