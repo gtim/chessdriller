@@ -62,7 +62,7 @@
 		</div>
 	{/if}
 
-	{#if included_studies !== null && included_studies.length > 1}
+	{#if included_studies !== null && included_studies.length > 0}
 		<div class="studies_container">
 			<div class="included_studies">
 			{#each included_studies as study (study.id) }
