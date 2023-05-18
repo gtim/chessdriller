@@ -108,6 +108,70 @@ export async function importPgn( pgn_content, pgn_filename, prisma, user_id, rep
 	return moves.length;
 }
 
+// Deletes a PGN.
+// Soft-deletes all moves that are not in another PGN/Study.
+// Returns the number of deleted moves.
+export async function deletePgn( pgn_id, user_id, prisma ) {
+	
+	// get PGN and all moves
+	const pgn = await prisma.Pgn.findUnique( {
+		where: { id: pgn_id },
+		include: {
+			moves: {
+				select: {
+					id: true,
+					pgns:    { select: {id:true} },
+					studies: { select: {id:true} }
+				}
+			},
+		}
+	});
+	if ( ! pgn )
+		throw new Error( 'PGN #' + pgn_id + ' not found' );
+	if ( pgn.userId != user_id )
+		throw new Error( 'PGN does not belong to this account (are you logged in?)' );
+	
+	// Find moves that should be soft-deleted
+	let queries = [];
+	let num_deleted_moves = 0;
+	for ( const move of pgn.moves ) {
+		if ( move.pgns.length == 1 && move.studies.length == 0 ) {
+			// no other PGNs/studies contain this move: soft-delete it
+			if ( move.pgns[0].id != pgn_id ) {
+				console.log( 'Assertion failed in PGN deletion: bad PGN ID ('+pgn_id+','+move.pgns[0].id+')' );
+				throw new Error( 'Bad PGN ID ('+pgn_id+','+move.pgns[0].id+')' );
+			}
+			queries.push( prisma.Move.update({
+				where: { id: move.id },
+				data: { 
+					deleted: true,
+					pgns: { disconnect: [{id:pgn_id}] }
+				}
+			}) );
+			num_deleted_moves++;
+		} else if ( move.pgns.length == 0 ) {
+			console.log( 'Assertion failed in PGN deletion: move not in PGN (move '+move.id+', PGN '+pgn_id+')' );
+			throw new Error( 'Move not in PGN (move '+move.id+', PGN '+pgn_id+')' );
+		} else {
+			// Other PGNs/studies contain this move: just disconnect this PGN
+		}
+	}
+
+	// delete the PGN row
+	queries.push( prisma.Pgn.delete({ where: { id: pgn.id } }) );
+
+	// run transaction
+	try {
+		await prisma.$transaction(queries);
+	} catch(e) {
+		console.log( 'Exception running PGN deletion transaction: ' + e.message );
+		throw new Error( e.message );
+	}
+
+	return num_deleted_moves;
+}
+
+
 // Converts text from single PGN game to a moves-list.
 // Exported only as a test utility.
 export function singlePgnToMoves( pgn_content, repForWhite ) {
