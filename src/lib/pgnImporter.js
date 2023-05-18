@@ -18,10 +18,11 @@ export async function includeStudy( study_id, prisma, user_id, repForWhite ) {
 	const moves = pgntexts.map( (pgn) => singlePgnToMoves( pgn, repForWhite ) ).flat();
 
 	// insert moves
+	let queries = [];
 	for ( const move of moves ) {
 		move.userId = user_id;
 		move.studies = { connect: [{ id: study_id }] };
-		await prisma.move.upsert( {
+		queries.push( prisma.move.upsert( {
 			where: {
 				userId_repForWhite_fromFen_toFen: {
 					userId: user_id,
@@ -35,18 +36,25 @@ export async function includeStudy( study_id, prisma, user_id, repForWhite ) {
 				studies: move.studies,
 				deleted: false
 			}
-		});
+		}) );
 	}
 
 	// update study
-	await prisma.LichessStudy.update({
+	queries.push( prisma.LichessStudy.update({
 		where: { id: study_id },
 		data: {
 			included: true,
 			repForWhite
 		}
+	}) );
 
-	});
+	// run transaction
+	try {
+		await prisma.$transaction(queries);
+	} catch(e) {
+		console.log( 'Exception inserting study moves into database: ' + e.message );
+		throw new Error( 'Exception inserting moves into database: ' + e.message );
+	}
 }
 
 export async function importPgn( pgn_content, pgn_filename, prisma, user_id, repForWhite ) {
@@ -67,10 +75,11 @@ export async function importPgn( pgn_content, pgn_filename, prisma, user_id, rep
 	}
 
 	// insert moves into db
+	let queries = [];
 	for ( const move of moves ) {
 		move.userId = user_id;
 		move.pgns = { connect: [{ id: pgn.id }] };
-		await prisma.move.upsert( {
+		queries.push( prisma.move.upsert( {
 			where: {
 				userId_repForWhite_fromFen_toFen: {
 					userId: user_id,
@@ -84,7 +93,16 @@ export async function importPgn( pgn_content, pgn_filename, prisma, user_id, rep
 				pgns: move.pgns,
 				deleted: false
 			}
-		});
+		}) );
+	}
+
+	try {
+		if ( queries.length > 0 ) {
+			await prisma.$transaction(queries);
+		}
+	} catch(e) {
+		console.log( 'Exception inserting PGN moves into database: ' + e.message );
+		throw new Error( 'Exception inserting moves into database: ' + e.message );
 	}
 
 	return moves.length;
