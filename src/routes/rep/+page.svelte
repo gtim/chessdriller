@@ -17,6 +17,11 @@
 		const json = await res.json();
 		studies = json.studies;
 	}
+	async function getStudiesTwice() {
+		// Stagger getStudies to deal with some request timing issues
+		getStudies();
+		setTimeout( getStudies, 500 );
+	}
 
 	onMount( async () => {
 		await getStudies();
