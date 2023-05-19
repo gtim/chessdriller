@@ -44,6 +44,12 @@
 			throw new Error(json.message);
 		}
 	}
+
+	let card;
+	export const redrawBoard = () => {
+		if ( card )
+			card.redrawBoard();
+	};
 </script>
 
 <LStudyCard
@@ -51,6 +57,7 @@
 	orientation={guessedColor=='b'?'black':'white'}
 	title={name}
 	included={false}
+	bind:this={card}
 >
 	<button class="hide" title="Remove study from this list" on:click={hide}>&#x2715;</button>
 	{#if adding_state == 0}

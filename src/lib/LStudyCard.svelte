@@ -10,6 +10,13 @@
 	export let title;
 
 	export let included = true; // different style for not-included
+
+	let chessground;
+	export const redrawBoard = () => {
+		console.log('redrawBoard ' + title);
+		if ( chessground )
+			chessground.redrawAll();
+	};
 </script>
 
 
@@ -19,6 +26,7 @@
 			className="cg-print" coordinates={false}
 			{fen} {orientation}
 			viewOnly={true} disableContextMenu={false} config={{drawable:{enabled:false}}}
+			bind:this={chessground}
 		/>
 	</div>
 	<h2>{@html title}</h2>

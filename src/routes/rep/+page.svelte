@@ -59,6 +59,9 @@
 		easing: cubicInOut,
 		fallback: fade
 	});
+	
+	// component array necessary to call redrawBoard() after animation
+	let unincluded_study_components = [];
 
 </script>
 
@@ -101,12 +104,17 @@
 		</div>
 		<div class="studies_container">
 			<div class="unincluded_studies">
-			{#each unincluded_studies as study (study.id) }
+			{#each unincluded_studies as study, i (study.id) }
 				<div 
 					animate:flip={{duration:750, easing: cubicInOut }}
 					in:receive="{{key:study.id}}" out:send="{{key:study.id}}"
+					on:introend={()=>unincluded_study_components[i].redrawBoard()}
 				>
-					<NewLStudy {...study} on:change={getStudiesTwice} on:included={getStudiesTwice}/>
+					<NewLStudy {...study}
+						on:change={getStudiesTwice}
+						on:included={getStudiesTwice}
+						bind:this={unincluded_study_components[i]}
+					/>
 				</div>
 			{/each}
 			</div>
@@ -132,7 +140,9 @@
 			<p class="hidden_studies"><small>
 				Hidden Lichess studies, not part of your repertoire:
 				{#each hidden_studies as study, i (study.id)}
-					{study.name}
+					<span in:receive="{{key:study.id}}" out:send="{{key:study.id}}">
+						{study.name}
+					</span>
 					(<a href="#" on:click|preventDefault={()=>unhide(study.id)}>unhide</a>){i<hidden_studies.length-1?', ':''}
 				{/each}
 			</small></p>
