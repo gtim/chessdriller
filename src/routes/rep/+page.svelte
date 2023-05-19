@@ -138,12 +138,12 @@
 	{#if hidden_studies !== null && hidden_studies.length > 0}
 		<div class="narrow_container">
 			<p class="hidden_studies"><small>
-				Hidden Lichess studies, not part of your repertoire:
+				Hidden studies, not part of your repertoire:
 				{#each hidden_studies as study, i (study.id)}
 					<span in:receive="{{key:study.id}}" out:send="{{key:study.id}}">
-						{study.name}
-					</span>
-					(<a href="#" on:click|preventDefault={()=>unhide(study.id)}>unhide</a>){i<hidden_studies.length-1?', ':''}
+						<a href="#" on:click|preventDefault={()=>unhide(study.id)} title="Unhide this study">{study.name}</a><!--
+					--></span><!--
+					-->{i < hidden_studies.length - 2 ? ', ' : ( i == hidden_studies.length - 2 ? ' and ' : '.' ) }
 				{/each}
 			</small></p>
 		</div>
