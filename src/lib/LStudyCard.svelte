@@ -13,7 +13,6 @@
 
 	let chessground;
 	export const redrawBoard = () => {
-		console.log('redrawBoard ' + title);
 		if ( chessground )
 			chessground.redrawAll();
 	};
