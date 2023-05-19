@@ -3,7 +3,7 @@
 	import LStudyCard from '$lib/LStudyCard.svelte';
 
 	import { createEventDispatcher } from 'svelte';
-	import { fade, slide } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 
 	const dispatch = createEventDispatcher();
 

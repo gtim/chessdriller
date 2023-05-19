@@ -1,11 +1,10 @@
-import { json, error, fail } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 import { moveIsDue } from '$lib/scheduler.js';
-import { auth } from "$lib/server/lucia";
 
 const prisma = new PrismaClient();
 
-export async function GET({ url, locals }) {
+export async function GET({ locals }) {
 
 	// session
 	const { user } = await locals.auth.validateUser();

@@ -1,5 +1,5 @@
 <script>
-	import { closeModal, openModal } from 'svelte-modals'
+	import { closeModal } from 'svelte-modals'
 	import { fly } from 'svelte/transition'
 
 	export let isOpen;

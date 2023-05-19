@@ -1,4 +1,4 @@
-import { json, error } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 import { getLineForStudy, getClosestLineForStudy } from '$lib/scheduler.js';
 

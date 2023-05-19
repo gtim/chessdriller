@@ -1,9 +1,9 @@
-import { json, error } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 import { fetchStudiesMetadata, fetchStudyPGN } from '$lib/lichessStudy.js';
 import { guessColor, makePreviewFen } from '$lib/pgnImporter.js';
 
-export async function GET({ url, locals }) {
+export async function GET({ locals }) {
 
 	// get lucia-user from session
 

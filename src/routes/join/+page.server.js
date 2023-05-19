@@ -1,5 +1,5 @@
 import { redirect } from "@sveltejs/kit";
-import { auth, lichessAuth } from "$lib/server/lucia";
+import { lichessAuth } from "$lib/server/lucia";
 
 export const load = async ({ locals, cookies }) => {
 

@@ -18,7 +18,7 @@ export async function GET({ cookies, url, locals }) {
 	// login successful
 
 	try {
-		const { existingUser, lichessUser, providerUserId, tokens } = await lichessAuth.validateCallback(code);
+		const { existingUser, providerUserId, tokens } = await lichessAuth.validateCallback(code);
 		const getUser = async () => {
 			if ( existingUser )
 				return existingUser;

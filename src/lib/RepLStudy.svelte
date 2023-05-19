@@ -2,8 +2,6 @@
 
 	import LStudyCard from '$lib/LStudyCard.svelte';
 
-	import { fade, slide } from 'svelte/transition';
-
 	import ConfirmModal from '$lib/ConfirmModal.svelte'
 	import { openModal } from 'svelte-modals'
 

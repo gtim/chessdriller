@@ -1,7 +1,7 @@
-import { json, error } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 
-export async function GET({ url, locals }) {
+export async function GET({ locals }) {
 	const { user } = await locals.auth.validateUser();
 	if (!user) return json({ success: false, message: 'not logged in' });
 

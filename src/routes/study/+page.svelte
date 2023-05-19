@@ -4,7 +4,7 @@
 	import MoveFeedbackStar from '$lib/MoveFeedbackStar.svelte';
 	import MoveSheet from '$lib/MoveSheet.svelte';
 	import { onMount } from 'svelte';
-	import { fade, fly } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 	import gsap from 'gsap';
 
 	const delay_after_line_ms = 500;
@@ -99,7 +99,7 @@
 						},
 						intro: true
 					});
-					mfs.$on('done', event => {
+					mfs.$on('done', () => {
 						mfs.$destroy();
 					});
 				}

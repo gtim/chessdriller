@@ -152,10 +152,6 @@
 		} ] );
 	}
 
-	function colorToMove( fen ) {
-		return fen.split(' ')[1] === 'w' ? 'white' : 'black';
-	}
-
 	// find allowed piece destinations via chess.js logic.
 	// GPL3 code from lichess-org/chessground-examples/src/utils.ts.
 	function toDests(chess) {

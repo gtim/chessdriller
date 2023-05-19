@@ -1,9 +1,9 @@
-import { json, error } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 import { deletePgn } from '$lib/pgnImporter.js';
 const prisma = new PrismaClient();
 
-export async function POST({ url, locals, params }) {
+export async function POST({ locals, params }) {
 	const { user } = await locals.auth.validateUser();
 	if (!user) return json({ success: false, message: 'not logged in' });
 

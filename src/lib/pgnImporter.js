@@ -1,6 +1,4 @@
 import { Chess } from '../../node_modules/cm-chess/src/cm-chess/Chess.js';
-import { PrismaClient } from '@prisma/client';
-
 
 export async function includeStudy( study_id, prisma, user_id, repForWhite ) {
 	const study = await prisma.LichessStudy.findUniqueOrThrow({
@@ -236,8 +234,8 @@ function chessHistoryToMoves( history, repForWhite ) {
 	for ( const move of history ) {
 		const ownMove = ( repForWhite && move.color == 'w' || !repForWhite && move.color == 'b' );
 		moves.push( {
-			repForWhite: repForWhite,
-			ownMove: repForWhite && move.color == 'w' || !repForWhite && move.color == 'b',
+			repForWhite,
+			ownMove,
 			fromFen: normalize_fen( move.previous ? move.previous.fen : 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' ),
 			toFen:   normalize_fen(move.fen),
 			moveSan: move.san,

@@ -1,4 +1,4 @@
-import { redirect } from "@sveltejs/kit";
+import { json, redirect } from "@sveltejs/kit";
 import { PrismaClient } from '@prisma/client';
 import { importPgn } from '$lib/pgnImporter.js';
 const prisma = new PrismaClient();
@@ -30,7 +30,7 @@ export const load = async ({locals}) => {
 // form action for uploading PGN
 
 export const actions = {
-	default: async ({cookies,request,locals}) => {
+	default: async ({request,locals}) => {
 
 		// session
 		const { user } = await locals.auth.validateUser();
