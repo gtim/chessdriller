@@ -78,7 +78,17 @@ export async function getClosestLineForStudy( moves, now, last_line ) {
 		// there are more due moves for that color's repertoire
 		let line;
 		let start_ix;
-		[ line, start_ix ] = findDueLineWithLatestDeviation( last_line, moves_same_rep_as_last );
+		try {
+			[ line, start_ix ] = findDueLineWithLatestDeviation( last_line, moves_same_rep_as_last );
+		} catch ( error ) {
+			if ( error instanceof RangeError ) {
+				// temporary fix until scheduler rewrite
+				console.log( 'caught findDueLineWithLatestDeviation crashed, returning new line' );
+				return getLineForStudy( moves, now );
+			} else {
+				throw(error);
+			}
+		}
 		if ( line.length == 0 ) {
 			console.log( 'findDueLineWithLatestDeviation found no line; start from scratch' );
 			return getLineForStudy( moves, now );
@@ -126,7 +136,7 @@ function findDueLineWithLatestDeviation( last_line_ids, all_moves ) {
 }
 function findContinuationWithMostDueMoves( start_move, all_moves, excluded_move_ids ) {
 	// Assume no cycles (TODO): directed acyclic graph -> single-path shortest path is straight-forward
-	console.log( '  findContinuationWithMostDueMoves' );
+	//console.log( '  findContinuationWithMostDueMoves' );
 	const possible_moves = all_moves.filter( m => m.fromFen === start_move.toFen && ! excluded_move_ids.hasOwnProperty(m.id) );
 	if ( possible_moves.length == 0 ) {
 		return [start_move.isDue ? 1 : 0, [start_move]];
