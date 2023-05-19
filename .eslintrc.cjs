@@ -7,6 +7,9 @@ module.exports = {
 		sourceType: 'module',
 		ecmaVersion: 2020
 	},
+	rules: {
+		"no-mixed-spaces-and-tabs": ['error','smart-tabs']
+	},
 	env: {
 		browser: true,
 		es2017: true,
