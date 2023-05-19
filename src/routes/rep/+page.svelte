@@ -4,6 +4,7 @@
 	import { flip } from 'svelte/animate';
 	import { fade, slide } from 'svelte/transition';
 	import { cubicInOut } from 'svelte/easing';
+	import { crossfade } from 'svelte/transition';
 
 	import NewLStudy from '$lib/NewLStudy.svelte';
 	import RepLStudy from '$lib/RepLStudy.svelte';
@@ -53,6 +54,12 @@
 		getStudies();
 	}
 
+	const [send, receive] = crossfade({
+		duration: 750,
+		easing: cubicInOut,
+		fallback: fade
+	});
+
 </script>
 
 <div class="narrow_container">
@@ -71,8 +78,8 @@
 		<div class="studies_container">
 			<div class="included_studies">
 			{#each included_studies as study (study.id) }
-				<div animate:flip={{duration:750, easing: cubicInOut }} in:fade|local>
-					<RepLStudy {...study} on:change={getStudies} />
+				<div animate:flip={{duration:750, easing: cubicInOut }} in:receive|local="{{key:study.id}}" out:send|local="{{key:study.id}}">
+					<RepLStudy {...study} on:change={getStudiesTwice} />
 				</div>
 			{/each}
 			</div>
@@ -95,8 +102,11 @@
 		<div class="studies_container">
 			<div class="unincluded_studies">
 			{#each unincluded_studies as study (study.id) }
-				<div animate:flip={{duration:750, easing: cubicInOut }} in:fade|local out:slide|local={{duration:500,axis:'x'}}>
-				<NewLStudy {...study} on:change={getStudies} on:included={getStudies}/>
+				<div 
+					animate:flip={{duration:750, easing: cubicInOut }}
+					in:receive="{{key:study.id}}" out:send="{{key:study.id}}"
+				>
+					<NewLStudy {...study} on:change={getStudiesTwice} on:included={getStudiesTwice}/>
 				</div>
 			{/each}
 			</div>
@@ -121,7 +131,7 @@
 		<div class="narrow_container">
 			<p class="hidden_studies"><small>
 				Hidden Lichess studies, not part of your repertoire:
-				{#each hidden_studies as study, i}
+				{#each hidden_studies as study, i (study.id)}
 					{study.name}
 					(<a href="#" on:click|preventDefault={()=>unhide(study.id)}>unhide</a>){i<hidden_studies.length-1?', ':''}
 				{/each}
