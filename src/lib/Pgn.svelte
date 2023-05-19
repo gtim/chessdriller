@@ -59,7 +59,7 @@
 		{#if content.length == 0}
 			<p>This file is empty.</p>
 		{:else}
-			<p><a href="#" on:click|preventDefault="{()=>show_content=!show_content}">{show_content?'Hide':'Show'} file contents</a></p>
+			<button class="contents" on:click|preventDefault="{()=>show_content=!show_content}">{show_content?'Hide':'Show'} file contents</button>
 			{#if show_content}
 				<div class="pgn_content" transition:slide|local>{content}</div>
 			{/if}
@@ -75,7 +75,7 @@
 		border-color:rgba(40,43,40,0.3); /* #282B28 */
 		border-style:solid;
 		border-width:1px;
-		padding:4px 16px 4px 8px;
+		padding:8px 16px 8px 12px;
 		font-size:14px;
 	}
 	div.pgn_content {
@@ -106,5 +106,16 @@
 
 	p.deleted {
 		text-decoration:line-through;
+	}
+
+	button.contents {
+		padding:3px 6px;
+		background:#FFF6ED;
+		border:1px solid rgba(40,43,40,0.7);
+		border-radius:4px;
+		cursor:pointer;
+	}
+	button.contents:hover {
+		background:#F2E6DB;
 	}
 </style>
