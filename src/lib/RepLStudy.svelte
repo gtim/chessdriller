@@ -1,3 +1,4 @@
+<!-- svelte-ignore unused-export-let -->
 <script>
 
 	import LStudyCard from '$lib/LStudyCard.svelte';
@@ -18,6 +19,13 @@
 	export let previewFen;
 	export let _count;
 	export let lastModifiedOnLichess;
+
+	// Below props are not used, but exported to avoid warnings when the Study is spread onto this prop.
+	export let lichessId;
+	export let lastFetched;
+	export let included;
+	export let hidden;
+	export let guessedColor;
 
 	
 	let updated_ago = relativeTime.from( new Date(lastModifiedOnLichess) );
