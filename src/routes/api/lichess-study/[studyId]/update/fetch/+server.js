@@ -5,7 +5,7 @@ import { pgndbToMoves } from '$lib/pgnImporter.js';
 
 const prisma = new PrismaClient();
 
-export async function GET({ locals, params }) {
+export async function POST({ locals, params }) {
 
 	const { user } = await locals.auth.validateUser();
 	if (!user) return json({ success: false, message: 'not logged in' });
@@ -80,7 +80,13 @@ export async function GET({ locals, params }) {
 	}
 
 
-	return json({ success: true });
+	return json({
+		success: true,
+		update: {
+			numNewMoves,
+			numRemovedMoves
+		}
+	});
 
 }
 

@@ -20,6 +20,12 @@ export async function GET({ locals }) {
 				guessedColor: true,
 				previewFen: true,
 				hidden: true,
+				updates: {
+					select: {
+						numNewMoves: true,
+						numRemovedMoves: true
+					}
+				},
 				_count: {
 					select: { 
 						moves: { where: { ownMove: true } }

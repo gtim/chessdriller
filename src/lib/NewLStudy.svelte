@@ -20,6 +20,7 @@
 	export let included;
 	export let repForWhite;
 	export let hidden;
+	export let updates;
 	export let _count;
 
 	async function hide() {
