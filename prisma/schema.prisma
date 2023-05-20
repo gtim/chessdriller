@@ -90,7 +90,7 @@ model LichessStudy {
 	user                       User @relation( fields: [userId], references: [id] )
 	userId                     Int
 	name                       String
-	lastModifiedOnLichess      DateTime
+	lastModifiedOnLichess      DateTime // appears unreliable -- not currently used
 	lastFetched                DateTime @default(now())
 	pgn                        String
 	moves                      Move[]

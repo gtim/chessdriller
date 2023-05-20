@@ -68,7 +68,6 @@
 		<p>Removed.</p>
 	{:else}
 		<p>{moves_string}.</p>
-		<p>Updated <span title="{lastModifiedOnLichess}">{updated_ago}</span>.</p>
 		<button class="remove" title="Remove study from repertoire" on:click={confirmRemoval}>&#x2715;</button>
 	{/if}
 	{#if removal_error}
