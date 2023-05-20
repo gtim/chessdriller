@@ -12,8 +12,7 @@ export async function includeStudy( study_id, prisma, user_id, repForWhite ) {
 		throw new Error( 'Adding Lichess study failed: study is already included' );
 	
 	// parse PGN
-	const pgntexts = split_pgndb_into_pgns( study.pgn );
-	const moves = pgntexts.map( (pgn) => singlePgnToMoves( pgn, repForWhite ) ).flat();
+	const moves = pgndbToMoves( study.pgn, repForWhite );
 
 	// insert moves
 	let queries = [];
@@ -65,12 +64,7 @@ export async function importPgn( pgn_content, pgn_filename, prisma, user_id, rep
 	} });
 
 	// parse (multi-game) PGN into moves-list
-	const pgntexts = split_pgndb_into_pgns( pgn_content );
-	const moves = [];
-	for ( const pgntext of pgntexts ) {
-		const these_moves = singlePgnToMoves( pgntext, repForWhite );
-		moves.push( ...these_moves );
-	}
+	const moves = pgndbToMoves( pgn_content, repForWhite );
 
 	// insert moves into db
 	let queries = [];
@@ -207,6 +201,11 @@ function orphanMoveSoftDeletionsQueries( moves, prisma ) {
 	return queries;
 }
 
+// Convert PGN database file (multiple PGNs) to a moves-list.
+export function pgndbToMoves( pgndb, repForWhite ) {
+	const pgntexts = split_pgndb_into_pgns( pgndb );
+	return pgntexts.map( (pgn) => singlePgnToMoves( pgn, repForWhite ) ).flat();
+}
 
 // Converts text from single PGN game to a moves-list.
 // Exported only as a test utility.

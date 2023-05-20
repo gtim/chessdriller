@@ -99,8 +99,21 @@ model LichessStudy {
 	guessedColor               String // guess on whether repertoire is w/b/u
 	previewFen                 String // FEN used for board preview in repertoire view
 	hidden                     Boolean @default(false) // true if hidden from the "studies" list
+	updates                    LichessStudyUpdate[]
 
 	@@unique([ userId, lichessId ])
+}
+
+// updates in progress; row removed when update has been applied
+model LichessStudyUpdate {
+	study                 LichessStudy @relation( fields: [studyId], references: [id] )
+	studyId               Int @unique
+//	name                  String?
+//	lastModifiedOnLichess DateTime?
+	fetched               DateTime @default(now())
+	numNewMoves           Int
+	numRemovedMoves       Int
+	pgn                   String
 }
 
 model Pgn {

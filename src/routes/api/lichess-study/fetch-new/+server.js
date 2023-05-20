@@ -17,7 +17,11 @@ export async function GET({ locals }) {
 	
 	const existing_studies = await prisma.LichessStudy.findMany({
 		where: { userId: user.cdUserId },
-		select: { lichessId: true }
+		select: {
+			lichessId: true,
+			lastModifiedOnLichess: true,
+			name: true
+		}
 	});
 	const existing_study_ids = new Set( existing_studies.map( (study) => study.lichessId ) );
 
@@ -50,6 +54,19 @@ export async function GET({ locals }) {
 					previewFen
 				} } );
 				num_new_studies++;
+			} else {
+				// existing study: check if modified
+				// Note: The Lichess API endpoint does not update LastModified when moves are added, only when study metadata changes.
+				// Studies cannot be updated here until that changes.
+				// (TODO)
+				const existing_study = existing_studies.find( (existing_study) => existing_study.lichessId === lichess_study.id );
+				if ( existing_study.lastModifiedOnLichess < new Date(lichess_study.updatedAt) ) {
+					//console.log( 'study has been updated: ' + existing_study.name );
+				} else {
+					//console.log( 'not updated: ' + existing_study.name );
+				}
+				//console.log( '  e:' + existing_study.lastModifiedOnLichess );
+				//console.log( '  l:' + new Date( lichess_study.updatedAt ) );
 			}
 		}
 

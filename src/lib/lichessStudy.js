@@ -1,3 +1,5 @@
+// Logic for handling Lichess Study API calls
+
 export async function fetchStudiesMetadata( lichess_username, lichess_access_token ) {
 	const req = new Request( 'https://lichess.org/api/study/by/' + lichess_username, {
 		method: "GET",
