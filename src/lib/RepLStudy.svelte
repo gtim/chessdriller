@@ -74,13 +74,21 @@
 		if ( ! res.ok ) {
 			error_msg = 'Fetching update failed ('+res.status+')';
 		} else if ( ! json.success ) {
-			error_msg = 'Fetching update failed:: ' + json.message;
+			error_msg = 'Fetching update failed: ' + json.message;
 		} else {
 			updates = [ json.update ];
 		}
 	}
 	async function applyUpdate() {
-		alert('not implemented');
+		const res = await fetch( '/api/lichess-study/'+id+'/update/apply', {method:'POST'} );
+		const json = await res.json();
+		if ( ! res.ok ) {
+			error_msg = 'Applying update failed ('+res.status+')';
+		} else if ( ! json.success ) {
+			error_msg = 'Applying update failed: ' + json.message;
+		} else {
+			dispatch( 'change' );
+		}
 	}
 
 </script>
@@ -106,8 +114,8 @@
 			Update:
 			+{update.numNewMoves} move{update.numNewMoves==1?'':'s'}<!--
 			-->{#if update.numRemovedMoves > 0},
-				-{update.numRemovedMoves} move{update.numRemovedMoves==1?'':'s'}<!--
-			-->{/if}.
+				-{update.numRemovedMoves} move{update.numRemovedMoves==1?'':'s'}
+			{/if}
 		</button>
 	{/if}
 	{#if error_msg}

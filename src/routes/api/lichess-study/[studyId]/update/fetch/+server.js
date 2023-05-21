@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 import { fetchStudyPGN } from '$lib/lichessStudy.js';
-import { pgndbToMoves } from '$lib/pgnImporter.js';
+import { pgndbToMoves, compareMovesLists } from '$lib/pgnImporter.js';
 
 const prisma = new PrismaClient();
 
@@ -33,12 +33,10 @@ export async function POST({ locals, params }) {
 			}
 		}
 	});
-	if ( study.userId !== user.cdUserId ) {
+	if ( study.userId !== user.cdUserId )
 		return json({ success: false, message: 'Study does not belong to this user (are you logged in?)' });
-	}
-	if ( ! study.included ) {
+	if ( ! study.included )
 		return json({ success: false, message: 'Only studies that are part of your repertoire can be updated, please add it first.' });
-	}
 
 	// fetch new PGN
 
@@ -55,7 +53,9 @@ export async function POST({ locals, params }) {
 			message: 'Parsing updated PGN failed: ' + e.message
 		});
 	}
-	const { numNewMoves, numRemovedMoves } = compareMoves( study, updated_moves );
+	const { new_moves, removed_moves } = compareMovesLists( study.moves, updated_moves );
+	const numNewMoves = new_moves.length;
+	const numRemovedMoves = removed_moves.length;
 
 	// insert update into database
 
@@ -88,17 +88,4 @@ export async function POST({ locals, params }) {
 		}
 	});
 
-}
-
-function compareMoves( study, updated_moves ) {
-	// convert each move to a movestring for simple comparison
-	// Set ensures unique movestrings and fast lookup.
-	const existing_movestrings = [...new Set( study.moves.map(   (m) => (m.repForWhite?'w':'b') + ':' + m.fromFen + ':' + m.toFen ) )];
-	const updated_movestrings =  [...new Set( updated_moves.map( (m) => (m.repForWhite?'w':'b') + ':' + m.fromFen + ':' + m.toFen ) )];
-	const new_movestrings     =  updated_movestrings.filter( ms => ! existing_movestrings.includes(ms) );
-	const removed_movestrings = existing_movestrings.filter( ms => !  updated_movestrings.includes(ms) );
-	return {
-		numNewMoves: new_movestrings.length,
-		numRemovedMoves: removed_movestrings.length
-	};
 }

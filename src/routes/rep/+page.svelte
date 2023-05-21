@@ -20,7 +20,7 @@
 	}
 	async function getStudiesTwice() {
 		// Stagger getStudies to deal with some request timing issues
-		getStudies();
+		await getStudies();
 		setTimeout( getStudies, 500 );
 	}
 

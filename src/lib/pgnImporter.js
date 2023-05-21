@@ -306,3 +306,18 @@ export function makePreviewFen( pgn_db ) {
 		return 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 	}
 }
+
+// Compare Moves-lists to find added and removed moves
+// existing_moves are from the Moves prisma table
+// update_moves are from e.g. pgndbToMoves
+// both are arrays of at least { repForWhite, fromFen, toFen }
+export function compareMovesLists( existing_moves, update_moves ) {
+	function movestring( move ) {
+		return (move.repForWhite?'w':'b') + ':' + move.fromFen + ':' + move.toFen;
+	}
+	const existing_movestrings = [...new Set( existing_moves.map(movestring) )];
+	const update_movestrings   = [...new Set( update_moves.map(movestring) )];
+	const new_moves     = update_moves.filter(   move => ! existing_movestrings.includes(movestring(move)) );
+	const removed_moves = existing_moves.filter( move => !   update_movestrings.includes(movestring(move)) );
+	return { new_moves, removed_moves };
+}
