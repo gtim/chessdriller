@@ -76,7 +76,7 @@
 		</div>
 	{/if}
 
-	{#if included_studies !== null && included_studies.length > 0}
+	{#if included_studies !== null}
 		<div class="studies_container">
 			<div class="included_studies">
 			{#each included_studies as study (study.id) }
@@ -90,17 +90,19 @@
 
 <!-- unincluded studies -->
 
-	{#if unincluded_studies !== null && unincluded_studies.length > 0}
-		<div class="narrow_container">
-			<p>
-			{#if unincluded_studies.length == 1}
-				The below study has not been added to your repertoire. You can either add it (+), or hide it (&#x2715;). 
-			{:else}
-				The below {unincluded_studies.length} studies have not been added to your repertoire. You can either add them (+), or hide them (&#x2715;).
-			{/if}
-			Hidden studies can always be unhidden later.
-			</p>
-		</div>
+	{#if unincluded_studies !== null }
+		{#if unincluded_studies.length > 0}
+			<div class="narrow_container">
+				<p>
+				{#if unincluded_studies.length == 1}
+					The below study has not been added to your repertoire. You can either add it (+), or hide it (&#x2715;). 
+				{:else}
+					The below {unincluded_studies.length} studies have not been added to your repertoire. You can either add them (+), or hide them (&#x2715;).
+				{/if}
+				Hidden studies can always be unhidden later.
+				</p>
+			</div>
+		{/if}
 		<div class="studies_container">
 			<div class="unincluded_studies">
 			{#each unincluded_studies as study, i (study.id) }
@@ -134,10 +136,12 @@
 		{/if}
 	</div>
 
-	{#if hidden_studies !== null && hidden_studies.length > 0}
+	{#if hidden_studies !== null}
 		<div class="narrow_container">
 			<p class="hidden_studies"><small>
-				Hidden studies, not part of your repertoire:
+				{#if hidden_studies.length > 0}
+					Hidden studies, not part of your repertoire:
+				{/if}
 				{#each hidden_studies as study, i (study.id)}
 					<span in:receive|local="{{key:study.id}}" out:send|local="{{key:study.id}}">
 						<a href="#" on:click|preventDefault={()=>unhide(study.id)} title="Unhide this study">{study.name}</a><!--
