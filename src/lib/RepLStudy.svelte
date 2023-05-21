@@ -1,6 +1,8 @@
 <!-- svelte-ignore unused-export-let -->
 <script>
 
+	import { fade } from 'svelte/transition';
+
 	import LStudyCard from '$lib/LStudyCard.svelte';
 
 	import ConfirmModal from '$lib/ConfirmModal.svelte'
@@ -14,6 +16,7 @@
 
 
 	export let id;
+	export let lichessId;
 	export let name;
 	export let repForWhite;
 	export let previewFen;
@@ -22,7 +25,6 @@
 	export let updates = [];
 
 	// Below props are not used, but exported to avoid warnings when the Study is spread onto this prop.
-	export let lichessId;
 	export let lastFetched;
 	export let included;
 	export let hidden;
@@ -67,6 +69,7 @@
 	 */
 
 	$: update = updates.length > 0 ? updates[0] : null;
+	let update_msg;
 	async function fetchUpdate() {
 		const res = await fetch( '/api/lichess-study/'+id+'/update/fetch', {method:'POST'} );
 		const json = await res.json();
@@ -75,6 +78,9 @@
 		} else if ( ! json.success ) {
 			error_msg = 'Fetching update failed: ' + json.message;
 		} else {
+			if ( json.update.numNewMoves == 0 && json.update.numRemovedMoves == 0 ) {
+				update_msg = 'No changed moves found <a href="https://lichess.org/study/'+lichessId+'" rel="noopener noreferrer">on  Lichess</a>.';
+			}
 			updates = [ json.update ];
 		}
 	}
@@ -113,6 +119,7 @@
 			class="applyUpdate"
 			title="Update {name} with {update.numNewOwnMoves} new {color} move{update.numNewOwnMoves==1?'':'s'} and {update.numRemovedOwnMoves} removed {color} move{update.numRemovedOwnMoves==1?'':'s'}."
 			on:click={applyUpdate}
+			in:fade|local
 		>
 			Update:
 			+{update.numNewOwnMoves} move{update.numNewOwnMoves==1?'':'s'}<!--
@@ -123,6 +130,9 @@
 	{/if}
 	{#if error_msg}
 		<p style="color:red;"><b>Error:</b> {error_msg}</p>
+	{/if}
+	{#if update_msg}
+		<p in:fade|local><small>{@html update_msg}</small></p>
 	{/if}
 </LStudyCard>
 
