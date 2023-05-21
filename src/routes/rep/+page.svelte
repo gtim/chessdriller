@@ -26,27 +26,25 @@
 
 	onMount( async () => {
 		await getStudies();
+		new_studies_promise = getNewStudies();
 	} );
 
 	let new_studies_promise;
+	let new_studies_error;
 	async function getNewStudies() {
 		const res = await fetch( '/api/lichess-study/fetch-new' );
 		const json = await res.json();
 		if ( ! res.ok ) {
-			throw new Error( 'Request failed' );
+			new_studies_error = 'Request failed ('+res.status+')';
 		}
 		if ( ! json.success ) {
-			throw new Error( 'Request failed: ' + json.message );
+			new_studies_error = json.message;
 		}
 
 		if ( json.num_new_studies > 0 ) {
 			getStudies();
 		}
 		return json;
-	}
-
-	async function lookForNewStudies() {
-		new_studies_promise = getNewStudies();
 	}
 
 	async function unhide(studyId) {
@@ -67,6 +65,9 @@
 
 <div class="narrow_container">
 	<h1>Repertoire</h1>
+	{#if new_studies_error}
+		<p style="color:red;"><small>Error checking Lichess for new studies: {new_studies_error}</p>
+	{/if}
 </div>
 
 
@@ -121,20 +122,6 @@
 			</div>
 		</div>
 	{/if}
-
-	<div class="narrow_container">
-		{#if new_studies_promise}
-			{#await new_studies_promise}
-				<p>Checking for new studies...</p>
-			{:then new_studies}
-				<p>Found {new_studies.num_new_studies} new {new_studies.num_new_studies==1?'study':'studies'}.</p>
-			{:catch error}
-				<p style="color:red;">{error}</p>
-			{/await}
-		{:else}
-			<button on:click={lookForNewStudies}>Check for new studies</button>
-		{/if}
-	</div>
 
 	{#if hidden_studies !== null}
 		<div class="narrow_container">
