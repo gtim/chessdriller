@@ -25,9 +25,12 @@ export async function POST({ locals, params }) {
 			repForWhite: true,
 			moves: {
 				select: {
+					id: true,
 					repForWhite: true,
 					fromFen: true,
-					toFen: true
+					toFen: true,
+					studies: { select: { id: true } },
+					pgns:    { select: { id: true } }
 				}
 			},
 			updates: {
@@ -65,6 +68,7 @@ export async function POST({ locals, params }) {
 		console.log( 'warning: stored numRemovedMoves different from newly-parsed ('+study.updates[0].numRemovedMoves+','+removed_moves.length+')' );
 
 	//  Add new moves
+	
 	let queries = [];
 	for ( const move of new_moves ) {
 		move.userId = study.userId;
@@ -88,16 +92,36 @@ export async function POST({ locals, params }) {
 	}
 
 	// Delete removed moves
+	
 	for ( const move of removed_moves ) {
-		console.log('removed move: not yet implemented');
+		if ( move.pgns.length + move.studies.length == 1 ) {
+			// no other PGNs/studies contain this move: soft-delete it
+			queries.push( prisma.Move.update({
+				where: { id: move.id },
+				data: {
+					studies: { disconnect: [{ id: study.id }] },
+					deleted: true
+				}
+			}) );
+		} else {
+			// move in other pgns/studies: just disconnect it from this study
+			queries.push( prisma.Move.update({
+				where: { id: move.id },
+				data: {
+					studies: { disconnect: [{ id: study.id }] }
+				}
+			}) );
+		}
 	}
 
 	// Remove update
+
 	queries.push( prisma.LichessStudyUpdate.delete({
 		where: { studyId: study.id }
 	}) );
 
 	// Run transaction
+	
 	try {
 		await prisma.$transaction(queries);
 	} catch(e) {
