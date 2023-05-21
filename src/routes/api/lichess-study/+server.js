@@ -33,6 +33,10 @@ export async function GET({ locals }) {
 				}
 			}
 		});
+		studies.forEach( (study) => {
+			study.numOwnMoves = study._count.moves;
+			delete study._count;
+		});
 		return json({
 			success: true, 
 			studies

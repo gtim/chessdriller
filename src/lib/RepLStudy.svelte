@@ -17,7 +17,7 @@
 	export let name;
 	export let repForWhite;
 	export let previewFen;
-	export let _count;
+	export let numOwnMoves;
 	export let lastModifiedOnLichess;
 	export let updates = [];
 
@@ -30,7 +30,7 @@
 
 	
 	let updated_ago = relativeTime.from( new Date(lastModifiedOnLichess) );
-	let moves_string = _count.moves+' '+(repForWhite?'white':'black')+' move'+(_count.moves==1?'':'s'); // e.g. "8 black moves"
+	$: moves_string = numOwnMoves+' '+(repForWhite?'white':'black')+' move'+(numOwnMoves==1?'':'s'); // e.g. "8 black moves"
 
 	let error_msg;
 

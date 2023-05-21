@@ -21,7 +21,7 @@
 	export let repForWhite;
 	export let hidden;
 	export let updates;
-	export let _count;
+	export let numOwnMoves;
 
 	async function hide() {
 		await fetch( '/api/lichess-study/'+id+'/hidden/true', {method:'POST'} );
