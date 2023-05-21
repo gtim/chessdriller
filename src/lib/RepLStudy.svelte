@@ -30,7 +30,6 @@
 
 	
 	let updated_ago = relativeTime.from( new Date(lastModifiedOnLichess) );
-	$: moves_string = numOwnMoves+' '+(repForWhite?'white':'black')+' move'+(numOwnMoves==1?'':'s'); // e.g. "8 black moves"
 
 	let error_msg;
 
@@ -91,11 +90,15 @@
 		}
 	}
 
+
+	$: color = repForWhite ? 'white' : 'black';
+	$: moves_string = numOwnMoves+' '+color+' move'+(numOwnMoves==1?'':'s'); // e.g. "8 black moves"
+
 </script>
 
 <LStudyCard
 	fen={previewFen}
-	orientation={repForWhite?'white':'black'}
+	orientation={color}
 	{title}
 >
 	{#if removed}
@@ -108,13 +111,13 @@
 	{#if update && ( update.numNewMoves > 0 || update.numRemovedMoves > 0 ) }
 		<button
 			class="applyUpdate"
-			title="Update {name} to the newest version of the Lichess study, with {update.numNewMoves} new move{update.numNewMoves==1?'':'s'} and {update.numRemovedMoves} removed move{update.numRemovedMoves==1?'':'s'}."
+			title="Update {name} with {update.numNewOwnMoves} new {color} move{update.numNewOwnMoves==1?'':'s'} and {update.numRemovedOwnMoves} removed {color} move{update.numRemovedOwnMoves==1?'':'s'}."
 			on:click={applyUpdate}
 		>
 			Update:
-			+{update.numNewMoves} move{update.numNewMoves==1?'':'s'}<!--
-			-->{#if update.numRemovedMoves > 0},
-				-{update.numRemovedMoves} move{update.numRemovedMoves==1?'':'s'}
+			+{update.numNewOwnMoves} move{update.numNewOwnMoves==1?'':'s'}<!--
+			-->{#if update.numRemovedOwnMoves > 0},
+				-{update.numRemovedOwnMoves} move{update.numRemovedOwnMoves==1?'':'s'}
 			{/if}
 		</button>
 	{/if}

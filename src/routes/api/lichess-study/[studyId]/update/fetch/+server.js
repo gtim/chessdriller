@@ -27,6 +27,7 @@ export async function POST({ locals, params }) {
 			moves: {
 				select: {
 					repForWhite: true,
+					ownMove: true,
 					fromFen: true,
 					toFen: true
 				}
@@ -56,6 +57,8 @@ export async function POST({ locals, params }) {
 	const { new_moves, removed_moves } = compareMovesLists( study.moves, updated_moves );
 	const numNewMoves = new_moves.length;
 	const numRemovedMoves = removed_moves.length;
+	const numNewOwnMoves = new_moves.filter(m=>m.ownMove).length;
+	const numRemovedOwnMoves = removed_moves.filter(m=>m.ownMove).length;
 
 	// insert update into database
 
@@ -63,7 +66,9 @@ export async function POST({ locals, params }) {
 		studyId: study.id,
 		fetched: new Date(),
 		numNewMoves,
+		numNewOwnMoves,
 		numRemovedMoves,
+		numRemovedOwnMoves,
 		pgn: updated_pgn
 	};
 	try {
@@ -84,7 +89,9 @@ export async function POST({ locals, params }) {
 		success: true,
 		update: {
 			numNewMoves,
-			numRemovedMoves
+			numNewOwnMoves,
+			numRemovedMoves,
+			numRemovedOwnMoves
 		}
 	});
 

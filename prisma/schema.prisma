@@ -112,7 +112,9 @@ model LichessStudyUpdate {
 //	lastModifiedOnLichess DateTime?
 	fetched               DateTime @default(now())
 	numNewMoves           Int
+	numNewOwnMoves        Int
 	numRemovedMoves       Int
+	numRemovedOwnMoves    Int
 	pgn                   String
 }
 
