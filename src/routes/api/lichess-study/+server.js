@@ -23,7 +23,9 @@ export async function GET({ locals }) {
 				updates: {
 					select: {
 						numNewMoves: true,
-						numRemovedMoves: true
+						numNewOwnMoves: true,
+						numRemovedMoves: true,
+						numRemovedOwnMoves: true
 					}
 				},
 				_count: {
