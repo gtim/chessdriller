@@ -11,10 +11,6 @@
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
-	import RelativeTime from '@yaireo/relative-time';
-	const relativeTime = new RelativeTime();
-
-
 	export let id;
 	export let lichessId;
 	export let name;
