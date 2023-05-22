@@ -14,3 +14,4 @@ vite.config.ts.timestamp-*
 /prisma/test.db
 /coverage
 /backup
+/src/routes/debug
