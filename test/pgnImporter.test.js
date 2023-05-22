@@ -143,11 +143,20 @@ test('transposition', async () => {
 });
 
 
-// cm-pgn 2.3.1 seems to fail parsing this PGN
+// cm-pgn 2.3.1 seems to fail parsing these two PGN
 test('two comments after final move', async () => {
 	const pgn_content = fs.readFileSync( './test/pgn/end-two-comments.pgn', 'utf8' );
 	await importPgn( pgn_content, 'end-two-comments.pgn', prisma, 1, true );
 	expect( await prisma.move.count() ).toEqual( 2 );
 	expect( await prisma.move.count({ where: { moveSan: 'd4' } } )).toEqual( 1 );
 	expect( await prisma.move.count({ where: { moveSan: 'Nf6' } } )).toEqual( 1 );
+});
+test('two comments before variant', async () => {
+	const pgn_content = fs.readFileSync( './test/pgn/two-comments-before-variant.pgn', 'utf8' );
+	await importPgn( pgn_content, 'two-comments-before-variant.pgn', prisma, 1, true );
+	expect( await prisma.move.count() ).toEqual( 4 );
+	expect( await prisma.move.count({ where: { moveSan: 'd4' } } )).toEqual( 1 );
+	expect( await prisma.move.count({ where: { moveSan: 'Nf6' } } )).toEqual( 1 );
+	expect( await prisma.move.count({ where: { moveSan: 'Bf4' } } )).toEqual( 1 );
+	expect( await prisma.move.count({ where: { moveSan: 'Bg5' } } )).toEqual( 1 );
 });

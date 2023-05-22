@@ -216,8 +216,10 @@ export function singlePgnToMoves( pgn_content, repForWhite ) {
 
 function singlePgnToCMChess( pgn_content ) {
 
-	// remove comment before '*', TODO investigate whether this is a cm-pgn bug (unit test "two comments after final move")
-	pgn_content = pgn_content.replace(/\{[^{}]*\}\s*\*/, '');
+	// remove comments due to issues parsing PGNs with two sequential comments
+	// unit tests: "two comments after final move" and "two comments before variant"
+	// TODO investigate whether this is a cm-pgn bug 
+	pgn_content = pgn_content.replace(/\{[^{}]*\}/, '');
 
 	// remove final '*', maybe cm-chess/chess.js bug makes it cause parser issues?
 	pgn_content = pgn_content.replace(/\*\s*$/, '\n');
