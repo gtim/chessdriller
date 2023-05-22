@@ -10,7 +10,7 @@
 <slot />
 
 <Modals>
-  <div slot="backdrop" class="backdrop" transition:fade on:click={closeModal} />
+	<div slot="backdrop" class="backdrop" transition:fade on:click={closeModal} on:keydown={closeModal} />
 </Modals>
 
 <style>
