@@ -1,8 +1,8 @@
-# [Chessdriller](https://chessdriller.org/)
+# Chessdriller
 
 ## Hi!
 
-*Chessdriller* is an open-source app for spaced repetition of chess openings.
+[Chessdriller](https://chessdriller.org/) is an open-source app for spaced repetition of chess openings.
 It's a free and libre alternative to the spaced-repetition features of Chessable, ChessTempo, Chessmadra, ChessHQ, Chess Position Trainer, Bookup, Listudy, etc.
 
 I use this fully functional beta every day for my own chess practice.
