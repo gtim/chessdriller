@@ -71,7 +71,7 @@
 >
 	<button class="hide" title="Remove study from this list" on:click={hide}>&#x2715;</button>
 	{#if adding_state == 0}
-		<button class="add" on:click|preventDefault={()=>adding_state=1}>+ add to repertoire</button>
+		<button class="cdbutton add" on:click|preventDefault={()=>adding_state=1}>+ add to repertoire</button>
 	{:else if adding_state == 1}
 		<p in:slide|local>Which color?
 			<button class="add_white" on:click|once={addWhite}>White</button>
@@ -89,16 +89,6 @@
 </LStudyCard>
 
 <style>
-	button.add {
-		padding:3px 6px;
-		background:#FFF6ED;
-		border:1px solid rgba(40,43,40,0.7);
-		border-radius:4px;
-		cursor:pointer;
-	}
-	button.add:hover {
-		background:#F2E6DB;
-	}
 	button.add_white, button.add_black {
 		cursor:pointer;
 		padding:3px 6px;

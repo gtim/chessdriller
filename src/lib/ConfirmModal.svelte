@@ -21,8 +21,8 @@
 			<h2>{title}</h2>
 			<p>{@html message}</p>
 			<div class="actions">
-				<button on:click={closeModal}>Cancel</button>
-				<button on:click={confirmAndClose}>{confirmLabel}</button>				
+				<button class="cdbutton" on:click={closeModal}>Cancel</button>
+				<button class="cdbutton" on:click={confirmAndClose}>{confirmLabel}</button>				
 			</div>
 		</div>
 	</div>
@@ -71,13 +71,6 @@
 	button {
 		font-size:16px;
 		padding:4px 8px;
-		background:#FFF6ED;
-		border:1px solid rgba(40,43,40,0.7);
-		border-radius:4px;
-		cursor:pointer;
-	}
-	button:hover {
-		background:#F2E6DB;
 	}
 
 </style>

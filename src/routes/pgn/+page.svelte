@@ -27,7 +27,7 @@
 				<input type="radio" id="radio_black" name="color" value="b" />
 				<label for="radio_black">Black</label>
 			</p>
-			<input type="submit" value="Upload PGN"/>
+			<input type="submit" class="cdbutton" value="Upload PGN"/>
 		</div>
 	</form>
 

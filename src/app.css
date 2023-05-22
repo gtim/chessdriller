@@ -31,3 +31,15 @@ a:hover {
 h1 {
 	text-align:center;
 }
+
+/* styling for buttons */
+.cdbutton {
+	padding:3px 6px;
+	background:#FFF6ED;
+	border:1px solid rgba(40,43,40,0.7);
+	border-radius:4px;
+	cursor:pointer;
+}
+.cdbutton:hover {
+	background:#F2E6DB;
+}

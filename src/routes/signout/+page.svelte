@@ -2,6 +2,15 @@
 	import { enhance } from "$app/forms";
 </script>
 
-<form use:enhance method="post">
-	<input type="submit" class="button" value="Sign out" />
-</form>
+<div>
+	<form use:enhance method="post">
+		<input type="submit" class="cdbutton" value="Click to sign out" />
+	</form>
+</div>
+
+<style>
+	div {
+		padding-top:32px;
+		text-align:center;
+	}
+</style>

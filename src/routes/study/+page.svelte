@@ -182,14 +182,14 @@
 				<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} bind:this={studyBoard} />
 				{#if num_wrongs_this_move >= 2 }
 					<button
-						class="show_answer"
+						class="cdbutton show_answer"
 						title="Show the right move"
 						transition:fade on:click={()=>{studyBoard.showAnswer()}} 
 					>Show answer</button>
 				{/if}
 				{#if line && line.slice(last_move_ix+1).length > 0 && line.slice(last_move_ix+1).filter(m=>m.isDue).length == 0}
 					<button 
-						class="skip_to_end"
+						class="cdbutton skip_to_end"
 						title="All due moves are reviewed, skip the end of this line"
 						transition:fade
 						on:click|once={()=>studyNextLine(line.map(m=>m.id))}
@@ -242,9 +242,6 @@
 	.show_answer, .skip_to_end {
 		position:absolute;
 		margin-top:6px;
-		background:none;
-		border:1px solid rgba(40,43,40,0.7);
-		border-radius:4px;
 	}
 	.show_answer {
 		left:0;

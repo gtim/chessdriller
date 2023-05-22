@@ -116,7 +116,7 @@
 	{/if}
 	{#if update && ( update.numNewMoves > 0 || update.numRemovedMoves > 0 ) }
 		<button
-			class="applyUpdate"
+			class="cdbutton"
 			title="Update {name} with {update.numNewOwnMoves} new {color} move{update.numNewOwnMoves==1?'':'s'} and {update.numRemovedOwnMoves} removed {color} move{update.numRemovedOwnMoves==1?'':'s'}."
 			on:click={applyUpdate}
 			in:fade|local
@@ -159,16 +159,5 @@
 		font-size:16px;
 		top:24px;
 		right:4px;
-	}
-
-	button.applyUpdate {
-		padding:3px 6px;
-		background:#FFF6ED;
-		border:1px solid rgba(40,43,40,0.7);
-		border-radius:4px;
-		cursor:pointer;
-	}
-	button.applyUpdate:hover {
-		background:#F2E6DB;
 	}
 </style>

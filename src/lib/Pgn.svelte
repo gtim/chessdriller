@@ -59,7 +59,7 @@
 		{#if content.length == 0}
 			<p>This file is empty.</p>
 		{:else}
-			<button class="contents" on:click|preventDefault="{()=>show_content=!show_content}">{show_content?'Hide':'Show'} file contents</button>
+			<button class="cdbutton" on:click|preventDefault="{()=>show_content=!show_content}">{show_content?'Hide':'Show'} file contents</button>
 			{#if show_content}
 				<div class="pgn_content" transition:slide|local>{content}</div>
 			{/if}
@@ -108,14 +108,4 @@
 		text-decoration:line-through;
 	}
 
-	button.contents {
-		padding:3px 6px;
-		background:#FFF6ED;
-		border:1px solid rgba(40,43,40,0.7);
-		border-radius:4px;
-		cursor:pointer;
-	}
-	button.contents:hover {
-		background:#F2E6DB;
-	}
 </style>
