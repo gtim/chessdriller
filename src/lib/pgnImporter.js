@@ -1,4 +1,4 @@
-import { Chess } from '../../node_modules/cm-chess/src/cm-chess/Chess.js';
+import { Chess } from '../../node_modules/cm-chess/src/Chess.js';
 
 export async function includeStudy( study_id, prisma, user_id, repForWhite ) {
 	const study = await prisma.LichessStudy.findUniqueOrThrow({
