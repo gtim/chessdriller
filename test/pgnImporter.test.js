@@ -160,3 +160,9 @@ test('two comments before variant', async () => {
 	expect( await prisma.move.count({ where: { moveSan: 'Bf4' } } )).toEqual( 1 );
 	expect( await prisma.move.count({ where: { moveSan: 'Bg5' } } )).toEqual( 1 );
 });
+
+test('two comments before variant (three times)', async () => {
+	const pgn_content = fs.readFileSync( './test/pgn/two-comments-before-variant-thrice.pgn', 'utf8' );
+	await importPgn( pgn_content, 'two-comments-before-variant-thrice.pgn', prisma, 1, true );
+	expect( await prisma.move.count() ).toEqual( 8 );
+});
