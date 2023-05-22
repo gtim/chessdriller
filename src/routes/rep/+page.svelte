@@ -79,7 +79,10 @@
 
 	{#if included_studies !== null}
 		<div class="studies_container">
-			<div class="included_studies">
+			<div class="included_studies"
+				class:grid_single_element={included_studies.length==1}
+				class:grid_two_elements={included_studies.length==2}
+			>
 			{#each included_studies as study (study.id) }
 				<div animate:flip={{duration:750, easing: cubicInOut }} in:receive|local="{{key:study.id}}" out:send|local="{{key:study.id}}">
 					<RepLStudy {...study} on:change={getStudiesTwice} />
@@ -105,7 +108,10 @@
 			</div>
 		{/if}
 		<div class="studies_container">
-			<div class="unincluded_studies">
+			<div class="unincluded_studies"
+				class:grid_single_element={unincluded_studies.length==1}
+				class:grid_two_elements={unincluded_studies.length==2}
+			>
 			{#each unincluded_studies as study, i (study.id) }
 				<div 
 					animate:flip={{duration:750, easing: cubicInOut }}
@@ -158,6 +164,13 @@
 		grid-gap: 20px;
 		margin-bottom:20px;
 		justify-content: center;
+	}
+	/* classes to apply on study lists with just one or two elements in order to center */
+	.grid_single_element {
+		width:360px;
+	}
+	.grid_two_elements {
+		width:720px;
 	}
 	.unincluded_studies { }
 	.included_studies { }
