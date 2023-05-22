@@ -9,10 +9,6 @@ export async function POST({ locals, params }) {
 	const { user } = await locals.auth.validateUser();
 	if (!user) return json({ success: false, message: 'not logged in' });
 
-	const cdUser = await prisma.User.findUniqueOrThrow({
-		where: { id: user.cdUserId }
-	});
-
 	// Get study + update
 
 	const study = await prisma.LichessStudy.findUnique({

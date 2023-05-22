@@ -31,8 +31,6 @@
 	export let guessedColor;
 
 	
-	let updated_ago = relativeTime.from( new Date(lastModifiedOnLichess) );
-
 	let error_msg;
 
 	/*
