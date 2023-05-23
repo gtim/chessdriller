@@ -37,6 +37,7 @@
     - current+best streak
 * identify leeches (keep count of lapses?)
 * keep track of user's lichess games and notify on out-of-repertoire moves
+* monitor lichess API responses for 429s and [respond properly ](https://lichess.org/page/api-tips)
 
 
 ### Styling improvements
