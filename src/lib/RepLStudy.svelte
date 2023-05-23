@@ -2,6 +2,7 @@
 <script>
 
 	import { fade } from 'svelte/transition';
+	import { tweened } from 'svelte/motion';
 
 	import LStudyCard from '$lib/LStudyCard.svelte';
 
@@ -93,8 +94,10 @@
 	}
 
 
+	const numOwnMovesTweened = tweened( numOwnMoves );
+	$: numOwnMovesTweened.set( numOwnMoves );
 	$: color = repForWhite ? 'white' : 'black';
-	$: moves_string = numOwnMoves+' '+color+' move'+(numOwnMoves==1?'':'s'); // e.g. "8 black moves"
+	$: moves_string = Math.round($numOwnMovesTweened) +' '+color+' move'+(numOwnMoves==1?'':'s'); // e.g. "8 black moves"
 
 </script>
 
