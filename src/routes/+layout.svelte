@@ -3,9 +3,12 @@
 	import NavLinks from '$lib/NavLinks.svelte';
 	import { Modals, closeModal } from 'svelte-modals'
 	import { fade } from 'svelte/transition';
+
+	export let data;
+	$: loggedIn = !!data.user;
 </script>
 
-<NavLinks />
+<NavLinks {loggedIn} />
 
 <slot />
 

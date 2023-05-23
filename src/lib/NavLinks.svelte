@@ -1,8 +1,14 @@
+<script>
+	export let loggedIn = false;
+</script>
+
 <ul>
-	<li><a href="/join">Log in</a></li>
+	<li><a href="/study">Study</a></li>
 	<li><a href="/rep">Repertoire</a></li>
 	<li><a href="/pgn">PGNs</a></li>
-	<li><a href="/study">Study</a></li>
+	{#if ! loggedIn}
+		<li><a href="/join">Log in</a></li>
+	{/if}
 </ul>
 
 <style>
