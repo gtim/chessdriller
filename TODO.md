@@ -5,6 +5,7 @@
 * when studies are removed at Lichess, they remain on Chessdriller
 * visual bug: en passant leaves the captured pawn
 * PGNs must end in newlines
+* it's possible to get stuck in a "skip end of line" loop if a move before a line-split becomes due while studying
 
 ## Small features
 
