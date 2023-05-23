@@ -73,7 +73,9 @@
 			error_msg = 'Fetching update failed: ' + json.message;
 		} else {
 			if ( json.update.numNewMoves == 0 && json.update.numRemovedMoves == 0 ) {
-				update_msg = 'No changed moves found <a href="https://lichess.org/study/'+lichessId+'" rel="noopener noreferrer">on  Lichess</a>.';
+				update_msg = 'No move changes found <a href="https://lichess.org/study/'+lichessId+'" rel="noopener noreferrer">on  Lichess</a>.';
+			} else {
+				update_msg = '';
 			}
 			updates = [ json.update ];
 		}
