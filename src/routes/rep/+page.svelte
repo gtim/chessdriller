@@ -80,7 +80,7 @@
 	{#if included_studies !== null}
 		<div class="studies_container">
 			<div class="included_studies"
-				class:grid_single_element={included_studies.length==1}
+				class:grid_single_element={included_studies.length<=1}
 				class:grid_two_elements={included_studies.length==2}
 			>
 			{#each included_studies as study (study.id) }
@@ -96,8 +96,8 @@
 
 	{#if unincluded_studies !== null }
 		{#if unincluded_studies.length > 0}
-			<div class="narrow_container">
-				<p>
+			<div class="narrow_container" out:fade|local>
+				<p out:fade|local>
 				{#if unincluded_studies.length == 1}
 					The below study has not been added to your repertoire. You can either add it (+), or hide it (&#x2715;). 
 				{:else}
@@ -109,7 +109,7 @@
 		{/if}
 		<div class="studies_container">
 			<div class="unincluded_studies"
-				class:grid_single_element={unincluded_studies.length==1}
+				class:grid_single_element={unincluded_studies.length<=1}
 				class:grid_two_elements={unincluded_studies.length==2}
 			>
 			{#each unincluded_studies as study, i (study.id) }
