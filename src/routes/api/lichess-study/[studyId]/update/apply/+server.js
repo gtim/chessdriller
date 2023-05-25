@@ -36,6 +36,8 @@ export async function POST({ locals, params }) {
 				select: {
 					numNewMoves: true,
 					numRemovedMoves: true,
+					lastModifiedOnLichess: true,
+					fetched: true,
 					pgn: true
 				}
 			}
@@ -112,6 +114,16 @@ export async function POST({ locals, params }) {
 			}) );
 		}
 	}
+
+	// Update study metadata
+	
+	queries.push( prisma.LichessStudy.update({
+		where: { id: study.id },
+		data: { 
+			lastModifiedOnLichess: study.updates[0].lastModifiedOnLichess,
+			lastFetched: study.updates[0].fetched
+		}
+	}) );
 
 	// Remove update
 

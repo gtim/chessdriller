@@ -10,7 +10,8 @@
 
 ## Small features
 
-* repertoire: auto-update studies on login 
+* repertoire: keep study names in sync with lichess
+* repertoire: auto-update studies on login
 * study: "skip to first due move" button
 * study: "skip end of line" should play it through quickly instead of jumping
 * set time zone per user (day currently wraps at 00:00 GMT)

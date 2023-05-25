@@ -17,19 +17,20 @@ export async function fetchStudiesMetadata( lichess_username, lichess_access_tok
 	} );
 }
 
-export async function fetchStudyPGN( study_id, lichess_username, lichess_access_token ) {
+export async function fetchStudy( study_id, lichess_username, lichess_access_token ) {
 	const req = new Request( 'https://lichess.org/api/study/' + study_id + '.pgn', {
 		method: "GET",
 		headers: headers(lichess_access_token)
 	} );
-	return fetch(req).then( (resp) => {
-		if ( ! resp.ok ) {
-			return resp.text().then( (resp_text) => {
-				throw new Error( 'Lichess request failed (' + resp.status + '): ' + resp_text );
-			} );
-		}
-		return resp.text();
-	});
+	const resp = await fetch(req);
+	if ( ! resp.ok ) {
+		throw new Error( 'Lichess request failed (' + resp.status + '): ' + await resp.text() );
+	}
+	const pgn = await resp.text();
+	return {
+		pgn,
+		lastModified: resp.headers.get('last-modified')
+	};
 }
 
 export async function fetchStudyLastModified( study_id, lichess_username, lichess_access_token ) {

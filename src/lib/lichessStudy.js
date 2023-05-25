@@ -1,4 +1,4 @@
-import { fetchStudyPGN, fetchStudiesMetadata } from '$lib/lichessApi.js';
+import { fetchStudy, fetchStudiesMetadata } from '$lib/lichessApi.js';
 import { pgndbToMoves, compareMovesLists, guessColor, makePreviewFen } from '$lib/pgnImporter.js';
 
 // fetchAllStudyChanges
@@ -33,7 +33,7 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 	for ( const lichess_study of lichess_studies ) {
 		if ( ! existing_study_ids.has( lichess_study.id ) ) {
 			// new study: insert into database
-			const pgn = await fetchStudyPGN( lichess_study.id, lichess_username, lichess_access_token );
+			const { pgn } = await fetchStudy( lichess_study.id, lichess_username, lichess_access_token );
 			const guessedColor = guessColor(pgn);
 			const previewFen = makePreviewFen(pgn);
 			await prisma.LichessStudy.create({ data: {
@@ -98,12 +98,12 @@ export async function fetchStudyUpdate( user_id, study_id, prisma, lichess_usern
 	
 	// fetch new PGN
 
-	const updated_pgn = await fetchStudyPGN( study.lichessId, lichess_username, lichess_access_token );
+	const { pgn, lastModified } = await fetchStudy( study.lichessId, lichess_username, lichess_access_token );
 
 	
 	// find number of new/removed moves
 	
-	const updated_moves = pgndbToMoves( updated_pgn, study.repForWhite );
+	const updated_moves = pgndbToMoves( pgn, study.repForWhite );
 	const { new_moves, removed_moves } = compareMovesLists( study.moves, updated_moves );
 
 	const numNewMoves = new_moves.length;
@@ -117,11 +117,12 @@ export async function fetchStudyUpdate( user_id, study_id, prisma, lichess_usern
 	const updated_study = {
 		studyId: study.id,
 		fetched: new Date(),
+		lastModifiedOnLichess: new Date(lastModified),
 		numNewMoves,
 		numNewOwnMoves,
 		numRemovedMoves,
 		numRemovedOwnMoves,
-		pgn: updated_pgn
+		pgn
 	};
 	await prisma.LichessStudyUpdate.upsert({
 		where: { studyId: study.id },
