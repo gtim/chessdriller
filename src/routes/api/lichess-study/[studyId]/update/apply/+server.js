@@ -4,10 +4,13 @@ import { pgndbToMoves, compareMovesLists } from '$lib/pgnImporter.js';
 
 const prisma = new PrismaClient();
 
+// TODO move most logic to $lib/lichessStudy.js
+
 export async function POST({ locals, params }) {
 
 	const { user } = await locals.auth.validateUser();
 	if (!user) return json({ success: false, message: 'not logged in' });
+
 
 	// Get study + update
 
