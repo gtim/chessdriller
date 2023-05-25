@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
-import { fetchStudiesMetadata, fetchStudyPGN } from '$lib/lichessStudy.js';
+import { fetchStudiesMetadata, fetchStudyPGN } from '$lib/lichessApi.js';
 import { guessColor, makePreviewFen } from '$lib/pgnImporter.js';
 
 export async function GET({ locals }) {
@@ -56,14 +56,11 @@ export async function GET({ locals }) {
 				num_new_studies++;
 			} else {
 				// existing study: check if modified
-				// Note: The Lichess API endpoint does not update LastModified when moves are added, only when study metadata changes.
-				// Studies cannot be updated here until that changes.
-				// (TODO)
-				const existing_study = existing_studies.find( (existing_study) => existing_study.lichessId === lichess_study.id );
+				const existing_study = existing_studies.find( (study) => study.lichessId === lichess_study.id );
 				if ( existing_study.lastModifiedOnLichess < new Date(lichess_study.updatedAt) ) {
-					//console.log( 'study has been updated: ' + existing_study.name );
+					console.log( 'study has been updated: ' + existing_study.name );
 				} else {
-					//console.log( 'not updated: ' + existing_study.name );
+					console.log( 'not updated: ' + existing_study.name );
 				}
 				//console.log( '  e:' + existing_study.lastModifiedOnLichess );
 				//console.log( '  l:' + new Date( lichess_study.updatedAt ) );

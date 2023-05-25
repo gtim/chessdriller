@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
-import { fetchStudyPGN } from '$lib/lichessStudy.js';
+import { fetchStudyPGN } from '$lib/lichessApi.js';
 import { pgndbToMoves, compareMovesLists } from '$lib/pgnImporter.js';
 
 const prisma = new PrismaClient();
