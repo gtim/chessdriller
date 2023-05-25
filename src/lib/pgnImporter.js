@@ -1,5 +1,12 @@
 import { Chess } from '../../node_modules/cm-chess/src/Chess.js';
 
+// TODO: Split this lib into
+//   1. PGN parsing functionality
+//       - no database calls
+//   2. LichessStudy / UploadedPGN interface
+//       - no PGN strings, only move arrays
+
+
 export async function includeStudy( study_id, prisma, user_id, repForWhite ) {
 	const study = await prisma.LichessStudy.findUniqueOrThrow({
 		where: { id: study_id }
