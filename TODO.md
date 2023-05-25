@@ -47,6 +47,7 @@
 * animation feedback on wrong move (board/piece shake? flash board reddish?)
 * animation feedback on variation finished
 * some prop background image on each page? book? pipe? coffe cup? glasses? chess pieces? chessboard? score sheet?
+* special rewarding correct-move stamp at the max interval
 
 ## Misc. thoughts
 
