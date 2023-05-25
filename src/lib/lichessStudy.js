@@ -1,6 +1,72 @@
-import { fetchStudyPGN } from '$lib/lichessApi.js';
-import { pgndbToMoves, compareMovesLists } from '$lib/pgnImporter.js';
+import { fetchStudyPGN, fetchStudiesMetadata } from '$lib/lichessApi.js';
+import { pgndbToMoves, compareMovesLists, guessColor, makePreviewFen } from '$lib/pgnImporter.js';
 
+// fetchAllStudyChanges
+// Synchronise user's studies with Lichess by:
+// - fetching any new studies
+// - fetching updates to any studies that have been modified (applied separately)
+// - marking removed studies (TODO not implemented)
+
+export async function fetchAllStudyChanges( user_id, prisma, lichess_username, lichess_access_token ) {
+	
+	// fetch existing study IDs from database
+	
+	const existing_studies = await prisma.LichessStudy.findMany({
+		where: { userId: user_id },
+		select: {
+			lichessId: true,
+			lastModifiedOnLichess: true,
+			name: true
+		}
+	});
+	const existing_study_ids = new Set( existing_studies.map( (study) => study.lichessId ) );
+
+	
+	// fetch study IDs from Lichess
+
+	const lichess_studies = await fetchStudiesMetadata( lichess_username, lichess_access_token );
+
+
+	// if new studies are found, insert them into database
+
+	let num_new_studies = 0;
+	for ( const lichess_study of lichess_studies ) {
+		if ( ! existing_study_ids.has( lichess_study.id ) ) {
+			// new study: insert into database
+			const pgn = await fetchStudyPGN( lichess_study.id, lichess_username, lichess_access_token );
+			const guessedColor = guessColor(pgn);
+			const previewFen = makePreviewFen(pgn);
+			await prisma.LichessStudy.create({ data: {
+				lichessId: lichess_study.id,
+				userId: user_id,
+				lastModifiedOnLichess: new Date(lichess_study.updatedAt),
+				name: lichess_study.name,
+				pgn,
+				guessedColor,
+				previewFen
+			} } );
+			num_new_studies++;
+		} else {
+			// existing study: check if modified
+			const existing_study = existing_studies.find( (study) => study.lichessId === lichess_study.id );
+			if ( existing_study.lastModifiedOnLichess < new Date(lichess_study.updatedAt) ) {
+				console.log( 'study has been updated: ' + existing_study.name );
+			} else {
+				console.log( 'not updated: ' + existing_study.name );
+			}
+			//console.log( '  e:' + existing_study.lastModifiedOnLichess );
+			//console.log( '  l:' + new Date( lichess_study.updatedAt ) );
+		}
+	}
+
+	return { num_new_studies };
+}
+
+
+
+// fetchStudyUpdate
+// Fetch the latest Lichess version of an existing study.
+// Update is stored as LichessStudyUpdate and applied to the LichessStudy row separately.
 
 export async function fetchStudyUpdate( user_id, study_id, prisma, lichess_username, lichess_access_token ) {
 
