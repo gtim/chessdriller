@@ -16,6 +16,7 @@
 * set time zone per user (day currently wraps at 00:00 GMT)
 * pgn upload: don't upload empty pgn if an error occurred
 * pgn upload: guess repertoire color and display parse issues before submitting form
+* feedback button to conveniently send me feedback on chessdriller
 
 
 ## Big features
