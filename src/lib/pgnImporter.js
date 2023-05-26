@@ -306,13 +306,16 @@ function num_own_splits(moves) {
 export function makePreviewFen( pgn_db ) {
 	const pgntexts = split_pgndb_into_pgns( pgn_db );
 	const pgn_first_chapter = pgntexts[0];
+	const initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 	try {
 		const chess = singlePgnToCMChess( pgn_first_chapter );
+		if ( chess.pgn.history.moves == 0 )
+			return initial_fen;
 		const preview_move_i = Math.min( 4, chess.pgn.history.moves.length ) - 1;
 		return chess.pgn.history.moves[ preview_move_i ].fen;
 	} catch (e) {
 		console.log( 'warning: makePreviewFen failed, returning origin position. ' + e.message );
-		return 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+		return initial_fen;
 	}
 }
 
