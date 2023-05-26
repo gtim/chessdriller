@@ -12,7 +12,6 @@ export async function fetchStudiesMetadata( lichess_username, lichess_access_tok
 	}
 
 	return resp.text().then( (content) => { 
-		console.log(content);
 		return content.split(/\n/).filter((line)=>line!='').map( JSON.parse );
 	} );
 }

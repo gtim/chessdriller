@@ -1,14 +1,15 @@
 # To-do and other thoughts
 
-## Bugs
+## Bugs (TODO make github issues of these)
 
 * when studies are removed at Lichess, they remain on Chessdriller
 * visual bug: en passant leaves the captured pawn
 * PGNs must end in newlines
 * occasionally at start of study, touching a square calls the touch event on the above square until refresh
 * it's possible to get stuck in a "skip end of line" loop if a move before a line-split becomes due while studying
+* makePreviewFen fails on PGNs without moves
 
-## Small features
+## Minor features
 
 * repertoire: keep study names in sync with lichess
 * repertoire: auto-update studies on login
@@ -20,7 +21,7 @@
 * feedback button to conveniently send me feedback on chessdriller
 
 
-## Big features
+## Major features
 
 * practice specific study/PGN/chapter (whether due or not)
     - should wrong-moves here always affect scheduling? or only if the move was due?

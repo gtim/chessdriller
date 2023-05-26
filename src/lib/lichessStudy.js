@@ -14,9 +14,18 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 	const existing_studies = await prisma.LichessStudy.findMany({
 		where: { userId: user_id },
 		select: {
+			id: true,
 			lichessId: true,
 			lastModifiedOnLichess: true,
-			name: true
+			lastFetched: true,
+			name: true,
+			included: true,
+			hidden: true,
+			updates: {
+				select: {
+					fetched: true
+				}
+			}
 		}
 	});
 	const existing_study_ids = new Set( existing_studies.map( (study) => study.lichessId ) );
@@ -30,6 +39,7 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 	// if new studies are found, insert them into database
 
 	let num_new_studies = 0;
+	let num_updates_fetched = 0;
 	for ( const lichess_study of lichess_studies ) {
 		if ( ! existing_study_ids.has( lichess_study.id ) ) {
 			// new study: insert into database
@@ -48,18 +58,29 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 			num_new_studies++;
 		} else {
 			// existing study: check if modified
+			// NOTE: Lichess does not update timestamp for sync-disabled studies, see lila issue #12882
 			const existing_study = existing_studies.find( (study) => study.lichessId === lichess_study.id );
-			if ( existing_study.lastModifiedOnLichess < new Date(lichess_study.updatedAt) ) {
-				console.log( 'study has been updated: ' + existing_study.name );
-			} else {
-				console.log( 'not updated: ' + existing_study.name );
+			const lichess_last_modified = new Date(lichess_study.updatedAt);
+			const has_newer_version_on_lichess = existing_study.lastFetched < lichess_last_modified;
+			const has_current_update_fetched = existing_study.updates.length && existing_study.updates[0].fetched >= lichess_last_modified;
+			if ( has_newer_version_on_lichess && ! has_current_update_fetched ) {
+				if ( existing_study.included ) {
+					// Study in repertoire: fetch update, apply separately
+					await fetchStudyUpdate( user_id, existing_study.id, prisma, lichess_username, lichess_access_token );
+					num_updates_fetched++;
+				} else if ( ! existing_study.hidden ) {
+					// Study not in repertoire: fetch update and auto-apply (TODO not implemented)
+				} else {
+					// study hidden: ignore any changes
+				}
 			}
-			//console.log( '  e:' + existing_study.lastModifiedOnLichess );
-			//console.log( '  l:' + new Date( lichess_study.updatedAt ) );
 		}
 	}
 
-	return { num_new_studies };
+	return {
+		num_new_studies,
+		num_updates_fetched
+	};
 }
 
 
