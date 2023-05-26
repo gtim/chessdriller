@@ -170,11 +170,13 @@
 
 {:else}
 
-	{#if stats}
-		<p id="stats">
+	<p id="stats">
+		{#if stats}
 			{stats.moves_due} move{stats.moves_due==1?'':'s'} <span on:click={()=>num_clicks_on_due++}>due</span>.
-		</p>
-	{/if}
+		{:else}
+			&nbsp;
+		{/if}
+	</p>
 
 	{#if line}
 		<div style="display:flex;justify-content:center;align-items:center;">
