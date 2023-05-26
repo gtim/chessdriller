@@ -15,12 +15,12 @@ Github issues and PRs are also welcome.
 Cheers,<br/>
 Tim
 
-## Known bugs and planned features
+## Planned features
 
-See [TODO.md](https://github.com/gtim/chessdriller/blob/main/TODO.md) for known bugs and planned features.
+See [TODO.md](https://github.com/gtim/chessdriller/blob/main/TODO.md) for planned features.
 
 ## Building and hosting your own instance
 
 If you want to host your own instance of Chessdriller, e.g. to help develop it or for privacy reasons,
 there's brief instructions in [BUILD.md](https://github.com/gtim/chessdriller/blob/main/BUILD.md).
-If any step is unclear or it doesn't work, just open an issue or email me.
+If any step is unclear or doesn't seem to work, just open an issue or email me.

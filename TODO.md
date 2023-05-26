@@ -1,23 +1,15 @@
 # To-do and other thoughts
 
-## Bugs (TODO make github issues of these)
-
-* when studies are removed at Lichess, they remain on Chessdriller
-* visual bug: en passant leaves the captured pawn
-* PGNs must end in newlines
-* occasionally at start of study, touching a square calls the touch event on the above square until refresh
-* it's possible to get stuck in a "skip end of line" loop if a move before a line-split becomes due while studying
-* makePreviewFen fails on PGNs without moves
+This page lists planned and dreamed features along with other notes and thoughts, in no particular order.
+Known bugs can be found on the [Github issue tracker](https://github.com/gtim/chessdriller/issues).
 
 ## Minor features
 
-* repertoire: keep study names in sync with lichess
 * repertoire: auto-update studies on login
 * repertoire: regenerate preview board on update
 * study: "skip to first due move" button
 * study: "skip end of line" should play it through quickly instead of jumping
 * set time zone per user (day currently wraps at 00:00 GMT)
-* pgn upload: don't upload empty pgn if an error occurred
 * pgn upload: guess repertoire color and display parse issues before submitting form
 * feedback button to conveniently send me feedback on chessdriller
 
@@ -47,8 +39,7 @@
 
 ### Styling improvements
 
-- make the move sheet double-column
-* correct-move "stamp" on the a/h files makes the board zoom out slightly
+* make the move sheet double-column
 * animation feedback on wrong move (board/piece shake? flash board reddish?)
 * animation feedback on variation finished
 * some prop background image on each page? book? pipe? coffe cup? glasses? chess pieces? chessboard? score sheet?
@@ -58,7 +49,7 @@
 
 * incorrect answer decreases move ease, but when to increase?
 * line-scheduling issues
-    - a short transposition / move-order swap will lead to the entire line being quized twice, with each variation.
+    - a short transposition / move-order swap will lead to the entire line being tested twice, with each variation.
     - possible solution: just quiz until the last due move, not to the end of the line 
     - counter-issue: when in learning, a line will "trickle in" to the due-queue, and if reviewed before it's finished trickling, stopping at the last due move would leave the rest for the due-queue in a couple minutes.
 * moves "reviewed early" are simply pushed forward at the current interval. should be handled better, maybe increase the interval (proportionally?) if they're reviewed >50% through.
