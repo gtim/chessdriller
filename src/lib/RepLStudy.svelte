@@ -19,6 +19,7 @@
 	export let previewFen;
 	export let numOwnMoves;
 	export let lastModifiedOnLichess;
+	export let removedOnLichess;
 	export let updates = [];
 
 	// Below props are not used, but exported to avoid warnings when the Study is spread onto this prop.
@@ -31,12 +32,12 @@
 	let error_msg;
 
 	/*
-	 * Removal
+	 * Removal (Uninclusion)
 	 */
 
 	function confirmRemoval(){
 		openModal( ConfirmModal, {
-			title: 'Remove study?',
+			title: 'Remove from repertoire?',
 			message: 'Remove the study <b>'+name+'</b> from your repertoire? Chessdriller remembers how well you knew the moves, in case you add them back later.',
 
 			confirm: removeStudy,
@@ -58,6 +59,30 @@
 		}
 	}
 	$: title = removed ? '<span style="text-decoration:line-through;">'+name+'</span>' : name;
+
+	/*
+	 * Removing included study after removed from Lichess
+	 */
+
+	function confirmLichessRemoval() {
+		openModal( ConfirmModal, {
+			title: 'Delete study?',
+			message: 'The study <b>'+name+'</b> was not found on Lichess anymore. Would you like to delete it from Chessdriller too?',
+			confirm: deleteStudy,
+			confirmLabel: 'Delete'
+		} );
+	}
+	async function deleteStudy() {
+		const res = await fetch( '/api/lichess-study/'+id+'/delete', {method:'POST'} );
+		const json = await res.json();
+		if ( ! res.ok ) {
+			error_msg = 'Deletion failed ('+res.status+')';
+		} else if ( ! json.success ) {
+			error_msg = 'Deletion failed: ' + json.message;
+		} else {
+			dispatch( 'change' );
+		}
+	}
 
 	/*
 	 * Updating
@@ -113,7 +138,16 @@
 		<button class="remove" title="Remove study from repertoire" on:click={confirmRemoval}>&#x2715;</button>
 		<button class="fetchUpdate" title="Check for updates" on:click={fetchUpdate}>&#x27F3;</button>
 	{/if}
-	{#if update && ( update.numNewMoves > 0 || update.numRemovedMoves > 0 ) }
+	{#if removedOnLichess}
+		<button
+			class="cdbutton" style="font-weight:bold;color:darkred;"
+			title="This study can't be found on Lichess anymore. Delete it from Chessdriller too?"
+			on:click={confirmLichessRemoval}
+		>
+			Not found on Lichess.<br/>
+			Delete study?
+		</button>
+	{:else if update && ( update.numNewMoves > 0 || update.numRemovedMoves > 0 ) }
 		<button
 			class="cdbutton"
 			title="Update {name} with {update.numNewOwnMoves} new {color} move{update.numNewOwnMoves==1?'':'s'} and {update.numRemovedOwnMoves} removed {color} move{update.numRemovedOwnMoves==1?'':'s'}."

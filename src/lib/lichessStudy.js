@@ -1,12 +1,12 @@
 import { fetchStudy, fetchStudiesMetadata } from '$lib/lichessApi.js';
-import { pgndbToMoves, compareMovesLists, guessColor, makePreviewFen } from '$lib/pgnImporter.js';
+import { pgndbToMoves, compareMovesLists, guessColor, makePreviewFen, unincludeStudy } from '$lib/pgnImporter.js';
 
 // fetchAllStudyChanges
 // Synchronise user's studies with Lichess by:
 // - fetching any new studies
 // - fetching updates to any studies that have been modified (applied separately)
-// - marking removed studies (TODO not implemented, issue #7)
-// - renaming renamed studies (TODO not implemented, issue #7) 
+// - marking studies removed on Lichess
+// - renaming studies renamed on Lichess
 
 export async function fetchAllStudyChanges( user_id, prisma, lichess_username, lichess_access_token ) {
 	
@@ -22,6 +22,7 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 			name: true,
 			included: true,
 			hidden: true,
+			removedOnLichess: true,
 			updates: {
 				select: {
 					fetched: true
@@ -35,6 +36,7 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 	// fetch study IDs from Lichess
 
 	const lichess_studies = await fetchStudiesMetadata( lichess_username, lichess_access_token );
+	const lichess_study_ids = new Set( lichess_studies.map( (study) => study.id ) );
 
 
 	// if new studies are found, insert them into database
@@ -42,6 +44,7 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 	let num_new_studies = 0;
 	let num_updates_fetched = 0;
 	let num_renamed_studies = 0;
+	let num_removed_studies = 0;
 	let queries = [];
 	for ( const lichess_study of lichess_studies ) {
 		if ( ! existing_study_ids.has( lichess_study.id ) ) {
@@ -62,6 +65,13 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 		} else {
 			// existing study
 			const existing_study = existing_studies.find( (study) => study.lichessId === lichess_study.id );
+			// ensure not removedOnLichess
+			if ( existing_study.removedOnLichess ) {
+				queries.push( prisma.LichessStudy.update({
+					where: { id: existing_study.id },
+					data: { removedOnLichess: false }
+				}) );
+			}
 			// update name
 			if ( existing_study.name !== lichess_study.name ) {
 				queries.push( prisma.LichessStudy.update({
@@ -91,18 +101,43 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 		}
 	}
 
-	// run name-change queries
+	// find deleted studies
+	for ( const existing_study of existing_studies ) {
+		if ( ! lichess_study_ids.has( existing_study.lichessId ) ) {
+			// study not found on lichess anymore: remove it
+			if ( existing_study.included ) {
+				// Study in repertoire: note deletion, apply separately
+				if ( ! existing_study.removedOnLichess ) {
+					queries.push( prisma.LichessStudy.update({
+						where: { id: existing_study.id },
+						data: { removedOnLichess: true }
+					}) );
+					num_removed_studies++;
+				}
+			} else {
+				// Study not included: delete immediately
+				queries.push( prisma.LichessStudy.delete({
+					where: { id: existing_study.id }
+				}) );
+				num_removed_studies++;
+			}
+		}
+	}
+
+	// run all queries as single transaction, except move updates, which are performed above
 	try {
 		await prisma.$transaction(queries);
 	} catch(e) {
 		throw new Error( 'Exception renaming study: ' + e.message );
 		num_renamed_studies = 0;
+		num_removed_studies = 0;
 	}
 
 	return {
 		num_new_studies,
 		num_updates_fetched,
-		num_renamed_studies
+		num_renamed_studies,
+		num_removed_studies
 	};
 }
 
@@ -217,3 +252,24 @@ async function updateUnincludedStudy( user_id, study_id, prisma, lichess_usernam
 	return;
 }
 
+// Delete a study completely.
+// If included in repertoire, uninclude it first.
+export async function deleteStudy( user_id, study_id, prisma ) {
+	const study = await prisma.LichessStudy.findUnique({
+		where: { id: study_id },
+		select: {
+			userId: true,
+			included: true
+		}
+	});
+	if ( study.userId !== user_id )
+		throw new Error('Study does not belong to this user (are you logged in?)');
+
+	if ( study.included ) {
+		await unincludeStudy( study_id, user_id, prisma );
+	}
+
+	await prisma.LichessStudy.delete({
+		where: { id: study_id }
+	});
+}

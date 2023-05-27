@@ -16,6 +16,7 @@
 	// Below props are not used, but exported to avoid warnings when the Study is spread onto this prop.
 	export let lichessId;
 	export let lastModifiedOnLichess;
+	export let removedOnLichess;
 	export let lastFetched;
 	export let included;
 	export let repForWhite;

@@ -99,6 +99,7 @@ model LichessStudy {
 	guessedColor               String // guess on whether repertoire is w/b/u
 	previewFen                 String // FEN used for board preview in repertoire view
 	hidden                     Boolean @default(false) // true if hidden from the "studies" list
+	removedOnLichess           Boolean @default(false) // true if not found on Lichess; should only be true for included studies as unincluded ones are removed immediately.
 	updates                    LichessStudyUpdate[]
 
 	@@unique([ userId, lichessId ])
@@ -106,9 +107,8 @@ model LichessStudy {
 
 // updates in progress; row removed when update has been applied
 model LichessStudyUpdate {
-	study                 LichessStudy @relation( fields: [studyId], references: [id] )
+	study                 LichessStudy @relation( fields: [studyId], references: [id], onDelete: Cascade )
 	studyId               Int @unique
-//	name                  String?
 	lastModifiedOnLichess DateTime
 	fetched               DateTime @default(now())
 	numNewMoves           Int

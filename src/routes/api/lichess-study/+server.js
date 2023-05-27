@@ -20,6 +20,7 @@ export async function GET({ locals }) {
 				guessedColor: true,
 				previewFen: true,
 				hidden: true,
+				removedOnLichess: true,
 				updates: {
 					select: {
 						numNewMoves: true,
