@@ -53,6 +53,32 @@ export const load = async ({ locals }) => {
 		title: 'Orphan moves that are not deleted',
 		items: orphans.map( (m) => `Move #${m.id} (${m.user.lichessUsername})` )
 	} );
+	
+	// Find deleted moves that are not orphan
+	
+	const unorphanDeletedMoves = await prisma.Move.findMany({
+		where: {
+			AND: [
+				{
+					OR: [
+						{ pgns:    { some: {} } },
+						{ studies: { some: {} } }
+					]
+				},
+				{ deleted: true }
+			]
+		},
+		select: {
+			id: true,
+			user: { select: {
+				lichessUsername: true
+			} }
+		}
+	});
+	checks.push( {
+		title: 'Deleted moves that are not orphan',
+		items: unorphanDeletedMoves.map( (m) => `Move #${m.id} (${m.user.lichessUsername})` )
+	} );
 
 	// Find studies with inconsistent included/hidden/removedOnLichess
 	const inconsistentBooleanStudies = await prisma.LichessStudy.findMany({
