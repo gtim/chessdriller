@@ -54,6 +54,40 @@ export const load = async ({ locals }) => {
 		items: orphans.map( (m) => `Move #${m.id} (${m.user.lichessUsername})` )
 	} );
 
+	// Find studies with inconsistent included/hidden/removedOnLichess
+	const inconsistentBooleanStudies = await prisma.LichessStudy.findMany({
+		where: {
+			OR: [
+				{
+					AND: [
+						{ included: true },
+						{ hidden: true }
+					]
+				},
+				{
+					AND: [
+						{ removedOnLichess: true },
+						{ included: false }
+					]
+				}
+			]
+		},
+		select: {
+			id: true,
+			name: true,
+			user: { select: {
+				lichessUsername: true
+			} },
+			included: true,
+			hidden: true,
+			removedOnLichess: true
+		}
+	});
+	checks.push( {
+		title: 'Studies with inconsistent booleans',
+		items: inconsistentBooleanStudies.map( (s) => `${s.name} (#${s.id}) by ${s.user.lichessUsername}: included:${s.included}, hidden:${s.hidden}, removedOnLichess:${s.removedOnLichess}` )
+	} );
+
 	return { checks };
 
 };
