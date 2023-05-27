@@ -41,6 +41,8 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 
 	let num_new_studies = 0;
 	let num_updates_fetched = 0;
+	let num_renamed_studies = 0;
+	let queries = [];
 	for ( const lichess_study of lichess_studies ) {
 		if ( ! existing_study_ids.has( lichess_study.id ) ) {
 			// new study: insert into database
@@ -58,9 +60,18 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 			} } );
 			num_new_studies++;
 		} else {
-			// existing study: check if modified
-			// NOTE: Lichess does not update timestamp for sync-disabled studies, see lila issue #12882
+			// existing study
 			const existing_study = existing_studies.find( (study) => study.lichessId === lichess_study.id );
+			// update name
+			if ( existing_study.name !== lichess_study.name ) {
+				queries.push( prisma.LichessStudy.update({
+					where: { id: existing_study.id },
+					data: { name: lichess_study.name }
+				}) );
+				num_renamed_studies++;
+			}
+			// check if PGN was modified
+			// NOTE: Lichess does not update timestamp for sync-disabled studies, see lila issue #12882
 			const lichess_last_modified = new Date(lichess_study.updatedAt);
 			const has_newer_version_on_lichess = existing_study.lastFetched < lichess_last_modified;
 			const has_current_update_fetched = existing_study.updates.length && existing_study.updates[0].fetched >= lichess_last_modified;
@@ -80,9 +91,18 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 		}
 	}
 
+	// run name-change queries
+	try {
+		await prisma.$transaction(queries);
+	} catch(e) {
+		throw new Error( 'Exception renaming study: ' + e.message );
+		num_renamed_studies = 0;
+	}
+
 	return {
 		num_new_studies,
-		num_updates_fetched
+		num_updates_fetched,
+		num_renamed_studies
 	};
 }
 

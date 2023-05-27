@@ -41,7 +41,7 @@
 			new_studies_error = json.message;
 		}
 
-		if ( json.num_new_studies > 0 || json.num_updates_fetched > 0 ) {
+		if ( json.num_new_studies > 0 || json.num_updates_fetched > 0 || json.num_renamed_studies > 0 ) {
 			getStudies();
 		}
 		return json;
