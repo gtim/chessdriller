@@ -5,6 +5,7 @@ Known bugs can be found on the [Github issue tracker](https://github.com/gtim/ch
 
 ## Minor features
 
+* handle studies that don't start at the initial position
 * repertoire: auto-update studies on login
 * repertoire: regenerate preview board on update
 * study: "skip to first due move" button
