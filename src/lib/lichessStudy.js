@@ -5,7 +5,8 @@ import { pgndbToMoves, compareMovesLists, guessColor, makePreviewFen } from '$li
 // Synchronise user's studies with Lichess by:
 // - fetching any new studies
 // - fetching updates to any studies that have been modified (applied separately)
-// - marking removed studies (TODO not implemented)
+// - marking removed studies (TODO not implemented, issue #7)
+// - renaming renamed studies (TODO not implemented, issue #7) 
 
 export async function fetchAllStudyChanges( user_id, prisma, lichess_username, lichess_access_token ) {
 	
@@ -69,7 +70,9 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 					await fetchStudyUpdate( user_id, existing_study.id, prisma, lichess_username, lichess_access_token );
 					num_updates_fetched++;
 				} else if ( ! existing_study.hidden ) {
-					// Study not in repertoire: fetch update and auto-apply (TODO not implemented)
+					// Study not in repertoire: fetch update and auto-apply
+					await updateUnincludedStudy( user_id, existing_study.id, prisma, lichess_username, lichess_access_token );
+					num_updates_fetched++;
 				} else {
 					// study hidden: ignore any changes
 				}
@@ -84,10 +87,10 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 }
 
 
-
 // fetchStudyUpdate
 // Fetch the latest Lichess version of an existing study.
 // Update is stored as LichessStudyUpdate and applied to the LichessStudy row separately.
+// Only for studies included in repertoire. Unincluded studies are updated directly with updateUnincludedStudy.
 
 export async function fetchStudyUpdate( user_id, study_id, prisma, lichess_username, lichess_access_token ) {
 
@@ -114,7 +117,7 @@ export async function fetchStudyUpdate( user_id, study_id, prisma, lichess_usern
 	if ( study.userId !== user_id )
 		throw new Error('Study does not belong to this user (are you logged in?)');
 	if ( ! study.included )
-		throw new Error('Only studies that are part of your repertoire can be updated, please add it first.');
+		throw new Error('Only studies that are part of your repertoire can be updated with fetchStudyUpdate, use updateUnincludedStudy.');
 
 	
 	// fetch new PGN
@@ -162,3 +165,35 @@ export async function fetchStudyUpdate( user_id, study_id, prisma, lichess_usern
 	}
 
 }
+
+
+// updateUnincludedStudy
+// Updates an unincluded or hidden study. The LichessStudy is directly updated.
+
+async function updateUnincludedStudy( user_id, study_id, prisma, lichess_username, lichess_access_token ) {
+	const study = await prisma.LichessStudy.findUnique({
+		where: { id: study_id },
+		select: {
+			id: true,
+			userId: true,
+			lichessId: true,
+			included: true
+		}
+	});
+	if ( study.userId !== user_id )
+		throw new Error('Study does not belong to this user (are you logged in?)');
+	if ( study.included )
+		throw new Error('Studies that are part of your repertoire cannot be updated with updateUnincludedStudy, use fetchStudyUpdate.');
+
+	const { pgn, lastModified } = await fetchStudy( study.lichessId, lichess_username, lichess_access_token );
+	await prisma.LichessStudy.update({
+		where: { id: study.id },
+		data: {
+			lastModifiedOnLichess: new Date(lastModified),
+			lastFetched: new Date(),
+			pgn: pgn
+		}
+	});
+	return;
+}
+
