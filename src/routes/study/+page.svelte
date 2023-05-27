@@ -1,7 +1,7 @@
 <script>
 
 	import StudyBoard from '$lib/StudyBoard.svelte';
-	import MoveFeedbackStar from '$lib/MoveFeedbackStar.svelte';
+	import MoveFeedbackStamp from '$lib/MoveFeedbackStamp.svelte';
 	import MoveSheet from '$lib/MoveSheet.svelte';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
@@ -89,7 +89,7 @@
 						data.interval.value = Math.round(data.interval.value/60);
 						data.interval.unit = 'h';
 					}
-					const mfs = new MoveFeedbackStar({
+					const mfs = new MoveFeedbackStamp({
 						target: document.body,
 						props: { 
 							value: data.interval.value,
