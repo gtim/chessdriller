@@ -6,17 +6,16 @@
 <div class="narrow_container">
 	<p>This page checks for some specific database inconsistencies that might indicate issues.</p>
 
-	<h2 class:bad={data.unincludedStudiesWithMoves>0} class:good={data.unincludedStudiesWithMoves==0}>
-		Unincluded studies with moves: {data.unincludedStudiesWithMoves.length}
-	</h2>
-	<ul>
-		{#each data.unincludedStudiesWithMoves as study}
-			<li>
-				{study.name} (#{study.id}) by {study.user.lichessUsername} (#{study.user.id}):
-				{study.moves.length} moves ({study.moves.filter((m)=>m.deleted).length} soft-deleted).
-			</li>
-		{/each}
-	</ul>
+	{#each data.checks as check}
+		<h2 class:bad={check.items.length>0} class:good={check.items.length==0}>
+			{check.title}: {check.items.length}
+		</h2>
+		<ul>
+			{#each check.items as item}
+				<li>{item}</li>
+			{/each}
+		</ul>
+	{/each}
 </div>
 
 <style>
