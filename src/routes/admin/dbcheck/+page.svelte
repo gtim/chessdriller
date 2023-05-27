@@ -5,20 +5,18 @@
 <h1>Database Check</h1>
 <div class="narrow_container">
 	<p>This page checks for some specific database inconsistencies that might indicate issues.</p>
-	<h2>Unincluded studies with moves</h2>
-	{#if data.unincludedStudiesWithMoves.length}
-		<p class="bad">{data.unincludedStudiesWithMoves.length} studies:</p>
-		<ul>
+
+	<h2 class:bad={data.unincludedStudiesWithMoves>0} class:good={data.unincludedStudiesWithMoves==0}>
+		Unincluded studies with moves: {data.unincludedStudiesWithMoves.length}
+	</h2>
+	<ul>
 		{#each data.unincludedStudiesWithMoves as study}
 			<li>
 				{study.name} (#{study.id}) by {study.user.lichessUsername} (#{study.user.id}):
 				{study.moves.length} moves ({study.moves.filter((m)=>m.deleted).length} soft-deleted).
 			</li>
 		{/each}
-		</ul>
-	{:else}
-		<p class="good">none</p>
-	{/if}
+	</ul>
 </div>
 
 <style>

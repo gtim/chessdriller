@@ -170,15 +170,20 @@ export async function unincludeStudy( study_id, user_id, prisma ) {
 		throw new Error( 'Study #' + study_id + ' not found' );
 	if ( study.userId != user_id )
 		throw new Error( 'Study does not belong to this account (are you logged in?)' );
-	
+
 	// Soft-delete moves
 	let queries = orphanMoveSoftDeletionsQueries( study.moves, prisma );
 	const num_deleted_moves = queries.length;
-
-	// Set the study to not included
+	
+	// Set the study to not included and disconnect moves
 	queries.push( prisma.LichessStudy.update({
 		where: { id: study_id },
-		data: { included: false }
+		data: {
+			included: false,
+			moves: {
+				set: []
+			}
+		}
 	}) );
 
 	// Run transaction
