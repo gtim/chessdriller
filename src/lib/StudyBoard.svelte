@@ -21,6 +21,9 @@
 	$: orientation = line && line[0].ownMove ? 'white' : 'black';
 	let container;
 	
+	export function getOrientation() {
+		return orientation;
+	}
 
 	// Chess logic from chess.js 
 	const chess = new Chess();
@@ -93,7 +96,11 @@
 			move_ix: current_move_i,
 			correct: correct,
 			guess: chess_move.san,
-			dest_pos: { x: container_rect.x + relX, y: container_rect.y + relY }
+			dest_pos: {
+				x: container_rect.x + relX,
+				y: container_rect.y + relY,
+				file: dest.charAt(0)
+			}
 		} );
 		if ( ! correct ) {
 			setTimeout( ()=>{

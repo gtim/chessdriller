@@ -89,13 +89,15 @@
 						data.interval.value = Math.round(data.interval.value/60);
 						data.interval.unit = 'h';
 					}
+					const mirrored = ( studyBoard.getOrientation() === 'white' ? e.detail.dest_pos.file === 'h' : e.detail.dest_pos.file === 'a' );
 					const mfs = new MoveFeedbackStamp({
 						target: document.body,
 						props: { 
 							value: data.interval.value,
 							unit: data.interval.unit,
 							x: e.detail.dest_pos.x,
-							y: e.detail.dest_pos.y
+							y: e.detail.dest_pos.y,
+							mirrored
 						},
 						intro: true
 					});

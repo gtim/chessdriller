@@ -3,12 +3,15 @@
 	import gsap from 'gsap';
 	export let x, y;
 	export let value, unit;
+	export let mirrored = false; // show stamp on the left side, if there's not enough space to the right (white h-file / black a-file)
 	let w, h;
 
 	$: content = '+' + value + '&thinsp;' + unit;
 
 
-	const rotation = 10+Math.random()*50; // 10-60
+	const rotation = (mirrored?-1:1) * ( 10+Math.random()*50 ); // 10-60
+	const dx = (mirrored?-1:1) * 25;
+	const dy = -20;
 
 	const dispatch = createEventDispatcher();
 
@@ -36,7 +39,7 @@
 </script>
 
 <div
-	style="left:{x-w/2+25}px;top:{y-h/2-20}px;rotate:{rotation}deg;"
+	style="left:{x-w/2+dx}px;top:{y-h/2+dy}px;rotate:{rotation}deg;"
 	bind:clientWidth={w} bind:clientHeight={h}
 	bind:this={stamp}
 >
