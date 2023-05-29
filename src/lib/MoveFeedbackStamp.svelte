@@ -60,5 +60,6 @@
 		padding:0 2px;
 		line-height:16px;
 		z-index:100;
+		pointer-events:none; /* allow click/touch through */
 	}
 </style>
