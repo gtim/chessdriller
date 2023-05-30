@@ -121,7 +121,8 @@ export async function POST({ locals, params }) {
 		where: { id: study.id },
 		data: { 
 			lastModifiedOnLichess: study.updates[0].lastModifiedOnLichess,
-			lastFetched: study.updates[0].fetched
+			lastFetched: study.updates[0].fetched,
+			pgn: study.updates[0].pgn
 		}
 	}) );
 
