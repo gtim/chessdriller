@@ -73,6 +73,10 @@
 	function stepOneMoveForward() {
 		const chess_move = chess.move( line[current_move_i].moveSan );
 		chessground.move( chess_move.from, chess_move.to );
+		if ( chess_move.flags.includes('e') ) {
+			// en passant: update board since chessground doesn't remove the captured pawn
+			chessground.set({ fen: chess.fen() });
+		}
 		current_move_i++;
 	}
 
@@ -115,6 +119,10 @@
 			const turnColor = chess.turn() === 'w' ? 'white' : 'black';
 			chessground.set({ turnColor: turnColor });
 			chessground.setAutoShapes( [] );
+			if ( chess_move.flags.includes('e') ) {
+				// en passant: update board since chessground doesn't remove the captured pawn
+				setTimeout( ()=>{ chessground.set({ fen: chess.fen() }) }, 200 );
+			}
 			current_move_i++;
 			if ( current_move_i == line.length ) {
 				lineFinished();
