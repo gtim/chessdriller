@@ -8,6 +8,7 @@ Known bugs can be found on the [Github issue tracker](https://github.com/gtim/ch
 * handle studies that don't start at the initial position
 * repertoire: auto-update studies on login
 * repertoire: regenerate preview board on update
+* repertoire: check for repertoire updates regularly while logged in, notify with banner/message in header
 * study: "skip to first due move" button
 * study: "skip end of line" should play it through quickly instead of jumping
 * set time zone per user (day currently wraps at 00:00 GMT)
