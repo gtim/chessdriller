@@ -61,7 +61,7 @@ describe( 'singlePgnToMoves', () => {
 			ownMove: false
 		} );
 	});
-	test('simple pgn, black', async () => {
+	test('simple pgn, black', () => {
 		const pgn_content = fs.readFileSync( './test/pgn/simple.pgn', 'utf8' );
 		const moves = singlePgnToMoves( pgn_content, false );
 		expect( moves ).toHaveLength( 4 );
@@ -88,7 +88,7 @@ describe( 'singlePgnToMoves', () => {
 			}
 		] );
 	});
-	test('recursive annotation variation', async () => {
+	test('recursive annotation variation', () => {
 		const pgn_content = fs.readFileSync( './test/pgn/rav.pgn', 'utf8' );
 		const moves = singlePgnToMoves( pgn_content, true );
 		expect( moves ).toHaveLength( 11 );
@@ -100,14 +100,14 @@ describe( 'singlePgnToMoves', () => {
 
 	// cm-pgn 2.3.1 seems to fail parsing these three PGNs
 	
-	test('two comments after final move', async () => {
+	test('two comments after final move', () => {
 		const pgn_content = fs.readFileSync( './test/pgn/end-two-comments.pgn', 'utf8' );
 		const moves = singlePgnToMoves( pgn_content, true );
 		expect( moves ).toHaveLength( 2 );
 		expect( moves.filter( (m) => m.moveSan === 'd4' ) ).toHaveLength( 1 );
 		expect( moves.filter( (m) => m.moveSan === 'Nf6' ) ).toHaveLength( 1 );
 	});
-	test('two comments before variant', async () => {
+	test('two comments before variant', () => {
 		const pgn_content = fs.readFileSync( './test/pgn/two-comments-before-variant.pgn', 'utf8' );
 		const moves = singlePgnToMoves( pgn_content, true );
 		expect( moves ).toHaveLength( 4 );
@@ -118,10 +118,22 @@ describe( 'singlePgnToMoves', () => {
 			{ moveSan: 'Bg5' }
 		]);
 	});
-	test('two comments before variant (three times)', async () => {
+	test('two comments before variant (three times)', () => {
 		const pgn_content = fs.readFileSync( './test/pgn/two-comments-before-variant-thrice.pgn', 'utf8' );
 		const moves = singlePgnToMoves( pgn_content, true );
 		expect( moves ).toHaveLength( 8 );
+	});
+
+	// PGNs must have at least one move according to spec, but zero-moves PGNs should be handled anyway.
+	test('empty PGN', () => {
+		const pgn_content = fs.readFileSync( './test/pgn/empty.pgn', 'utf8' );
+		const moves = singlePgnToMoves( pgn_content, true );
+		expect( moves ).toHaveLength( 0 );
+	});
+	test('empty PGN with result', () => {
+		const pgn_content = fs.readFileSync( './test/pgn/empty-draw.pgn', 'utf8' );
+		const moves = singlePgnToMoves( pgn_content, true );
+		expect( moves ).toHaveLength( 0 );
 	});
 } );
 
@@ -131,7 +143,7 @@ describe( 'singlePgnToMoves', () => {
  */
 
 describe( 'pgndbToMoves', () => {
-	test('pgn database', async () => {
+	test('pgn database', () => {
 		// pgndbToMoves does not combine duplicate moves, this happens at the prisma layer.
 		// As such, these expectations are different from those in uploadedPgn.test.js.
 		const pgn_content = fs.readFileSync( './test/pgn/database.pgn', 'utf8' );

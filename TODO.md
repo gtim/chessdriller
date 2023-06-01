@@ -8,7 +8,6 @@ Known bugs can be found on the [Github issue tracker](https://github.com/gtim/ch
 * make a proper lucia-provider for Lichess login
 * styling: make /study look good on non-mobile
 * styling: make the move sheet double-column
-* PGN parsing: separate PGN logic from database logic further, to allow testing without database
 * PGN parsing: ensure cm-pgn can be used unmodified
 * PGN parsing: test a bunch of different PGNs to make sure parsing works fine
 * proper error logging

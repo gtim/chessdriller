@@ -15,22 +15,28 @@ export function pgndbToMoves( pgndb, repForWhite ) {
 // Converts text from single PGN game to a moves-list.
 // Exported only as a test utility.
 export function singlePgnToMoves( pgn_content, repForWhite ) {
-	const cmpgn = singlePgnToCMPgn( pgn_content );
-	return chessHistoryToMoves( cmpgn.history.moves, repForWhite );
+	const cmpgn_moves = singlePgnToCMPgnMoves( pgn_content );
+	return chessHistoryToMoves( cmpgn_moves, repForWhite );
 }
 
-function singlePgnToCMPgn( pgn_content ) {
+function singlePgnToCMPgnMoves( pgn_content ) {
 
 	// remove comments due to issues parsing PGNs with two sequential comments
 	// unit tests: "two comments after final move", "two comments before variant", "two comments before variant thrice"
 	// TODO investigate whether this is a cm-pgn bug 
 	pgn_content = pgn_content.replaceAll(/\{[^{}]*\}/g, '');
 
-	// remove final '*', maybe cm-pgn/chess.js bug makes it cause parser issues?
-	pgn_content = pgn_content.replace(/\*\s*$/, '\n');
+	// remove trailing newlines/spaces
+	pgn_content = pgn_content.replace(/\s*$/gs, '');
+	
+	// Detect empty PGN with simple regex. 
+	// Empty (zero moves) PGNs are invalid, but we try to handle them since Lichess can produce them.
+	if ( pgn_content.match(/^\[.*?\]\s*(\*|1-0|0-1|1\/2-1\/2)\s*$/m) ) {
+		return [];
+	}
 
 	const cmpgn = new Pgn( pgn_content ); // TODO: handle PGN parse errors
-	return cmpgn;
+	return cmpgn.history.moves;
 }
 
 // Traverse all cm-pgn moves, including variations, and returns moves-list
@@ -101,11 +107,11 @@ export function makePreviewFen( pgn_db ) {
 	const pgn_first_chapter = pgntexts[0];
 	const initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 	try {
-		const cmpgn = singlePgnToCMPgn( pgn_first_chapter );
-		if ( cmpgn.history.moves == 0 )
+		const cmpgn_moves = singlePgnToCMPgnMoves( pgn_first_chapter );
+		if ( cmpgn_moves == 0 )
 			return initial_fen;
-		const preview_move_i = Math.min( 4, cmpgn.history.moves.length ) - 1;
-		return cmpgn.history.moves[ preview_move_i ].fen;
+		const preview_move_i = Math.min( 4, cmpgn_moves.length ) - 1;
+		return cmpgn_moves[ preview_move_i ].fen;
 	} catch (e) {
 		console.warn( 'warning: makePreviewFen failed, returning origin position. ' + e.message );
 		return initial_fen;
