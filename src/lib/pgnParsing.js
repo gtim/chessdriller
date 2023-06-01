@@ -1,8 +1,8 @@
-import { Chess } from '../../node_modules/cm-chess/src/Chess.js';
+import { Pgn } from '../../node_modules/cm-pgn/src/Pgn.js';
 
 /*
  * PGN parsing (from connected Lichess study or uploaded PGN).
- * Glue to cm-chess.
+ * Glue to cm-pgn.
  */
 
 // Convert PGN database file (multiple concatenated PGNs) to a moves-list.
@@ -15,26 +15,25 @@ export function pgndbToMoves( pgndb, repForWhite ) {
 // Converts text from single PGN game to a moves-list.
 // Exported only as a test utility.
 export function singlePgnToMoves( pgn_content, repForWhite ) {
-	const chess = singlePgnToCMChess( pgn_content );
-	return chessHistoryToMoves( chess.history(), repForWhite );
+	const cmpgn = singlePgnToCMPgn( pgn_content );
+	return chessHistoryToMoves( cmpgn.history.moves, repForWhite );
 }
 
-function singlePgnToCMChess( pgn_content ) {
+function singlePgnToCMPgn( pgn_content ) {
 
 	// remove comments due to issues parsing PGNs with two sequential comments
 	// unit tests: "two comments after final move", "two comments before variant", "two comments before variant thrice"
 	// TODO investigate whether this is a cm-pgn bug 
 	pgn_content = pgn_content.replaceAll(/\{[^{}]*\}/g, '');
 
-	// remove final '*', maybe cm-chess/chess.js bug makes it cause parser issues?
+	// remove final '*', maybe cm-pgn/chess.js bug makes it cause parser issues?
 	pgn_content = pgn_content.replace(/\*\s*$/, '\n');
 
-	const chess = new Chess();
-	chess.loadPgn( pgn_content ); // TODO: handle unparsable PGNs
-	return chess;
+	const cmpgn = new Pgn( pgn_content ); // TODO: handle PGN parse errors
+	return cmpgn;
 }
 
-// Traverse all cm-chess moves, including variations, and returns moves-list
+// Traverse all cm-pgn moves, including variations, and returns moves-list
 function chessHistoryToMoves( history, repForWhite ) {
 	const moves = [];
 	for ( const move of history ) {
@@ -56,7 +55,7 @@ function chessHistoryToMoves( history, repForWhite ) {
 }
 
 // A PGN database file can contain multiple PGNs: http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm#c8
-// Since chess.js and cm-chess don't support multiple PGNs, the file is split here. The spec points out that it is simple enough that a full-blown parser is not needed, but it remains to be seen whether kinda-complying PGNs in the wild will cause trouble. Ideally, this would be solved in cm-chess (or chess.js).
+// Since chess.js and cm-pgn don't support multiple PGNs, the file is split here. The spec points out that it is simple enough that a full-blown parser is not needed, but it remains to be seen whether kinda-complying PGNs in the wild will cause trouble. Ideally, this would be solved in cm-pgn (or chess.js).
 function split_pgndb_into_pgns( pgn_db ) {
 	pgn_db = pgn_db.replaceAll( /\r/g, "" );
 	const regex = /(\[.*?\n\n *\S.*?\n\n)/gs; // Should fail on PGNs with comments with empty lines
@@ -102,13 +101,13 @@ export function makePreviewFen( pgn_db ) {
 	const pgn_first_chapter = pgntexts[0];
 	const initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 	try {
-		const chess = singlePgnToCMChess( pgn_first_chapter );
-		if ( chess.pgn.history.moves == 0 )
+		const cmpgn = singlePgnToCMPgn( pgn_first_chapter );
+		if ( cmpgn.history.moves == 0 )
 			return initial_fen;
-		const preview_move_i = Math.min( 4, chess.pgn.history.moves.length ) - 1;
-		return chess.pgn.history.moves[ preview_move_i ].fen;
+		const preview_move_i = Math.min( 4, cmpgn.history.moves.length ) - 1;
+		return cmpgn.history.moves[ preview_move_i ].fen;
 	} catch (e) {
-		console.log( 'warning: makePreviewFen failed, returning origin position. ' + e.message );
+		console.warn( 'warning: makePreviewFen failed, returning origin position. ' + e.message );
 		return initial_fen;
 	}
 }
