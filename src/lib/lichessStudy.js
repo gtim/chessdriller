@@ -1,5 +1,6 @@
 import { fetchStudy, fetchStudiesMetadata } from '$lib/lichessApi.js';
-import { pgndbToMoves, compareMovesLists, guessColor, makePreviewFen, unincludeStudy } from '$lib/pgnImporter.js';
+import { compareMovesLists, orphanMoveSoftDeletionsQueries } from '$lib/movesUtil.js';
+import { pgndbToMoves, guessColor, makePreviewFen } from '$lib/pgnParsing.js';
 
 // fetchAllStudyChanges
 // Synchronise user's studies with Lichess by:
@@ -272,4 +273,108 @@ export async function deleteStudy( user_id, study_id, prisma ) {
 	await prisma.LichessStudy.delete({
 		where: { id: study_id }
 	});
+}
+
+// Include study
+export async function includeStudy( study_id, prisma, user_id, repForWhite ) {
+	const study = await prisma.LichessStudy.findUniqueOrThrow({
+		where: { id: study_id }
+	});
+	if ( study.userId != user_id ) 
+		throw new Error( 'Adding Lichess study failed: user ID does not match' );
+	if ( study.hidden )
+		throw new Error( 'Adding Lichess study failed: can\'t import hidden study, unhide it first' );
+	if ( study.included )
+		throw new Error( 'Adding Lichess study failed: study is already included' );
+	
+	// parse PGN
+	const moves = pgndbToMoves( study.pgn, repForWhite );
+
+	// insert moves
+	let queries = [];
+	for ( const move of moves ) {
+		move.userId = user_id;
+		move.studies = { connect: [{ id: study_id }] };
+		queries.push( prisma.move.upsert( {
+			where: {
+				userId_repForWhite_fromFen_toFen: {
+					userId: user_id,
+					repForWhite: move.repForWhite,
+					fromFen: move.fromFen,
+					toFen: move.toFen
+				}
+			},
+			create: move,
+			update: {
+				studies: move.studies,
+				deleted: false
+			}
+		}) );
+	}
+
+	// update study
+	queries.push( prisma.LichessStudy.update({
+		where: { id: study_id },
+		data: {
+			included: true,
+			repForWhite
+		}
+	}) );
+
+	// run transaction
+	try {
+		await prisma.$transaction(queries);
+	} catch(e) {
+		console.log( 'Exception inserting study moves into database: ' + e.message );
+		throw new Error( 'Exception inserting moves into database: ' + e.message );
+	}
+}
+
+// Unincludes a PGN, so that it is no longer part of the repertoire.
+// Soft-deletes all moves that are not in another PGN/Study.
+// Returns the number of deleted moves.
+export async function unincludeStudy( study_id, user_id, prisma ) {
+	
+	// get study and all moves
+	const study = await prisma.LichessStudy.findUnique( {
+		where: { id: study_id },
+		include: {
+			moves: {
+				select: {
+					id: true,
+					pgns:    { select: {id:true} },
+					studies: { select: {id:true} }
+				}
+			},
+		}
+	});
+	if ( ! study )
+		throw new Error( 'Study #' + study_id + ' not found' );
+	if ( study.userId != user_id )
+		throw new Error( 'Study does not belong to this account (are you logged in?)' );
+
+	// Soft-delete moves
+	let queries = orphanMoveSoftDeletionsQueries( study.moves, prisma );
+	const num_deleted_moves = queries.length;
+	
+	// Set the study to not included and disconnect moves
+	queries.push( prisma.LichessStudy.update({
+		where: { id: study_id },
+		data: {
+			included: false,
+			moves: {
+				set: []
+			}
+		}
+	}) );
+
+	// Run transaction
+	try {
+		await prisma.$transaction(queries);
+	} catch(e) {
+		console.log( 'Exception running study removal transaction: ' + e.message );
+		throw new Error( e.message );
+	}
+
+	return num_deleted_moves;
 }

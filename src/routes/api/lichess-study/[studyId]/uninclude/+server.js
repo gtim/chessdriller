@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
-import { unincludeStudy } from '$lib/pgnImporter.js';
+import { unincludeStudy } from '$lib/lichessStudy.js';
 const prisma = new PrismaClient();
 
 export async function POST({ locals, params }) {

@@ -1,6 +1,8 @@
 import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
-import { pgndbToMoves, compareMovesLists } from '$lib/pgnImporter.js';
+
+import { pgndbToMoves } from '$lib/pgnParsing.js';
+import { compareMovesLists } from '$lib/movesUtil.js';
 
 const prisma = new PrismaClient();
 

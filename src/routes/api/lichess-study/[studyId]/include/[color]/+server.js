@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
-import { includeStudy } from '$lib/pgnImporter.js';
+import { includeStudy } from '$lib/lichessStudy.js';
 
 export async function POST({ locals, params }) {
 	const { user } = await locals.auth.validateUser();

@@ -1,5 +1,4 @@
 import { getLineForStudy, moveIsDue } from '$lib/scheduler.js';
-import { importPgn } from '$lib/pgnImporter.js';
 import { PrismaClient } from '@prisma/client';
 
 describe( 'moveIsDue', () => {

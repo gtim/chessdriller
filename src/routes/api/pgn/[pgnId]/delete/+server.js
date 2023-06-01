@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
-import { deletePgn } from '$lib/pgnImporter.js';
+import { deletePgn } from '$lib/uploadedPgn.js';
 const prisma = new PrismaClient();
 
 export async function POST({ locals, params }) {

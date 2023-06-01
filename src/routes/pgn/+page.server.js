@@ -1,6 +1,6 @@
 import { json, redirect } from "@sveltejs/kit";
 import { PrismaClient } from '@prisma/client';
-import { importPgn } from '$lib/pgnImporter.js';
+import { importPgn } from '$lib/uploadedPgn.js';
 const prisma = new PrismaClient();
 
 // data loader for PGN table
