@@ -1,0 +1,16 @@
+[Event "Database Test Game 1"]
+[Result "*"]
+
+1. d4 d5 2. c4 c6 3. Nf3 *
+
+
+[Event "Database Test Game 2"]
+[Result "*"]
+
+1. d4 Nf6 2. c4 e6 3. Nf3 *
+
+
+[Event "Database Test Game 3"]
+[Result "*"]
+
+1. d4 f5 2. g3 Nf6 3. Bg2 *

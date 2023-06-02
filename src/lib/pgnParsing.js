@@ -68,6 +68,7 @@ function chessHistoryToMoves( history, repForWhite ) {
 function split_pgndb_into_pgns( pgn_db ) {
 	pgn_db = pgn_db.replaceAll( /\r/g, "" );
 	pgn_db = pgn_db.replaceAll(/\{[^}]*\}/gs, ''); // remove comments -- removed anyway in singlePgnToCmPgnMoves
+	pgn_db = pgn_db + '\n\n'; // makes the following regex hack work for pgn databases that don't end in newlines
 	const regex = /(\[.*?\n\n *\S.*?\n\n)/gs;
 	const found = pgn_db.match(regex);
 	return found;

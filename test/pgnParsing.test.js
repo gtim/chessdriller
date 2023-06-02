@@ -135,6 +135,12 @@ describe( 'singlePgnToMoves', () => {
 		expect( moves ).toHaveLength( 0 );
 	});
 
+	test('no ending newlines', () => {
+		const pgn_content = fs.readFileSync( './test/pgn/no-newlines-at-end.pgn', 'utf8' );
+		const moves = singlePgnToMoves( pgn_content, true );
+		expect( moves ).toHaveLength( 4 );
+	});
+
 	// Real-life PGNs
 	test('italian intro: no moves, only comment', () => {
 		const pgn_content = fs.readFileSync( './test/pgn/italian.pgn', 'utf8' );
@@ -170,6 +176,16 @@ describe( 'pgndbToMoves', () => {
 		// pgndbToMoves does not combine duplicate moves, this happens at the prisma layer.
 		// As such, these expectations are different from those in uploadedPgn.test.js.
 		const pgn_content = fs.readFileSync( './test/pgn/database.pgn', 'utf8' );
+		const moves = pgndbToMoves( pgn_content, true );
+		expect( moves ).toHaveLength( 15 );
+		expect( moves.filter( (m) => m.moveSan === 'd4' ) ).toHaveLength( 3 );
+		expect( moves.filter( (m) => m.moveSan === 'd5' ) ).toHaveLength( 1 );
+		expect( moves.filter( (m) => m.moveSan === 'c4' ) ).toHaveLength( 2 );
+		expect( moves.filter( (m) => m.moveSan === 'Nf3') ).toHaveLength( 2 );
+		expect( moves.filter( (m) => m.fromFen === 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq' ) ).toHaveLength( 3 );
+	});
+	test('pgn database with no newlines at end', () => {
+		const pgn_content = fs.readFileSync( './test/pgn/database-no-newlines-at-end.pgn', 'utf8' );
 		const moves = pgndbToMoves( pgn_content, true );
 		expect( moves ).toHaveLength( 15 );
 		expect( moves.filter( (m) => m.moveSan === 'd4' ) ).toHaveLength( 3 );
