@@ -3,6 +3,7 @@
 	import StudyBoard from '$lib/StudyBoard.svelte';
 	import MoveFeedbackStamp from '$lib/MoveFeedbackStamp.svelte';
 	import MoveSheet from '$lib/MoveSheet.svelte';
+	import Spinner from '$lib/Spinner.svelte';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import gsap from 'gsap';
@@ -60,6 +61,7 @@
 	let review_finished = false;
 
 	let last_move_ix = -1;
+	let last_fetchmove_promise;
 
 	async function onMove(e) {
 		if ( e.detail.correct ) {
@@ -70,7 +72,7 @@
 			console.log('no:( move ID: ' + e.detail.move_id);
 			num_wrongs_this_move++;
 		}
-		fetch( '/api/study/move', {
+		last_fetchmove_promise = fetch( '/api/study/move', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
@@ -180,9 +182,16 @@
 		{/if}
 	</p>
 
+
+
 	{#if line}
 		<div style="display:flex;justify-content:center;align-items:center;">
 			<div style="position:relative;width:100%;max-width:512px;">
+				<div style="position:absolute;right:6px;margin-top:-26px;">
+					{#await last_fetchmove_promise}
+						<Spinner/>
+					{/await}
+				</div>
 				<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} bind:this={studyBoard} />
 				{#if num_wrongs_this_move >= 2 }
 					<button
