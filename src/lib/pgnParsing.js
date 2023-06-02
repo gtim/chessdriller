@@ -21,12 +21,11 @@ export function singlePgnToMoves( pgn_content, repForWhite ) {
 
 function singlePgnToCMPgnMoves( pgn_content ) {
 
-	// remove comments due to issues parsing PGNs with two sequential comments
-	// unit tests: "two comments after final move", "two comments before variant", "two comments before variant thrice"
-	// TODO investigate whether this is a cm-pgn bug 
-	pgn_content = pgn_content.replaceAll(/\{[^{}]*\}/g, '');
+	// Remove comments
+	// This circumvents cm-pgn bug shaack/cm-pgn#17
+	pgn_content = pgn_content.replaceAll(/\{[^}]*\}/gs, '');
 
-	// remove trailing newlines/spaces
+	// Remove trailing newlines/spaces
 	pgn_content = pgn_content.replace(/\s*$/gs, '');
 	
 	// Detect empty PGN with simple regex. 
