@@ -27,7 +27,7 @@
  */
 export async function getLineForStudy( moves, now ) {
 
-	console.log( 'getLineForStudy' );
+	//console.log( 'getLineForStudy' );
 
 	moves.forEach( m => m.isDue = moveIsDue(m,now) );
 	const due_moves = moves.filter( m => m.isDue );
@@ -43,7 +43,7 @@ export async function getLineForStudy( moves, now ) {
 	let line = buildLineBackwards( [most_due_move], moves_same_rep );
 	line = continueLineUntilEnd( line, moves_same_rep );
 
-	console.log( 'returning line: ' + line.map( m => m.moveSan + (m.isDue?'*':'') ).join(', ') );
+	//console.log( 'returning line: ' + line.map( m => m.moveSan + (m.isDue?'*':'') ).join(', ') );
 
 	return { line: line, start_ix: 0, num_due_moves: due_moves.length };
 }
@@ -62,7 +62,7 @@ export async function getLineForStudy( moves, now ) {
  */
 export async function getClosestLineForStudy( moves, now, last_line ) {
 	
-	console.log( 'getClosestLineForStudy' );
+	//console.log( 'getClosestLineForStudy' );
 
 	moves.forEach( m => m.isDue = moveIsDue(m,now) );
 	const due_moves = moves.filter( m => m.isDue );
@@ -90,10 +90,10 @@ export async function getClosestLineForStudy( moves, now, last_line ) {
 			}
 		}
 		if ( line.length == 0 ) {
-			console.log( 'findDueLineWithLatestDeviation found no line; start from scratch' );
+			//console.log( 'findDueLineWithLatestDeviation found no line; start from scratch' );
 			return getLineForStudy( moves, now );
 		}
-		console.log( 'returning line: ' + line.map( m => m.moveSan + (m.isDue?'*':'') ).join(', ') );
+		//console.log( 'returning line: ' + line.map( m => m.moveSan + (m.isDue?'*':'') ).join(', ') );
 		return { line: line, start_ix: start_ix, num_due_moves: due_moves.length };
 	} else {
 		return getLineForStudy( moves, now );
@@ -120,7 +120,7 @@ export function moveIsDue( move, now ) {
 
 
 function findDueLineWithLatestDeviation( last_line_ids, all_moves ) {
-	console.log( '  findDueLineWithLatestDeviation' );
+	//console.log( '  findDueLineWithLatestDeviation' );
 	let excluded_move_ids = {};
 	const last_line_moves = last_line_ids.map( mId => all_moves.find( m => m.id === mId ) );
 	for ( let move_ix = last_line_ids.length-2; move_ix >= 0; move_ix-- ) {
@@ -163,7 +163,7 @@ function findContinuationWithMostDueMoves( start_move, all_moves, excluded_move_
 //
 // It would be interesting to find the "optimal" line, i.e. with as many due moves as possible. This would be the single-pair longest path of a 0/1-weighted cyclic directed graph, which I'd guess is O(n!)? However a repertoire is small and sparse, and can surely be brute-forced reasonably.
 function buildLineBackwards( line, all_moves ) {
-	console.log( '  buildLineBackwards: ' + line.map(m=>m.moveSan).join(', ') );
+	//console.log( '  buildLineBackwards: ' + line.map(m=>m.moveSan).join(', ') );
 	if ( line[0].fromFen === 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq' ) {
 		return line;
 	}
@@ -188,14 +188,14 @@ function continueLineUntilEnd( line, all_moves ) {
 	while (true) {
 		const possible_succeeding_moves = all_moves.filter( m => m.fromFen === line[line.length-1].toFen );
 		if ( possible_succeeding_moves.length == 0 ) {
-			console.log( '  continueUntilEnd: ' + line.map(m=>m.moveSan).join(', ') );
+			//console.log( '  continueUntilEnd: ' + line.map(m=>m.moveSan).join(', ') );
 			return line;
 		}
 		const fens_in_line = line.map( m => m.fromFen );
 		line.push( randomMove( possible_succeeding_moves ) );
 		if ( fens_in_line.includes( line[line.length-1].toFen ) ) {
 			// repeated position: end
-			console.log( '  continueUntilEnd: ' + line.map(m=>m.moveSan).join(', ') + ' (repetition)');
+			//console.log( '  continueUntilEnd: ' + line.map(m=>m.moveSan).join(', ') + ' (repetition)');
 			return line;
 		}
 	}
