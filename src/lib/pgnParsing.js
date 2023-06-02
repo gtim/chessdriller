@@ -27,7 +27,7 @@ function singlePgnToCMPgnMoves( pgn_content ) {
 
 	// Remove trailing newlines/spaces
 	pgn_content = pgn_content.replace(/\s*$/gs, '');
-	
+
 	// Detect empty PGN with simple regex. 
 	// Empty (zero moves) PGNs are invalid, but we try to handle them since Lichess can produce them.
 	if ( pgn_content.match(/^\[.*?\]\s*(\*|1-0|0-1|1\/2-1\/2)\s*$/m) ) {
@@ -59,11 +59,16 @@ function chessHistoryToMoves( history, repForWhite ) {
 	return moves;
 }
 
-// A PGN database file can contain multiple PGNs: http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm#c8
-// Since chess.js and cm-pgn don't support multiple PGNs, the file is split here. The spec points out that it is simple enough that a full-blown parser is not needed, but it remains to be seen whether kinda-complying PGNs in the wild will cause trouble. Ideally, this would be solved in cm-pgn (or chess.js).
+// A PGN database file can contain multiple concatenated PGNs
+// (http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm#c8)
+// Since chess.js and cm-pgn don't support multiple PGNs, the file is split here.
+// The spec points out that it is simple enough that a full-blown parser is not needed,
+// but it remains to be seen whether kinda-complying PGNs in the wild will cause trouble.
+// Ideally, this would be solved in cm-pgn.
 function split_pgndb_into_pgns( pgn_db ) {
 	pgn_db = pgn_db.replaceAll( /\r/g, "" );
-	const regex = /(\[.*?\n\n *\S.*?\n\n)/gs; // Should fail on PGNs with comments with empty lines
+	pgn_db = pgn_db.replaceAll(/\{[^}]*\}/gs, ''); // remove comments -- removed anyway in singlePgnToCmPgnMoves
+	const regex = /(\[.*?\n\n *\S.*?\n\n)/gs;
 	const found = pgn_db.match(regex);
 	return found;
 }
