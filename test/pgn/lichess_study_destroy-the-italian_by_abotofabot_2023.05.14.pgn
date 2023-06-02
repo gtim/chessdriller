@@ -1,0 +1,234 @@
+[Event "Destroy the Italian!: Intro"]
+[Site "https://lichess.org/study/sWSvbNk0/E2aD5Xqj"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "05:06:08"]
+[Variant "Standard"]
+[ECO "?"]
+[Opening "?"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+{ Hello and welcome to another opening study. Today I will guide you thourgh some underrated gambits against one of the most common openings, the Italian. On the way, I will show you some sneaky and effective traps. Please click the heart button, so I will be motivated to make more of these studies. I hope you will enjoy this and let's begin!
+
+(By the way, all the haters will say these are beginner's traps and aren't effective, but a lot of White's moves are the most played move, and there is only one way for White to have any chances in the game)
+
+EDIT: Thanks so much for 1400+❤️! I am really grateful to everyone! Let's keep going! }
+*
+
+
+[Event "Destroy the Italian!: Rousseau Gambit 4.Nc3?"]
+[Site "https://lichess.org/study/sWSvbNk0/OC3VAlWH"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "05:09:44"]
+[Variant "Standard"]
+[ECO "C50"]
+[Opening "Italian Game: Rousseau Gambit"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 { One of the most played openings - the Italian Game } 3... f5! { Although only the eighth [EDIT: NOW SEVENTH - IS IT BEACUSE OF THIS STUDY?] most played move on lichess, this deadly gambit has so many traps that almost certainly white will fall into one.
+White realises that you want the e4 pawn, so they might play exf5, d3 or Nc3. All of these moves are mistakes. } 4. Nc3?? { It's rare to see a move 4 blunder } 4... fxe4 5. Nxe4 (5. Bxg8 exf3 6. Bd5 fxg2 7. Bxg2 $19) (5. Ng1 Nf6 $19) 5... d5! { White can resign here } *
+
+
+[Event "Destroy the Italian!: 4.exf5?"]
+[Site "https://lichess.org/study/sWSvbNk0/4QWI6rgI"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "05:18:13"]
+[Variant "Standard"]
+[ECO "C50"]
+[Opening "Italian Game: Rousseau Gambit"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 f5! 4. exf5? { the most played move on lichess } 4... e4 { Notice how the knight has to go to g1 (In the next chapter you will see what happens if white tries Nd4) } 5. Qe2 { Some players will think you're just playing random moves and they will try to punish you } (5. Ng1 d5 6. Bb5 Qg5! 7. Bxc6+ bxc6 8. g3 Nf6 9. d3 Qxf5 $19) 5... Qe7 6. Ng1 { The knight has to go back anyway } 6... Nf6 { Preparing d5 } 7. d3?? { The most played move - and - you guessed it - a blunder } 7... Nd4! { Forking the queen and the square c2 } 8. Qd1 { Protects the c2 square } 8... Nxc2+ { But we play it anyway! We fork the king and the rook } 9. Qxc2 (9. Kf1 Nxa1 $19) 9... exd3+ 10. Qe2 dxe2 $19 { We have a queen. They don't. } *
+
+
+[Event "Destroy the Italian!: Trap for white"]
+[Site "https://lichess.org/study/sWSvbNk0/2HSdxq5o"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "05:25:49"]
+[Variant "Standard"]
+[ECO "C50"]
+[Opening "Italian Game: Rousseau Gambit"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+{ Don't fall into this trap! }
+1. e4 e5 2. Nf3 Nc6 3. Bc4 f5 4. exf5 e4 5. Nd4!? { If your opponent knows this, they play this. DON'T TAKE IT. } 5... Nf6 (5... Nxd4?? 6. Qh5+ g6 7. fxg6 Nf6 8. g7+ Nxh5 9. gxh8=Q) 6. Nxc6 bxc6 7. O-O d5 8. Bb3 Bxf5 9. d3 Be7 10. dxe4 Nxe4 11. Re1 O-O $17 { We have a great center, and great pieces
+82% win rate for black } *
+
+
+[Event "Destroy the Italian!: 4.d3"]
+[Site "https://lichess.org/study/sWSvbNk0/3Fga8Dx7"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "06:19:43"]
+[Variant "Standard"]
+[ECO "C50"]
+[Opening "Italian Game: Giuoco Pianissimo, Dubois Variation"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 f5 4. d3 Bc5 5. Ng5 { Your opponent thinks this is the way to 'refute' our 'dubious' gambit. They couldn't be further from the truth } 5... f4 6. Nf7 (6. Bf7+ Kf8 7. h4 h6 8. Bxg8 hxg5 9. Bd5 gxh4 $19) 6... Qh4 { Suddenly your queen starts a powerful counterattack, threatening mate in 1 } 7. O-O Nf6 { Simply deveolping, preparing Rf8,trapping the knight } 8. Nxh8 Ng4 { now suddenly mate is threatened on h2 } 9. h3 (9. Bf7+ Kf8 10. h3 Nxf2) 9... Nxf2 { preparing all kinds of discovered checks, so white has to } 10. Rxf2 Qxf2+ 11. Kh1 { It seems like black's attack is over, and we are down a piece. But we have a stunning blow... } (11. Kh2 d5 12. Bxd5 Bg4! 13. Qxg4 (13. hxg4 Qh4#) 13... Qg1#) 11... f3! { Threatening mate on g2 } 12. gxf3 d5! { Preparing to bring another piece into the attack } 13. Bxd5 Bxh3 { White cannot stop both Qg2 and Qg1 } 14. Bf7+ Kf8 15. Ng6+ hxg6 16. Bxg6 Qg2# *
+
+
+[Event "Destroy the Italian!: 4. d4"]
+[Site "https://lichess.org/study/sWSvbNk0/nOW0YKuD"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "06:30:57"]
+[Variant "Standard"]
+[ECO "C50"]
+[Opening "Italian Game: Rousseau Gambit"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 f5 4. d4 { This is white's best defense } 4... exd4 5. Nxd4 (5. e5 d6 6. exd6 Qxd6) 5... Nf6 6. Nxf5 (6. exf5 Bc5 7. Nxc6 bxc6 8. O-O d5 9. Re1+ Kf7! 10. Bd3 Re8 11. Bg5 Rxe1+ 12. Qxe1 Qd6 $10) 6... d5! { Now all of white's developed pieces are struggling } 7. exd5 Bxf5 8. dxc6 Qxd1+ 9. Kxd1 O-O-O+ 10. Bd2 Ng4 $36 { Although white has two extra pawns, black has so much initiative as you will see } 11. cxb7+ Kxb7 12. Ke2 { The most played move } 12... Bc5 13. f3 Rhe8+ 14. Kf1 Ne3+ 15. Bxe3 Rd1+! 16. Ke2 Rxh1 $19 { Black is crushing } *
+
+
+[Event "Destroy the Italian!: Beating the Fried Liver: The Ulvestad Variation"]
+[Site "https://lichess.org/study/sWSvbNk0/pnDINo6n"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "06:41:32"]
+[Variant "Standard"]
+[ECO "C57"]
+[Opening "Italian Game: Two Knights Defense, Ulvestad Variation"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 d5 5. exd5 { Now the main line is Na5, which goes into a complicated theoretical battle } 5... b5! { Now the only correct move for white is Bf1. Who's gonna find that? } (5... Na5 6. Bb5+ c6 7. dxc6 bxc6 8. Qf3 cxb5 9. Qxa8 Qc7 10. Qf3 Nc6 11. c3 Bg4 12. Qg3 Nd4! 13. Na3 Ne2 $10 { A craziness }) 6. Bxb5 Qxd5 { Forking the bishop and the g2 pawn } 7. Bxc6+ Qxc6 8. O-O Bb7 { Now black is threatening mate } 9. f3?? { Most played and a blunder } 9... h6 { Notice how in these variations the knight is misplaced } 10. Nh3 g5! { This ruthless attacking move simply prepares g4! } 11. Nf2 { This stops g4 } (11. Qe2 O-O-O) 11... g4! { But we play it anyway } 12. d3 gxf3 13. Qxf3 { White tries to trade queens, but it doesn't help at all } 13... Qxf3 14. gxf3 Rg8+ 15. Ng4 (15. Kh1 Bxf3#) (15. Bg5 Rxg5+) 15... Bc5+ 16. Kg2 Nxg4 17. Kh3 Nf2+ 18. Kh4 Be7+ 19. Kh5 Bxf3+ 20. Kxh6 Ng4+ 21. Kh7 Nf6+ 22. Kh6 Rg6# { Remember, you don't need to remember all of these checks. You just need to remember: check! } *
+
+
+[Event "Destroy the Italian!: 9. Nf3"]
+[Site "https://lichess.org/study/sWSvbNk0/LmXQdPY1"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "06:52:32"]
+[Variant "Standard"]
+[ECO "C57"]
+[Opening "Italian Game: Two Knights Defense, Ulvestad Variation"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 d5 5. exd5 b5 6. Bxb5 Qxd5 7. Bxc6+ Qxc6 8. O-O Bb7 9. Nf3 O-O-O 10. d3 g5! { The same bold attacking spearhead! } 11. Bxg5 Rg8 { If the bishop moves then Qxf3 wins a piece } 12. Bxf6 Qxf6 { threatning bxf3 } 13. Nbd2 Bh6 { white collapses } 14. Ne4 Bxe4 15. Kh1 Bb7 16. Qe2 Rxg2!! 17. Kxg2 Rg8+ 18. Kh3 Qf5+ 19. Kh4 Qg4# *
+
+
+[Event "Destroy the Italian!: 9. Qf3"]
+[Site "https://lichess.org/study/sWSvbNk0/apL4SDr5"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "06:56:25"]
+[Variant "Standard"]
+[ECO "C57"]
+[Opening "Italian Game: Two Knights Defense, Ulvestad Variation"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 d5 5. exd5 b5 6. Bxb5 Qxd5 7. Bxc6+ Qxc6 8. O-O Bb7 9. Qf3 e4 10. Qe3 h6 11. Nh3 O-O-O! 12. Qxa7 Bc5! 13. Qa5 e3! 14. f3 exd2+ 15. Nf2 d1=Q! 16. Rxd1 Rxd1+ 17. Qe1 Rxe1# *
+
+
+[Event "Destroy the Italian!: 6. dxc6"]
+[Site "https://lichess.org/study/sWSvbNk0/9DzMkWMu"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "06:58:53"]
+[Variant "Standard"]
+[ECO "C57"]
+[Opening "Italian Game: Two Knights Defense, Ulvestad Variation"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 d5 5. exd5 b5 6. dxc6 bxc4 7. O-O h6 { See how many tempi the knight gives us } 8. Nf3 e4 { 2 } 9. Re1 Be6 { 3 } 10. Ne5 Bd6 { 4 } 11. Nd7 Bxh2+! { A stunner } 12. Kxh2 Ng4+ 13. Kg3 (13. Kg1 Qh4 14. d4 Qxf2+ 15. Kh1 Qh4+ 16. Kg1 Qh2+ 17. Kf1 Qh1+ 18. Ke2 Qxg2#) 13... Qg5 14. d3 Ne3+ 15. Kh2 Qxg2# *
+
+
+[Event "Destroy the Italian!: 6. Bf1"]
+[Site "https://lichess.org/study/sWSvbNk0/nkG3JaJp"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "07:02:06"]
+[Variant "Standard"]
+[ECO "C57"]
+[Opening "Italian Game: Two Knights Defense, Ulvestad Variation, Kurkin Gambit"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 d5 5. exd5 b5 6. Bf1 h6 7. Nxf7 Kxf7 8. dxc6 Bc5 9. Bxb5 Bg4 { Attack! } 10. Be2 Bxf2+! { Attack! } 11. Kxf2 Ne4+ 12. Ke1 (12. Kf1 Qf6+ 13. Bf3 Ng5 14. d4 Nxf3 15. gxf3 Bxf3 $19) 12... Qh4+ 13. g3 Nxg3 14. hxg3 (14. Bxg4 Ne4+ 15. Ke2 Qf2+ 16. Kd3 Nc5+ 17. Kc4 Qd4+ 18. Kb5 a6+ 19. Ka5 Qa4#) 14... Qxg3+ 15. Kf1 Rhf8! 16. Bxg4 Kg8+ { Artificially castling with mate on tap! } 17. Bf3 Rxf3+ $19 *
+
+
+[Event "Destroy the Italian!: Beating the Fried Liver 2: The Fritz Variation"]
+[Site "https://lichess.org/study/sWSvbNk0/ugjq9qJS"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "07:09:59"]
+[Variant "Standard"]
+[ECO "C57"]
+[Opening "Italian Game: Two Knights Defense, Fritz Variation"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 d5 5. exd5 Nd4 { Another way to fry the fried liver } 6. d6 { It seems like white has renenwed the threat and this time there is no d5 } 6... Qxd6! 7. Nxf7 { It seems like black can resign, but actually it's white who can after } 7... Qc6! { Forking g2 and c4 } 8. Nxh8 Qxg2 9. Rf1 Qe4+ 10. Be2 Nf3# *
+
+
+[Event "Destroy the Italian!: 8. 0-0"]
+[Site "https://lichess.org/study/sWSvbNk0/fIjhl0F6"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "07:14:40"]
+[Variant "Standard"]
+[ECO "C57"]
+[Opening "Italian Game: Two Knights Defense, Fritz Variation"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 d5 5. exd5 Nd4 6. d6 Qxd6 7. Nxf7 Qc6 8. O-O Qxc4 9. Nxh8 Nxc2 { traps the rook } 10. Na3 Bxa3 11. bxa3 Nxa1 $19 { with a huge material advantage } *
+
+
+[Event "Destroy the Italian!: 7. Bxf7"]
+[Site "https://lichess.org/study/sWSvbNk0/nBvcFt2g"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "07:20:24"]
+[Variant "Standard"]
+[ECO "C57"]
+[Opening "Italian Game: Two Knights Defense, Fritz Variation"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 d5 5. exd5 Nd4 6. d6 Qxd6 7. Bxf7+ Ke7 { we are threatening h6 to win the bishop, so the bishop must go } 8. Bb3 (8. Bc4 { loses to } 8... Qc6 9. Bf1 Nxc2+ 10. Ke2 h6 11. Nf3 Qe4#) 8... Nxb3 9. axb3 { black first gains tempi, then traps the queen! } 9... h6 10. Nf3 e4 11. Nh4 Kf7 12. g3 { provides an escape sqaure for the knight } 12... g5 13. Ng2 Bg4 { traps the queen } *
+
+
+[Event "Destroy the Italian!: 6. c3"]
+[Site "https://lichess.org/study/sWSvbNk0/Lk1BGffz"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "07:25:22"]
+[Variant "Standard"]
+[ECO "C57"]
+[Opening "Italian Game: Two Knights Defense, Fritz Variation"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+1. e4 e5 2. Nf3 Nc6 3. Bc4 Nf6 4. Ng5 d5 5. exd5 Nd4 6. c3 { another attempt } 6... b5! 7. cxd4 bxc4 8. dxe5 Qxd5! 9. exf6 Qxg5 10. fxg7 Bxg7 11. O-O Bb7 { threatens mate } 12. f3 Bd4+ 13. Kh1 O-O-O 14. d3 Qg6 15. dxc4 Rhg8 { wanting mate } 16. Qe2 Rde8 17. Qd2 Bxf3!! 18. Rxf3 (18. gxf3 Qg1+ 19. Rxg1 Rxg1#) 18... Re1+ 19. Rf1 Rxf1# *
+
+
+[Event "Destroy the Italian!: Outro"]
+[Site "https://lichess.org/study/sWSvbNk0/wxaxf3Y4"]
+[Result "*"]
+[UTCDate "2023.05.14"]
+[UTCTime "07:27:56"]
+[Variant "Standard"]
+[ECO "?"]
+[Opening "?"]
+[Annotator "https://lichess.org/@/abotofabot"]
+
+{ Now you've seen so many effective ways to eliminate the Italian, you are equipped with a load of weapons to suprise your opponent at any time.
+
+Thank you for making it this far, and good luck on DESTROYING THE ITALIAN!
+
+If you have time, please look at my other studies as well:
+
+Destroy the French!
+lichess.org/study/0On2ull7
+Destroy the King's Gambit!
+lichess.org/study/MtWmIyQ5
+Destroy the Sicilian!
+lichess.org/study/NWQv3uUe
+Destroy the Pirc!
+lichess.org/study/Whm4XaV1
+Destroy the Caro-Kann!
+https://lichess.org/study/uiQTLZlM
+Destroy the Nimzowitsch!
+https://lichess.org/study/HBmKawDD }
+*
+
+

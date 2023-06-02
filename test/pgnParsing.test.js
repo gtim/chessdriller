@@ -98,8 +98,7 @@ describe( 'singlePgnToMoves', () => {
 		expect( moves.filter( (m) => m.fromFen === 'rnbqkb1r/pppppppp/5n2/6B1/3P4/8/PPP1PPPP/RN1QKBNR b KQkq' ) ).toHaveLength( 3 );
 	});
 
-	// cm-pgn 2.3.1 seems to fail parsing these three PGNs
-	
+	// cm-pgn 2.3.1 seems to fail parsing these three PGNs (cm-pgn/#17)
 	test('two comments after final move', () => {
 		const pgn_content = fs.readFileSync( './test/pgn/end-two-comments.pgn', 'utf8' );
 		const moves = singlePgnToMoves( pgn_content, true );
@@ -135,6 +134,30 @@ describe( 'singlePgnToMoves', () => {
 		const moves = singlePgnToMoves( pgn_content, true );
 		expect( moves ).toHaveLength( 0 );
 	});
+
+	// Real-life PGNs
+	test('italian intro: no moves, only comment', () => {
+		const pgn_content = fs.readFileSync( './test/pgn/italian.pgn', 'utf8' );
+		const moves = singlePgnToMoves( pgn_content, true );
+		expect( moves ).toHaveLength( 0 );
+	} );
+	test('blixt-SM: time notation every move', () => {
+		const pgn_content = fs.readFileSync( './test/pgn/blixtsm.pgn', 'utf8' );
+		const moves = singlePgnToMoves( pgn_content, true );
+		expect( moves ).toHaveLength( 66 );
+	} );
+	test('italian, entire study', () => {
+		// note: chessdriller is not intended for this type of PGNs, but should be able to parse them anyway.
+		const pgn_content = fs.readFileSync( './test/pgn/lichess_study_destroy-the-italian_by_abotofabot_2023.05.14.pgn', 'utf8' );
+		const moves = pgndbToMoves( pgn_content, true );
+		expect( moves ).toHaveLength( 534 );
+	} );
+	test('chess.com game export', () => {
+		const pgn_content = fs.readFileSync( './test/pgn/chesscomblitz.pgn', 'utf8' );
+		const moves = singlePgnToMoves( pgn_content, true );
+		expect( moves ).toHaveLength( 135 );
+	} );
+		 
 } );
 
 
@@ -155,6 +178,12 @@ describe( 'pgndbToMoves', () => {
 		expect( moves.filter( (m) => m.moveSan === 'Nf3') ).toHaveLength( 2 );
 		expect( moves.filter( (m) => m.fromFen === 'rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq' ) ).toHaveLength( 3 );
 	});
+	test('italian, entire study', () => {
+		// note: chessdriller is not intended for this type of PGNs, but should be able to parse them anyway.
+		const pgn_content = fs.readFileSync( './test/pgn/lichess_study_destroy-the-italian_by_abotofabot_2023.05.14.pgn', 'utf8' );
+		const moves = pgndbToMoves( pgn_content, true );
+		expect( moves ).toHaveLength( 534 );
+	} );
 } );
 
 /*
