@@ -1,5 +1,4 @@
 <script>
-	import {Spinner} from 'spin.js';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
