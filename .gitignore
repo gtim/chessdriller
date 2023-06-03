@@ -15,3 +15,4 @@ vite.config.ts.timestamp-*
 /coverage
 /backup
 /src/routes/debug
+/src/routes/test
