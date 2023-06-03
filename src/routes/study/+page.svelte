@@ -189,7 +189,7 @@
 		<div style="display:flex;justify-content:center;align-items:center;">
 			<div style="position:relative;width:100%;max-width:512px;">
 				<div style="position:absolute;right:6px;margin-top:-26px;">
-					{#await last_fetchmove_promise || nextline_promise}
+					{#await Promise.all( [ last_fetchmove_promise, nextline_promise ] ) }
 						<Spinner/>
 					{/await}
 				</div>
