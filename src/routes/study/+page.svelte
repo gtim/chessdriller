@@ -53,7 +53,10 @@
 			} else {
 				review_finished = true;
 			}
-		});
+		} ).catch( (err) => {
+			error_text = 'Failed asking for next line to study: ' + err.message;
+			console.warn(error_text);
+		} );
 	}
 
 	let studyBoard;
@@ -109,9 +112,12 @@
 					});
 				}
 			} else { 
-				error_text = 'API call failed: ' + data.error;
+				error_text = 'Sending move to server failed: ' + data.error;
 			}
 			updateStats();
+		} ).catch( (err) => {
+			error_text = 'Sending move to server failed: ' + err.message;
+			console.warn(error_text);
 		} );
 	}
 	function lineFinished(e) {
@@ -216,10 +222,7 @@
 
 
 	{#if error_text}
-		<div class="error"><p>
-			<span style="font-weight:bold;">Error:</span>
-			{error_text}
-		</p></div>
+		<div class="error">{error_text}</div>
 	{/if}
 
 	{#if line}
@@ -238,19 +241,6 @@
 	}
 	#stats {
 		text-align:center;
-	}
-
-	.error {
-		border:solid 2px #93877E;
-		color:#8B0000;
-		font-weight:bold;
-		width:fit-content;
-		margin:16px auto 0 auto;
-		padding:12px 16px;
-	}
-	.error p {
-		margin:0;
-		padding:0;
 	}
 
 	.show_answer, .skip_to_end {
