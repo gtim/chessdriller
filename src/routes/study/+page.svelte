@@ -34,8 +34,9 @@
 	                           : move_pairs.slice(0, Math.ceil(last_move_ix/2)+1 );
 
 
+	let nextline_promise;
 	async function studyNextLine( last_line_move_ids = [] ) {
-		fetch( '/api/study?' + new URLSearchParams({
+		nextline_promise = fetch( '/api/study?' + new URLSearchParams({
 			last: JSON.stringify(last_line_move_ids),
 		}), nocache_headers )
 		.then( (res) => res.json() )
@@ -188,7 +189,7 @@
 		<div style="display:flex;justify-content:center;align-items:center;">
 			<div style="position:relative;width:100%;max-width:512px;">
 				<div style="position:absolute;right:6px;margin-top:-26px;">
-					{#await last_fetchmove_promise}
+					{#await last_fetchmove_promise || nextline_promise}
 						<Spinner/>
 					{/await}
 				</div>
