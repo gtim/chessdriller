@@ -25,8 +25,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@lucia-auth/adapter-prisma": "^1.0.0",
-		"@lucia-auth/oauth": "file:../dev/lucia/packages/integration-oauth/dist",
+		"@lucia-auth/adapter-prisma": "^2.0.0",
+		"@lucia-auth/oauth": "file:../dev/lucia/packages/integration-oauth/dist/lucia-auth-oauth-1.1.1.tgz",
 		"@prisma/client": "^4.8.0",
 		"@yaireo/relative-time": "^1.0.3",
 		"chess.js": "^1.0.0-beta.3",
@@ -34,7 +34,7 @@
 		"cm-pgn": "^3.3.0",
 		"express": "^4.18.2",
 		"gsap": "^3.11.5",
-		"lucia-auth": "^1.0.0",
+		"lucia-auth": "^1.7.1",
 		"svelte-chessground": "^0.2.0",
 		"svelte-modals": "^1.2.1"
 	}

@@ -9,14 +9,18 @@ export const load = async ({ locals, cookies }) => {
 		throw redirect(302, "/");
 
 	// get url to redirect the user to, with the state
-	const [authUrl, state] = await lichessAuth.getAuthorizationUrl();
+	const [authUrl, state, code_verifier] = await lichessAuth.getAuthorizationUrl();
 	
 	// the state can be stored in cookies or localstorage for request validation on callback
-	cookies.set("lichess_oauth_state", state, {
-		path: "/",
-		maxAge: 60 * 60,
-		secure: false // only for local testing without https
-	});
+	cookies.set(
+		"lichess_oauth_state", 
+		JSON.stringify([ state, code_verifier ]),
+		{
+			path: "/",
+			maxAge: 60 * 60,
+			secure: false // only for local testing without https
+		}
+	);
 
 	return { authUrl: authUrl.toString() }
 };

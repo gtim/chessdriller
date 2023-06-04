@@ -10,7 +10,7 @@ export async function GET({ cookies, url, locals }) {
 
 	const code = url.searchParams.get("code");
 	const state = url.searchParams.get("state");
-	const storedState = cookies.get("lichess_oauth_state");
+	const [ storedState, code_verifier ] = JSON.parse( cookies.get("lichess_oauth_state") );
 
 	if (state !== storedState)
 		return new Response(null, { status: 401 });
@@ -18,7 +18,7 @@ export async function GET({ cookies, url, locals }) {
 	// login successful
 
 	try {
-		const { existingUser, providerUserId, tokens } = await lichessAuth.validateCallback(code);
+		const { existingUser, providerUserId, tokens } = await lichessAuth.validateCallback( code, code_verifier );
 		const getUser = async () => {
 			if ( existingUser )
 				return existingUser;
