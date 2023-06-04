@@ -15,6 +15,7 @@ beforeAll( async () => {
 } );
 
 beforeEach( async () => {
+	await prisma.pgn.deleteMany({});
 	await prisma.move.deleteMany({});
 } );
 
@@ -144,6 +145,13 @@ describe( 'importPgn', () => {
 			where: { toFen: 'rnbqkbnr/ppp2ppp/4p3/3p4/2PP4/5N2/PP2PPPP/RNBQKB1R b KQkq' }
 		} )).toEqual( 1 );
 	});
+
+	test('transposition', async () => {
+		const pgn_content = fs.readFileSync( './test/pgn/not-a-pgn.txt', 'utf8' );
+		await expect( importPgn( pgn_content, 'not-a-pgn.txt', prisma, 1, true ) ).rejects.toThrowError();
+		expect( await prisma.pgn.count() ).toEqual( 0 );
+		expect( await prisma.move.count() ).toEqual( 0 );
+	} );
 
 } );
 

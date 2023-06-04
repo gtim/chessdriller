@@ -48,7 +48,7 @@ h1 {
 
 div.error {
 	border:solid 2px #8B0000;
-	border-radius:4px;
+	border-radius:8px;
 	background-color:rgba(255,204,187,0.7);
 	color:#8B0000;
 	width:fit-content;

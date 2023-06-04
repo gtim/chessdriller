@@ -29,12 +29,13 @@ function singlePgnToCMPgnMoves( pgn_content ) {
 	pgn_content = pgn_content.replace(/\s*$/gs, '');
 
 	// Detect empty PGN with simple regex. 
-	// Empty (zero moves) PGNs are invalid, but we try to handle them since Lichess can produce them.
+	// Empty (zero moves) PGNs are invalid, but we try to handle them since
+	// Lichess can produce them, in particular as a chapter of a study.
 	if ( pgn_content.match(/^\[.*?\]\s*(\*|1-0|0-1|1\/2-1\/2)\s*$/m) ) {
 		return [];
 	}
 
-	const cmpgn = new Pgn( pgn_content ); // TODO: handle PGN parse errors
+	const cmpgn = new Pgn( pgn_content );
 	return cmpgn.history.moves;
 }
 
@@ -71,6 +72,8 @@ function split_pgndb_into_pgns( pgn_db ) {
 	pgn_db = pgn_db + '\n\n'; // makes the following regex hack work for pgn databases that don't end in newlines
 	const regex = /(\[.*?\n\n *\S.*?\n\n)/gs;
 	const found = pgn_db.match(regex);
+	if ( ! found  )
+		throw new Error( 'PGN could not be parsed' );
 	return found;
 }
 
@@ -78,9 +81,9 @@ function split_pgndb_into_pgns( pgn_db ) {
 // Guess whether PGN is for white or black.
 // Returns w (white), b (black) or u (unknown)
 export function guessColor( pgn_db ) {
-	const pgntexts = split_pgndb_into_pgns( pgn_db );
 	let moves_as_white, moves_as_black;
 	try {
+		const pgntexts = split_pgndb_into_pgns( pgn_db );
 		moves_as_white = pgntexts.map( (pgn) => singlePgnToMoves( pgn, true  ) ).flat();
 		moves_as_black = pgntexts.map( (pgn) => singlePgnToMoves( pgn, false ) ).flat();
 	} catch (e) {
@@ -108,10 +111,10 @@ function num_own_splits(moves) {
 
 // Generate the preview FEN from move n of the first chapter
 export function makePreviewFen( pgn_db ) {
-	const pgntexts = split_pgndb_into_pgns( pgn_db );
-	const pgn_first_chapter = pgntexts[0];
 	const initial_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 	try {
+		const pgntexts = split_pgndb_into_pgns( pgn_db );
+		const pgn_first_chapter = pgntexts[0];
 		const cmpgn_moves = singlePgnToCMPgnMoves( pgn_first_chapter );
 		if ( cmpgn_moves == 0 )
 			return initial_fen;

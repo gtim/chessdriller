@@ -39,7 +39,7 @@
 		Added {form.num_moves_added} new move{form.num_moves_added==1?'':'s'} to your repertoire.
 		</p>
 	{:else if form?.message}
-		<p><span style="font-weight:bold;color:red;">Error uploading PGN file:</span> {form.message}</p>
+		<div class="error">Error uploading PGN file: {form.message}</div>
 	{/if}
 
 	{#if data.pgns.length > 0}

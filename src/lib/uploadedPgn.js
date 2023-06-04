@@ -3,15 +3,16 @@ import { orphanMoveSoftDeletionsQueries } from '$lib/movesUtil.js';
 
 export async function importPgn( pgn_content, pgn_filename, prisma, user_id, repForWhite ) {
 
+	// parse (multi-game) PGN into moves-list
+	const moves = pgndbToMoves( pgn_content, repForWhite );
+
+	// create pgn
 	const pgn = await prisma.pgn.create({ data: {
 		userId: user_id,
 		repForWhite: repForWhite,
 		filename: pgn_filename,
 		content: pgn_content
 	} });
-
-	// parse (multi-game) PGN into moves-list
-	const moves = pgndbToMoves( pgn_content, repForWhite );
 
 	// insert moves into db
 	let queries = [];
@@ -40,8 +41,8 @@ export async function importPgn( pgn_content, pgn_filename, prisma, user_id, rep
 			await prisma.$transaction(queries);
 		}
 	} catch(e) {
-		console.log( 'Exception inserting PGN moves into database: ' + e.message );
-		throw new Error( 'Exception inserting moves into database: ' + e.message );
+		console.warn( 'Failed adding moves to database: ' + e.message );
+		throw new Error( 'Failed adding moves to databse: ' + e.message );
 	}
 
 	return moves.length;

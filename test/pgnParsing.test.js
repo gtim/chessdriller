@@ -163,6 +163,12 @@ describe( 'singlePgnToMoves', () => {
 		const moves = singlePgnToMoves( pgn_content, true );
 		expect( moves ).toHaveLength( 135 );
 	} );
+
+	// Not a PGN
+	test('not a PGN', () => {
+		const pgn_content = fs.readFileSync( './test/pgn/not-a-pgn.txt', 'utf8' );
+		expect( ()=>{ singlePgnToMoves(pgn_content,true) } ).toThrowError();
+	} );
 		 
 } );
 
@@ -199,6 +205,10 @@ describe( 'pgndbToMoves', () => {
 		const pgn_content = fs.readFileSync( './test/pgn/lichess_study_destroy-the-italian_by_abotofabot_2023.05.14.pgn', 'utf8' );
 		const moves = pgndbToMoves( pgn_content, true );
 		expect( moves ).toHaveLength( 534 );
+	} );
+	test('not a PGN', () => {
+		const pgn_content = fs.readFileSync( './test/pgn/not-a-pgn.txt', 'utf8' );
+		expect( ()=>{ pgndbToMoves(pgn_content,true) } ).toThrowError();
 	} );
 } );
 
