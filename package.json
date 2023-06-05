@@ -11,6 +11,7 @@
 		"coverage": "vitest run --coverage"
 	},
 	"devDependencies": {
+		"@lucia-auth/adapter-mongoose": "^2.0.0",
 		"@sveltejs/adapter-node": "^1.2.3",
 		"@sveltejs/kit": "^1.20.1",
 		"@vitest/coverage-c8": "^0.31.4",
