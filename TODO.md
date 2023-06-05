@@ -5,17 +5,20 @@ Known bugs can be found on the [Github issue tracker](https://github.com/gtim/ch
 
 ## Priority
 
-* make a proper lucia-provider for Lichess login
+* repertoire: auto-update studies on login
+* repertoire: check for repertoire updates regularly while logged in, notify with banner/message in header
 * styling: make /study look good on non-mobile
 * styling: make the move sheet double-column
-* proper error logging
-
+* move "log out" to a /me page
+* /admin displaying number of active users
+* scheduler rewrite
+* handle move options/splits
+* go through the new-user flow to make sure all steps make sense
 
 ## Minor features
 
-* repertoire: auto-update studies on login
+* proper error logging
 * repertoire: regenerate preview board on update
-* repertoire: check for repertoire updates regularly while logged in, notify with banner/message in header
 * study: "skip to first due move" button
 * study: "skip end of line" should play it through quickly instead of jumping
 * set time zone per user (day currently wraps at 00:00 GMT)
@@ -26,15 +29,18 @@ Known bugs can be found on the [Github issue tracker](https://github.com/gtim/ch
 
 ## Major features
 
+* keep track of user's lichess games and notify on out-of-repertoire moves
 * integration tests (create account, import study and /study)
 * practice specific study/PGN/chapter (whether due or not)
     - should wrong-moves here always affect scheduling? or only if the move was due?
-* repertoire: tree visualization of repertoire with all variations
+* repertoire: visualization (tree?) of repertoire with all variations
     - color-coded for move maturity?
     - hover to show move or position?
-* /reprtoire/study/[studyId]
+    - subtab of /rep
+* /rep/study/[studyId] 
     - tree view for the specific study
     - split into study chapters?
+    - Lichess link 
 * study: display PGN comments
 * study: display "variations due" (in addition to "moves due")
 * profile page (/me?)
@@ -44,7 +50,6 @@ Known bugs can be found on the [Github issue tracker](https://github.com/gtim/ch
     - current+best streak
     - move log-out button here ?
 * identify leeches (keep count of lapses?)
-* keep track of user's lichess games and notify on out-of-repertoire moves
 * monitor lichess API responses for 429s and [respond properly ](https://lichess.org/page/api-tips)
 * allow inputing repertoire on Chessdriller. (can the Lichess study code be reused?)
 * handle studies that don't start from the initial position
@@ -66,3 +71,4 @@ Known bugs can be found on the [Github issue tracker](https://github.com/gtim/ch
     - possible solution: just quiz until the last due move, not to the end of the line 
     - counter-issue: when in learning, a line will "trickle in" to the due-queue, and if reviewed before it's finished trickling, stopping at the last due move would leave the rest for the due-queue in a couple minutes.
 * moves "reviewed early" are simply pushed forward at the current interval. should be handled better, maybe increase the interval (proportionally?) if they're reviewed >50% through.
+* should big intervals grow more slowly? e.g. 0.7 ease above 30 days (but smooth transition)
