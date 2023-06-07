@@ -10,7 +10,6 @@ Known bugs can be found on the [Github issue tracker](https://github.com/gtim/ch
 * styling: make /study look good on non-mobile
 * styling: make the move sheet double-column
 * move "log out" to a /me page
-* /admin displaying number of active users
 * scheduler rewrite
 * handle move options/splits
 * go through the new-user flow to make sure all steps make sense

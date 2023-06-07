@@ -1,0 +1,29 @@
+<script>
+	export let data;
+	console.log(data);
+</script>
+
+<h1>Admin</h1>
+<div class="narrow_container">
+	<p><a href="/admin/dbcheck">database sanity check</a></p>
+	<table>
+		<tr><th>Username</th><th>Studies</th><th>PGNs</th><th>Moves</th><th>History</th></tr>
+		{#each data.users as user}
+			<tr>
+				<td>{user.lichessUsername}</td>
+				<td>{user._count.studies}</td>
+				<td>{user._count.pgns}</td>
+				<td>{user._count.moves}</td>
+				<td>{user._count.history}</td>
+			</tr>
+		{/each}
+	</table>
+</div>
+
+<style>
+	.narrow_container {
+		width:512px;
+		max-width:100%;
+		margin:0 auto;
+	}
+</style>
