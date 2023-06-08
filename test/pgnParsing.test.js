@@ -1,4 +1,4 @@
-import { singlePgnToMoves, pgndbToMoves, makePreviewFen } from '$lib/pgnParsing.js';
+import { singlePgnToMoves, pgndbToMoves, pgndbNumChapters, makePreviewFen } from '$lib/pgnParsing.js';
 import fs from 'fs';
 
 /*
@@ -217,8 +217,21 @@ describe( 'pgndbToMoves', () => {
 		expect( moves.filter( (m) => m.moveSan === 'a5' ) ).toHaveLength( 48 );
 		expect( moves.filter( (m) => m.fromFen === 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq' ) ).toHaveLength( 64 );
 	} );
-
 		 
+} );
+
+/*
+ * Test pgndbNumChapters: concatenated PGN "database" files
+ */
+
+describe( 'pgndbNumChapters', () => {
+	test('pgndbNumChapters', () => {
+		expect( pgndbNumChapters( fs.readFileSync( './test/pgn/database.pgn', 'utf8' ) ) ).toEqual( 3 );
+		expect( pgndbNumChapters( fs.readFileSync( './test/pgn/database-no-newlines-at-end.pgn', 'utf8' ) ) ).toEqual( 3 );
+		expect( pgndbNumChapters( fs.readFileSync( './test/pgn/lichess_study_destroy-the-italian_by_abotofabot_2023.05.14.pgn', 'utf8' ) ) ).toEqual( 16 );
+		expect( ()=>{pgndbNumChapters( fs.readFileSync( './test/pgn/not-a-pgn.txt', 'utf8' ) )} ).toThrowError();
+		expect( pgndbNumChapters( fs.readFileSync( './test/pgn/64-chapters.pgn', 'utf8' ) ) ).toEqual( 64 );
+	});
 } );
 
 /*

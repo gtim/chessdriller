@@ -56,11 +56,14 @@ export const actions = {
 			where: { userId, repForWhite: repForWhite, deleted: false } 
 		});
 
-		let total_moves_parsed;
+		let num_moves_parsed;
+		let num_chapters_parsed;
 
 		try {
 			const pgn_text = await file.text();
-			total_moves_parsed = await importPgn( pgn_text, file.name, prisma, userId, repForWhite );
+			const res = await importPgn( pgn_text, file.name, prisma, userId, repForWhite );
+			num_moves_parsed = res.num_moves_parsed;
+			num_chapters_parsed = res.num_chapters_parsed;
 		} catch ( e ) {
 			return {
 				success: false,
@@ -74,7 +77,8 @@ export const actions = {
 
 		return {
 			success: true,
-			num_moves_parsed: total_moves_parsed,
+			num_moves_parsed,
+			num_chapters_parsed,
 			num_moves_added:  rep_moves_after - rep_moves_before
 		};
 	}

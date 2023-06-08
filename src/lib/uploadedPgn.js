@@ -1,10 +1,11 @@
-import { pgndbToMoves } from '$lib/pgnParsing.js';
+import { pgndbToMoves, pgndbNumChapters } from '$lib/pgnParsing.js';
 import { orphanMoveSoftDeletionsQueries } from '$lib/movesUtil.js';
 
 export async function importPgn( pgn_content, pgn_filename, prisma, user_id, repForWhite ) {
 
 	// parse (multi-game) PGN into moves-list
 	const moves = pgndbToMoves( pgn_content, repForWhite );
+	const num_chapters_parsed = pgndbNumChapters( pgn_content );
 
 	// create pgn
 	const pgn = await prisma.pgn.create({ data: {
@@ -45,7 +46,10 @@ export async function importPgn( pgn_content, pgn_filename, prisma, user_id, rep
 		throw new Error( 'Failed adding moves to databse: ' + e.message );
 	}
 
-	return moves.length;
+	return {
+		num_moves_parsed: moves.length,
+		num_chapters_parsed,
+	}
 }
 
 // Deletes a PGN.

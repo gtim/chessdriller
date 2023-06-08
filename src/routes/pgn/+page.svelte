@@ -35,8 +35,13 @@
 		<p>
 		Success!
 		Parsed one file
-		with {form.num_moves_parsed} move{form.num_moves_parsed==1?'':'s'}.
-		Added {form.num_moves_added} new move{form.num_moves_added==1?'':'s'} to your repertoire.
+		with {form.num_moves_parsed} move{form.num_moves_parsed==1?'':'s'}
+		across {form.num_chapters_parsed} chapter{form.num_chapters_parsed==1?'':'s'}.
+		{#if form.num_moves_added > 0}
+			Added {form.num_moves_added} new move{form.num_moves_added==1?'':'s'} to your repertoire.
+		{:else}
+			All moves were already found in your other PGNs or studies, so no new ones were added to your repertoire.
+		{/if}
 		</p>
 	{:else if form?.message}
 		<div class="error">Error uploading PGN file: {form.message}</div>

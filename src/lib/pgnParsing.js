@@ -11,6 +11,12 @@ export function pgndbToMoves( pgndb, repForWhite ) {
 	return pgntexts.map( (pgn) => singlePgnToMoves( pgn, repForWhite ) ).flat();
 }
 
+// Number of chapters/games in a PGN database file.
+export function pgndbNumChapters( pgndb ) {
+	const pgntexts = split_pgndb_into_pgns( pgndb );
+	return pgntexts.length;
+}
+
 
 // Converts text from single PGN game to a moves-list.
 // Exported only as a test utility.
