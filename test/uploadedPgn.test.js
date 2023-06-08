@@ -146,7 +146,7 @@ describe( 'importPgn', () => {
 		} )).toEqual( 1 );
 	});
 
-	test('transposition', async () => {
+	test('not a PGN file', async () => {
 		const pgn_content = fs.readFileSync( './test/pgn/not-a-pgn.txt', 'utf8' );
 		await expect( importPgn( pgn_content, 'not-a-pgn.txt', prisma, 1, true ) ).rejects.toThrowError();
 		expect( await prisma.pgn.count() ).toEqual( 0 );
