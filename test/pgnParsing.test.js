@@ -169,7 +169,7 @@ describe( 'singlePgnToMoves', () => {
 		const pgn_content = fs.readFileSync( './test/pgn/not-a-pgn.txt', 'utf8' );
 		expect( ()=>{ singlePgnToMoves(pgn_content,true) } ).toThrowError();
 	} );
-		 
+
 } );
 
 
@@ -210,6 +210,15 @@ describe( 'pgndbToMoves', () => {
 		const pgn_content = fs.readFileSync( './test/pgn/not-a-pgn.txt', 'utf8' );
 		expect( ()=>{ pgndbToMoves(pgn_content,true) } ).toThrowError();
 	} );
+	test('64-chapter PGN', async () => {
+		const pgn_content = fs.readFileSync( './test/pgn/64-chapters.pgn', 'utf8' );
+		const moves = pgndbToMoves( pgn_content, false );
+		expect( moves.filter( (m) => m.moveSan === 'a6' ) ).toHaveLength( 64 );
+		expect( moves.filter( (m) => m.moveSan === 'a5' ) ).toHaveLength( 48 );
+		expect( moves.filter( (m) => m.fromFen === 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq' ) ).toHaveLength( 64 );
+	} );
+
+		 
 } );
 
 /*

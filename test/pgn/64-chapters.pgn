@@ -1,0 +1,833 @@
+[Event "a lot of chapters: a3"]
+[Site "https://lichess.org/study/RzrAaPmg/0hBFCKkq"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:01:02"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Anderssen's Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. a3 a6 *
+
+
+[Event "a lot of chapters: a4"]
+[Site "https://lichess.org/study/RzrAaPmg/Y1BMku6f"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:01:20"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Ware Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. a4 a6 *
+
+
+[Event "a lot of chapters: b3"]
+[Site "https://lichess.org/study/RzrAaPmg/Lxb52Tsh"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:01:26"]
+[Variant "Standard"]
+[ECO "A01"]
+[Opening "Nimzo-Larsen Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. b3 a6 *
+
+
+[Event "a lot of chapters: b4"]
+[Site "https://lichess.org/study/RzrAaPmg/egYUtOoL"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:01:36"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Polish Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. b4 a6 *
+
+
+[Event "a lot of chapters: c3"]
+[Site "https://lichess.org/study/RzrAaPmg/7J512icT"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:01:46"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Saragossa Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. c3 a6 *
+
+
+[Event "a lot of chapters: c4"]
+[Site "https://lichess.org/study/RzrAaPmg/gN3W0HEA"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:01:49"]
+[Variant "Standard"]
+[ECO "A10"]
+[Opening "English Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. c4 a6 *
+
+
+[Event "a lot of chapters: d3"]
+[Site "https://lichess.org/study/RzrAaPmg/bKea02GT"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:01:57"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Mieses Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. d3 a6 *
+
+
+[Event "a lot of chapters: d4"]
+[Site "https://lichess.org/study/RzrAaPmg/TdU0QlYa"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:02:02"]
+[Variant "Standard"]
+[ECO "A40"]
+[Opening "Queen's Pawn Game"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. d4 a6 *
+
+
+[Event "a lot of chapters: e3"]
+[Site "https://lichess.org/study/RzrAaPmg/F65bftEx"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:02:09"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van't Kruijs Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. e3 a6 *
+
+
+[Event "a lot of chapters: e4"]
+[Site "https://lichess.org/study/RzrAaPmg/s2GfhFgc"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:02:13"]
+[Variant "Standard"]
+[ECO "B00"]
+[Opening "St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. e4 a6 *
+
+
+[Event "a lot of chapters: f3"]
+[Site "https://lichess.org/study/RzrAaPmg/zjpL1wNn"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:02:19"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Barnes Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. f3 a6 *
+
+
+[Event "a lot of chapters: f4"]
+[Site "https://lichess.org/study/RzrAaPmg/F3Qx9pob"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:02:22"]
+[Variant "Standard"]
+[ECO "A02"]
+[Opening "Bird Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. f4 a6 *
+
+
+[Event "a lot of chapters: g3"]
+[Site "https://lichess.org/study/RzrAaPmg/CuN7BtDZ"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:02:33"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Hungarian Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. g3 a6 *
+
+
+[Event "a lot of chapters: g4"]
+[Site "https://lichess.org/study/RzrAaPmg/RUB9hcEs"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:02:38"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Grob Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. g4 a6 *
+
+
+[Event "a lot of chapters: h3"]
+[Site "https://lichess.org/study/RzrAaPmg/OmbdEM8F"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:02:44"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Clemenz Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. h3 a6 *
+
+
+[Event "a lot of chapters: h4"]
+[Site "https://lichess.org/study/RzrAaPmg/Iu6yC1Zo"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:02:49"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "KÃ¡das Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. h4 a6 *
+
+
+[Event "a lot of chapters: Nc3 a3"]
+[Site "https://lichess.org/study/RzrAaPmg/Qbe3JLPz"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:03:39"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. a3 a5 *
+
+
+[Event "a lot of chapters: Nc3 a4"]
+[Site "https://lichess.org/study/RzrAaPmg/6IdSLuNu"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:03:48"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. a4 a5 *
+
+
+[Event "a lot of chapters: Nc3 b3"]
+[Site "https://lichess.org/study/RzrAaPmg/3YveuqRv"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:03:58"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. b3 a5 *
+
+
+[Event "a lot of chapters: Nc3 b4"]
+[Site "https://lichess.org/study/RzrAaPmg/fI2CLJ2Z"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:04:07"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. b4 a5 *
+
+
+[Event "a lot of chapters: Nc3 d3"]
+[Site "https://lichess.org/study/RzrAaPmg/uwm2IyJ4"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:04:16"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. d3 a5 *
+
+
+[Event "a lot of chapters: Nc3 d4"]
+[Site "https://lichess.org/study/RzrAaPmg/ZpJWYBcO"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:04:24"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. d4 a5 *
+
+
+[Event "a lot of chapters: Nc3 e3"]
+[Site "https://lichess.org/study/RzrAaPmg/mNGadJeH"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:04:32"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. e3 a5 *
+
+
+[Event "a lot of chapters: Nc3 e4"]
+[Site "https://lichess.org/study/RzrAaPmg/3kGPQINp"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:04:40"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. e4 a5 *
+
+
+[Event "a lot of chapters: Nc3 f3"]
+[Site "https://lichess.org/study/RzrAaPmg/ZLfwpe5L"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:04:52"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. f3 a5 *
+
+
+[Event "a lot of chapters: Nc3 f4"]
+[Site "https://lichess.org/study/RzrAaPmg/Ma97ZieC"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:05:00"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. f4 a5 *
+
+
+[Event "a lot of chapters: Nc3 g3"]
+[Site "https://lichess.org/study/RzrAaPmg/o3smSt56"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:05:08"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. g3 a5 *
+
+
+[Event "a lot of chapters: Nc3 g4"]
+[Site "https://lichess.org/study/RzrAaPmg/oPbtUeyo"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:05:15"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. g4 a5 *
+
+
+[Event "a lot of chapters: Nc3 h3"]
+[Site "https://lichess.org/study/RzrAaPmg/jCIdELQt"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:05:28"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. h3 a5 *
+
+
+[Event "a lot of chapters: Nc3 h4"]
+[Site "https://lichess.org/study/RzrAaPmg/kYDzkLZH"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:05:48"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Van Geet Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nc3 a6 2. h4 a5 *
+
+
+[Event "a lot of chapters: Nf3 a3"]
+[Site "https://lichess.org/study/RzrAaPmg/nQrmlIwj"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:05:59"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. a3 a5 *
+
+
+[Event "a lot of chapters: Nf3 a4"]
+[Site "https://lichess.org/study/RzrAaPmg/fcEhWzIw"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:06:06"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. a4 a5 *
+
+
+[Event "a lot of chapters: Nf3 b3"]
+[Site "https://lichess.org/study/RzrAaPmg/TqbQ32RE"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:06:19"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. b3 a5 *
+
+
+[Event "a lot of chapters: Nf3 b4"]
+[Site "https://lichess.org/study/RzrAaPmg/dBaI0Lvo"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:06:29"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. b4 a5 *
+
+
+[Event "a lot of chapters: Nf3 c3"]
+[Site "https://lichess.org/study/RzrAaPmg/rfry7tn3"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:06:38"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. c3 a5 *
+
+
+[Event "a lot of chapters: Nf3 c4"]
+[Site "https://lichess.org/study/RzrAaPmg/3fQZYUIa"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:06:47"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. Nc3 a5 *
+
+
+[Event "a lot of chapters: Nf3 d3"]
+[Site "https://lichess.org/study/RzrAaPmg/IUEuyFSq"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:06:59"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. d3 a5 *
+
+
+[Event "a lot of chapters: Nf3 d4"]
+[Site "https://lichess.org/study/RzrAaPmg/anjlXS70"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:07:09"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. d4 a5 *
+
+
+[Event "a lot of chapters: Nf3 e3"]
+[Site "https://lichess.org/study/RzrAaPmg/qU3iFF0u"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:07:51"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. e3 a5 *
+
+
+[Event "a lot of chapters: Nf3 e4"]
+[Site "https://lichess.org/study/RzrAaPmg/vZeYlk3B"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:07:58"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. e4 a5 *
+
+
+[Event "a lot of chapters: Nf3 g3"]
+[Site "https://lichess.org/study/RzrAaPmg/qsSuuwWG"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:08:08"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. g3 a5 *
+
+
+[Event "a lot of chapters: Nf3 g4"]
+[Site "https://lichess.org/study/RzrAaPmg/PwVGG9ee"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:08:17"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. g4 a5 *
+
+
+[Event "a lot of chapters: Nf3 h3"]
+[Site "https://lichess.org/study/RzrAaPmg/j4Zgbt8f"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:08:26"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. h3 a5 *
+
+
+[Event "a lot of chapters: Nf3 h4"]
+[Site "https://lichess.org/study/RzrAaPmg/LIMKDpgR"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:08:33"]
+[Variant "Standard"]
+[ECO "A04"]
+[Opening "Zukertort Opening: St. George Defense"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nf3 a6 2. h4 a5 *
+
+
+[Event "a lot of chapters: Na3 b3"]
+[Site "https://lichess.org/study/RzrAaPmg/Sutqe96T"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:08:52"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. b3 a5 *
+
+
+[Event "a lot of chapters: Na3 b4"]
+[Site "https://lichess.org/study/RzrAaPmg/FOw96nzt"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:09:00"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. b4 a5 *
+
+
+[Event "a lot of chapters: Na3 c3"]
+[Site "https://lichess.org/study/RzrAaPmg/yXcFTZQF"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:09:07"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. c3 a5 *
+
+
+[Event "a lot of chapters: Na3 c4"]
+[Site "https://lichess.org/study/RzrAaPmg/juxZHZRr"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:09:19"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. c4 a5 *
+
+
+[Event "a lot of chapters: Na3 d3"]
+[Site "https://lichess.org/study/RzrAaPmg/TqYVrzVR"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:09:32"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. d3 a5 *
+
+
+[Event "a lot of chapters: Na3 d4"]
+[Site "https://lichess.org/study/RzrAaPmg/JklK1Yfs"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:09:39"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. d4 a5 *
+
+
+[Event "a lot of chapters: Na3 e3"]
+[Site "https://lichess.org/study/RzrAaPmg/GDAu87MO"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:09:57"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. e3 a5 *
+
+
+[Event "a lot of chapters: Na3 e4"]
+[Site "https://lichess.org/study/RzrAaPmg/dK9DsyUP"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:10:03"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. e4 a5 *
+
+
+[Event "a lot of chapters: Na3 f3"]
+[Site "https://lichess.org/study/RzrAaPmg/Nk98DFpo"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:10:11"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. f3 a5 *
+
+
+[Event "a lot of chapters: Na3 f4"]
+[Site "https://lichess.org/study/RzrAaPmg/lbeh5sWR"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:10:18"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. f4 a5 *
+
+
+[Event "a lot of chapters: Na3 g3"]
+[Site "https://lichess.org/study/RzrAaPmg/ZqD33ELu"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:10:29"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. g3 a5 *
+
+
+[Event "a lot of chapters: Na3 g4"]
+[Site "https://lichess.org/study/RzrAaPmg/1nvmI5Uc"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:10:45"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. g4 a5 *
+
+
+[Event "a lot of chapters: Na3 h3"]
+[Site "https://lichess.org/study/RzrAaPmg/p0Pwzgyw"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:10:53"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. h3 a5 *
+
+
+[Event "a lot of chapters: Na3 h4"]
+[Site "https://lichess.org/study/RzrAaPmg/uetVFPuF"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:11:01"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Sodium Attack"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Na3 a6 2. h4 a5 *
+
+
+[Event "a lot of chapters: Nh3 a3"]
+[Site "https://lichess.org/study/RzrAaPmg/hmphyXzC"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:11:14"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Amar Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nh3 a6 2. a3 a5 *
+
+
+[Event "a lot of chapters: Nh3 a4"]
+[Site "https://lichess.org/study/RzrAaPmg/iy0aMERF"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:11:22"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Amar Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nh3 a6 2. a4 a5 *
+
+
+[Event "a lot of chapters: Nh3 b3"]
+[Site "https://lichess.org/study/RzrAaPmg/omr4IGxv"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:11:37"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Amar Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nh3 a6 2. b3 a5 *
+
+
+[Event "a lot of chapters: Nh3 b4"]
+[Site "https://lichess.org/study/RzrAaPmg/dRnIRXdp"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:11:45"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Amar Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nh3 a6 2. b4 a5 *
+
+
+[Event "a lot of chapters: Nh3 c3"]
+[Site "https://lichess.org/study/RzrAaPmg/67BFPEFA"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:11:53"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Amar Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nh3 a6 2. c3 a5 *
+
+
+[Event "a lot of chapters: Nh3 c4"]
+[Site "https://lichess.org/study/RzrAaPmg/15gqOCIM"]
+[Result "*"]
+[UTCDate "2023.06.08"]
+[UTCTime "21:12:08"]
+[Variant "Standard"]
+[ECO "A00"]
+[Opening "Amar Opening"]
+[Annotator "https://lichess.org/@/cdtest2"]
+
+1. Nh3 a6 2. c4 a5 *
+
+
+

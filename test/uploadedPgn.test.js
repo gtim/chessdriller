@@ -153,6 +153,15 @@ describe( 'importPgn', () => {
 		expect( await prisma.move.count() ).toEqual( 0 );
 	} );
 
+	test('64-chapter PGN', async () => {
+		const pgn_content = fs.readFileSync( './test/pgn/64-chapters.pgn', 'utf8' );
+		await importPgn( pgn_content, '64-chapters.pgn', prisma, 1, false );
+		expect( await prisma.pgn.count() ).toEqual( 1 );
+		expect( await prisma.move.count({ where: { ownMove: true } } ) ).toEqual( 68 );
+		expect( await prisma.move.count({ where: { moveSan: 'a6' } } ) ).toEqual( 20 );
+		expect( await prisma.move.count({ where: { moveSan: 'a5' } } ) ).toEqual( 48 );
+	} );
+
 } );
 
 describe( 'deletePgn', () => {
