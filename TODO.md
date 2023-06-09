@@ -5,8 +5,6 @@ Known bugs can be found on the [Github issue tracker](https://github.com/gtim/ch
 
 ## Priority
 
-* repertoire: auto-update studies on login
-* repertoire: check for repertoire updates regularly while logged in, notify with banner/message in header
 * styling: make /study look good on non-mobile
 * styling: make the move sheet double-column
 * scheduler rewrite
@@ -23,12 +21,14 @@ Known bugs can be found on the [Github issue tracker](https://github.com/gtim/ch
 * pgn upload: guess repertoire color and display parse issues before submitting form
 * feedback button to conveniently send me feedback on chessdriller
 * when studies/PGNs don't start from the initial position, warn and fail gracefully
+* repertoire: check for repertoire updates regularly while logged in, notify with banner/message in header
+* internal: maybe prisma client should only be instantiated once?
 
 
 ## Major features
 
 * keep track of user's lichess games and notify on out-of-repertoire moves
-* integration tests (create account, import study and /study)
+* internal: integration tests (create account, import study and /study)
 * practice specific study/PGN/chapter (whether due or not)
     - should wrong-moves here always affect scheduling? or only if the move was due?
 * repertoire: visualization (tree?) of repertoire with all variations

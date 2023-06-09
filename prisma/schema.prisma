@@ -60,6 +60,7 @@ model User {
 	lichessAccessToken          String?
 	lichessAccessTokenFetchedAt DateTime?
 	lichessAccessTokenExpiresIn Int?
+	lastRepertoireUpdateCheck   DateTime?
 }
 
 model Move {

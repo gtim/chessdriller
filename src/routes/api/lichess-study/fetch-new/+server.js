@@ -13,16 +13,20 @@ export async function GET({ locals }) {
 		where: { id: user.cdUserId }
 	});
 
+	// update studies
+	let changes;
 	try {
-		const changes = await fetchAllStudyChanges( user.cdUserId, prisma, cdUser.lichessUsername, cdUser.lichessAccessToken );
-		return json({
-			success: true,
-			...changes
-		});
-
+		changes = await fetchAllStudyChanges( user.cdUserId, prisma, cdUser.lichessUsername, cdUser.lichessAccessToken );
 	} catch (e) {
 		console.warn(e.message);
 		return json({ success: false, message: e.message });
 	}
+
+	// return study changes
+	return json({
+		success: true,
+		...changes
+	});
+
 
 }

@@ -134,6 +134,13 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 		num_removed_studies = 0;
 	}
 
+	// update user update-check timestamp
+	await prisma.User.update({
+		where: { id: user_id },
+		data: { lastRepertoireUpdateCheck: new Date() }
+	});
+
+
 	return {
 		num_new_studies,
 		num_updates_fetched,
@@ -142,6 +149,23 @@ export async function fetchAllStudyChanges( user_id, prisma, lichess_username, l
 	};
 }
 
+// fetchAllStudyChangesUnlessFetchedRecently
+// Calls fetchAllStudyChanges if they have not been fetched recently (default: 5 min)
+export async function fetchAllStudyChangesUnlessFetchedRecently( user_id, prisma, min_interval_s = 5*60 ) {
+	const cdUser = await prisma.User.findUniqueOrThrow({
+		where: { id: user_id },
+		select: {
+			lichessUsername: true,
+			lichessAccessToken: true,
+			lastRepertoireUpdateCheck: true,
+		}
+	});
+	if ( ! cdUser.lastRepertoireUpdateCheck || new Date(cdUser.lastRepertoireUpdateCheck) < new Date() - min_interval_s*1000 ) {
+		return fetchAllStudyChanges( user_id, prisma, cdUser.lichessUsername, cdUser.lichessAccessToken );
+	} else {
+		return {};
+	}
+}
 
 // fetchStudyUpdate
 // Fetch the latest Lichess version of an existing study.
