@@ -5,6 +5,7 @@ Known bugs can be found on the [Github issue tracker](https://github.com/gtim/ch
 
 ## Priority
 
+* on connecting a study or uploading a PGN, ask if the moves are new or known. if known, start interval at 1 day. warn when adding many new moves.
 * styling: make /study look good on non-mobile
 * styling: make the move sheet double-column
 * scheduler rewrite
