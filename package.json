@@ -34,7 +34,7 @@
 		"chessground": "^8.3.7",
 		"cm-pgn": "^3.3.0",
 		"express": "^4.18.2",
-		"gsap": "^3.11.5",
+		"gsap": "^3.12.1",
 		"lucia-auth": "^1.7.1",
 		"svelte-chessground": "^0.2.8",
 		"svelte-modals": "^1.2.1"
