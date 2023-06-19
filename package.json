@@ -13,7 +13,7 @@
 	"devDependencies": {
 		"@lucia-auth/adapter-mongoose": "^2.0.0",
 		"@sveltejs/adapter-node": "^1.2.3",
-		"@sveltejs/kit": "^1.20.1",
+		"@sveltejs/kit": "^1.20.4",
 		"@vitest/coverage-c8": "^0.32.0",
 		"dotenv": "^16.1.4",
 		"env-cmd": "^10.1.0",
