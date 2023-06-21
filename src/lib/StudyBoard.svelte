@@ -1,6 +1,6 @@
 <script>
 
-	import { Chessground } from 'svelte-chessground';
+	import { ChessgroundUnstyled } from 'svelte-chessground';
 	import { Chess } from 'chess.js'; // Chess logic for finding valid moves
 	import { onMount } from 'svelte';
 
@@ -203,6 +203,6 @@
 </script>
 
 <div style="width:100%;max-width:512px;aspect-ratio:1;" bind:this={container}>
-	<Chessground className="cg-print" {config} bind:this={chessground} />
+	<ChessgroundUnstyled className="cg-print" {config} bind:this={chessground} />
 </div>
 

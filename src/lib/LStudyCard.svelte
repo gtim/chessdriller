@@ -1,5 +1,5 @@
 <script>
-	import { Chessground } from 'svelte-chessground';
+	import { ChessgroundUnstyled } from 'svelte-chessground';
 
 	import './chessground.base.css';
 	import './chessground.brown.css';
@@ -21,7 +21,7 @@
 
 <div class="study" class:unincluded={!included}>
 	<div class="board">
-		<Chessground
+		<ChessgroundUnstyled
 			className="cg-print" coordinates={false}
 			{fen} {orientation}
 			viewOnly={true} disableContextMenu={false} config={{drawable:{enabled:false}}}

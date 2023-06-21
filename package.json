@@ -36,7 +36,7 @@
 		"express": "^4.18.2",
 		"gsap": "^3.12.1",
 		"lucia-auth": "^1.7.1",
-		"svelte-chessground": "^0.2.8",
+		"svelte-chessground": "^1.1.0",
 		"svelte-modals": "^1.2.1"
 	}
 }
