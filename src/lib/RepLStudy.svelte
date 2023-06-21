@@ -152,7 +152,7 @@
 	p {
 		margin:0;
 	}
-	button.remove, button.fetchUpdate {
+	button.remove {
 		position:absolute;
 		padding:0;
 		background:none;
@@ -160,16 +160,11 @@
 		cursor:pointer;
 		color:#800020;
 	}
-	button.remove:hover, button.fetchUpdate:hover {
+	button.remove:hover {
 		font-weight:bold;
 	}
 	button.remove {
 		top:3px;
 		right:6px;
-	}
-	button.fetchUpdate {
-		font-size:16px;
-		top:24px;
-		right:4px;
 	}
 </style>
