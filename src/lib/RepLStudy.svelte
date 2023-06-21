@@ -89,23 +89,6 @@
 	 */
 
 	$: update = updates.length > 0 ? updates[0] : null;
-	let update_msg;
-	async function fetchUpdate() {
-		const res = await fetch( '/api/lichess-study/'+id+'/update/fetch', {method:'POST'} );
-		const json = await res.json();
-		if ( ! res.ok ) {
-			error_msg = 'Fetching update failed ('+res.status+')';
-		} else if ( ! json.success ) {
-			error_msg = 'Fetching update failed: ' + json.message;
-		} else {
-			if ( json.update.numNewMoves == 0 && json.update.numRemovedMoves == 0 ) {
-				update_msg = 'No move changes found <a href="https://lichess.org/study/'+lichessId+'" rel="noopener noreferrer">on  Lichess</a>.';
-			} else {
-				update_msg = '';
-			}
-			updates = [ json.update ];
-		}
-	}
 	async function applyUpdate() {
 		const res = await fetch( '/api/lichess-study/'+id+'/update/apply', {method:'POST'} );
 		const json = await res.json();
@@ -136,7 +119,6 @@
 	{:else}
 		<p>{moves_string}.</p>
 		<button class="remove" title="Remove study from repertoire" on:click={confirmRemoval}>&#x2715;</button>
-		<button class="fetchUpdate" title="Check for updates" on:click={fetchUpdate}>&#x27F3;</button>
 	{/if}
 	{#if removedOnLichess}
 		<button
@@ -163,9 +145,6 @@
 	{/if}
 	{#if error_msg}
 		<p style="color:red;"><b>Error:</b> {error_msg}</p>
-	{/if}
-	{#if update_msg}
-		<p in:fade|local><small>{@html update_msg}</small></p>
 	{/if}
 </LStudyCard>
 
