@@ -1,5 +1,4 @@
 import { getLineForStudy, moveIsDue } from '$lib/scheduler.js';
-import { PrismaClient } from '@prisma/client';
 
 describe( 'moveIsDue', () => {
 	test('not-own moves', () => {
