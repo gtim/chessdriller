@@ -3,13 +3,11 @@
  *
  * Logic governing when a move is due for repetition and how to pick a line/variation to practice.
  *
- * Note: some algorithms here are DoS-vulnerable to malign/pathological PGNs.
- *
  */
 
 
 /*
- * getLineForStudy( prisma, user_id, last_line )
+ * getLineForStudy( moves, user_id, last_line )
  *
  * Next line scheduled for study
  *
@@ -49,7 +47,7 @@ export async function getLineForStudy( moves, now ) {
 }
 
 /*
- * getClosestLineForStudy( prisma, user_id, last_line )
+ * getClosestLineForStudy( moves, user_id, last_line )
  *
  * Next line scheduled for study, that is closest to the last line
  *
@@ -59,6 +57,19 @@ export async function getLineForStudy( moves, now ) {
  *   last_line: array of move IDs for the last line studied
  *
  * Output: same as for getLineForStudy
+ *
+ * Algorithm:
+ *   1. Rewind the final move of the last line.
+ *   2. Search breadth-first for a continuation with a due move.
+ *      If no continuation is found, go to step 1 and rewind another move.
+ *      When one is found, pick it and append to the line.
+ *   3. Breadth-first search for a continuation with a due move.
+ *      If no continuation is found, pick one randomly and return.
+ *      If multiple continuations found at same depth, pick one randomly and repeat.
+ *      If a single continuation is found, pick it and repeat.
+ * TODO: above not impemented yet, rewrite in progress
+ *
+ * Note: DoS-vulnerable to malign/pathological PGNs. 
  */
 export async function getClosestLineForStudy( moves, now, last_line ) {
 	
