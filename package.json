@@ -6,6 +6,8 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "eslint .",
 		"test": "env-cmd -f .env.test npx prisma db push --force-reset && vitest",
 		"coverage": "vitest run --coverage"
@@ -14,6 +16,8 @@
 		"@lucia-auth/adapter-mongoose": "^2.0.0",
 		"@sveltejs/adapter-node": "^1.2.3",
 		"@sveltejs/kit": "^1.20.5",
+		"@typescript-eslint/eslint-plugin": "^5.61.0",
+		"@typescript-eslint/parser": "^5.61.0",
 		"@vitest/coverage-c8": "^0.32.0",
 		"dotenv": "^16.1.4",
 		"env-cmd": "^10.1.0",
@@ -21,6 +25,9 @@
 		"eslint-plugin-svelte3": "^4.0.0",
 		"prisma": "^4.15.0",
 		"svelte": "^3.54.0",
+		"svelte-check": "^3.4.5",
+		"tslib": "^2.6.0",
+		"typescript": "^5.1.6",
 		"vite": "^4.3.9",
 		"vitest": "^0.32.2"
 	},
