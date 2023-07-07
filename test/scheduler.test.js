@@ -1,64 +1,8 @@
 import { getLineForStudy, moveIsDue } from '$lib/scheduler.js';
 
-describe( 'moveIsDue', () => {
-	test('not-own moves', () => {
-		const date = new Date('2023-02-19T12:00:00Z');
-		expect(
-			moveIsDue( {
-				ownMove: false, 
-				learningDueTime: new Date('2023-02-18T10:00:00Z'),
-				reviewDueDate: null
-			}, date )
-		).toBe(false);
-		expect(
-			moveIsDue( {
-				ownMove: false, 
-				learningDueTime: null,
-				reviewDueDate: new Date('2023-02-17')
-			}, date )
-		).toBe(false);
-	});
-	
-	test('moves in learning', () => {
-		const move230218T10 = {
-			ownMove: true, 
-			learningDueTime: new Date('2023-02-18T10:00:00Z'),
-			reviewDueDate: null
-		};
-		expect( moveIsDue( move230218T10, new Date('2022-02-18T10:00:00Z') ) ).toBe( false );
-		expect( moveIsDue( move230218T10, new Date('2022-02-18T23:00:00Z') ) ).toBe( false );
-		expect( moveIsDue( move230218T10, new Date('2023-02-17T10:00:00Z') ) ).toBe( false );
-		expect( moveIsDue( move230218T10, new Date('2023-02-17T23:00:00Z') ) ).toBe( false );
-		expect( moveIsDue( move230218T10, new Date('2023-02-18T00:00:00Z') ) ).toBe( false );
-		expect( moveIsDue( move230218T10, new Date('2023-02-18T09:59:59Z') ) ).toBe( false );
-		expect( moveIsDue( move230218T10, new Date('2023-02-18T10:00:01Z') ) ).toBe( true );
-		expect( moveIsDue( move230218T10, new Date('2023-02-18T23:00:00Z') ) ).toBe( true );
-		expect( moveIsDue( move230218T10, new Date('2023-02-19T00:00:00Z') ) ).toBe( true );
-		expect( moveIsDue( move230218T10, new Date('2023-02-19T10:00:00Z') ) ).toBe( true );
-		expect( moveIsDue( move230218T10, new Date('2023-03-19T00:00:00Z') ) ).toBe( true );
-		expect( moveIsDue( move230218T10, new Date('2024-02-19T00:00:00Z') ) ).toBe( true );
-	} );
-
-	test('moves in review', () => {
-		const move230218 = {
-			ownMove: true, 
-			learningDueTime: null,
-			reviewDueDate: new Date('2023-02-18')
-		};
-		expect( moveIsDue( move230218, new Date('2022-02-18T10:00:00Z') ) ).toBe( false );
-		expect( moveIsDue( move230218, new Date('2022-02-18T23:00:00Z') ) ).toBe( false );
-		expect( moveIsDue( move230218, new Date('2023-02-17T10:00:00Z') ) ).toBe( false );
-		expect( moveIsDue( move230218, new Date('2023-02-17T23:00:00Z') ) ).toBe( false );
-		expect( moveIsDue( move230218, new Date('2023-02-18T00:00:00Z') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2023-02-18T09:59:59Z') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2023-02-18T10:00:01Z') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2023-02-18T23:00:00Z') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2023-02-19T00:00:00Z') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2023-02-19T10:00:00Z') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2023-03-19T00:00:00Z') ) ).toBe( true );
-		expect( moveIsDue( move230218, new Date('2024-02-19T00:00:00Z') ) ).toBe( true );
-	} );
-});
+/*
+ * Test studdy-line fetching logic
+ */
 
 describe( 'getLineForStudy', () => {
 	const empty_response = {
@@ -209,9 +153,6 @@ describe( 'getLineForStudy', () => {
 	} );
 	test.todo( 'getLineForStudy: buildLineBackwards, make sure proper sane line is returned' );
 	test.todo( 'getLineForStudy: continueLineUntilEnd, make sure proper sane line is returned' );
-	test.todo( 'getClosestLineForStudy: make sure latest due deviation is returned' );
-	test.todo( 'getClosestLineForStudy: make sure latest due deviation is returned when a later non-due deviation exists' );
-	test.todo( 'getClosestLineForStudy: with no more moves in same rep, make sure most due move is returned' );
 
 	test( 'same FEN should not be repeated (cyclic move graph)', async () => {
 		const moves = [
@@ -267,5 +208,72 @@ describe( 'getLineForStudy', () => {
 			} );
 		}
 	} );
-	test.todo( 'getClosestLineForStudy: same FEN should not be repeated (cyclic move graph)' );
+});
+test.todo( 'getClosestLineForStudy: make sure latest due deviation is returned' );
+test.todo( 'getClosestLineForStudy: make sure latest due deviation is returned when a later non-due deviation exists' );
+test.todo( 'getClosestLineForStudy: with no more moves in same rep, make sure most due move is returned' );
+test.todo( 'getClosestLineForStudy: same FEN should not be repeated (cyclic move graph)' );
+
+/*
+ * Test moveIsDue logic
+ */
+
+describe( 'moveIsDue', () => {
+	test('not-own moves', () => {
+		const date = new Date('2023-02-19T12:00:00Z');
+		expect(
+			moveIsDue( {
+				ownMove: false, 
+				learningDueTime: new Date('2023-02-18T10:00:00Z'),
+				reviewDueDate: null
+			}, date )
+		).toBe(false);
+		expect(
+			moveIsDue( {
+				ownMove: false, 
+				learningDueTime: null,
+				reviewDueDate: new Date('2023-02-17')
+			}, date )
+		).toBe(false);
+	});
+	
+	test('moves in learning', () => {
+		const move230218T10 = {
+			ownMove: true, 
+			learningDueTime: new Date('2023-02-18T10:00:00Z'),
+			reviewDueDate: null
+		};
+		expect( moveIsDue( move230218T10, new Date('2022-02-18T10:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218T10, new Date('2022-02-18T23:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218T10, new Date('2023-02-17T10:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218T10, new Date('2023-02-17T23:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218T10, new Date('2023-02-18T00:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218T10, new Date('2023-02-18T09:59:59Z') ) ).toBe( false );
+		expect( moveIsDue( move230218T10, new Date('2023-02-18T10:00:01Z') ) ).toBe( true );
+		expect( moveIsDue( move230218T10, new Date('2023-02-18T23:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218T10, new Date('2023-02-19T00:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218T10, new Date('2023-02-19T10:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218T10, new Date('2023-03-19T00:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218T10, new Date('2024-02-19T00:00:00Z') ) ).toBe( true );
+	} );
+
+	test('moves in review', () => {
+		const move230218 = {
+			ownMove: true, 
+			learningDueTime: null,
+			reviewDueDate: new Date('2023-02-18')
+		};
+		expect( moveIsDue( move230218, new Date('2022-02-18T10:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218, new Date('2022-02-18T23:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218, new Date('2023-02-17T10:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218, new Date('2023-02-17T23:00:00Z') ) ).toBe( false );
+		expect( moveIsDue( move230218, new Date('2023-02-18T00:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2023-02-18T09:59:59Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2023-02-18T10:00:01Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2023-02-18T23:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2023-02-19T00:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2023-02-19T10:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2023-03-19T00:00:00Z') ) ).toBe( true );
+		expect( moveIsDue( move230218, new Date('2024-02-19T00:00:00Z') ) ).toBe( true );
+	} );
 });
