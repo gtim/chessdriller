@@ -30,6 +30,12 @@ function createRepertoire( sanLines: string[][], repForWhite = true ) {
 				fromFen: cjsMove.before.split(' ').slice(0,3).join(' '),
 				toFen:    cjsMove.after.split(' ').slice(0,3).join(' '),
 				learningDueTime: new Date('2023-01-01T00:00:01Z'),
+				userId: 0,
+				learningStep: 1,
+				reviewDueDate: null,
+				reviewInterval: null,
+				reviewEase: null,
+				deleted: false,
 			};
 			if ( ! repertoire.some( (m) => m.moveSan === move.moveSan && m.ownMove === move.ownMove && m.fromFen === move.fromFen && m.toFen === move.toFen ) ) {
 				repertoire.push( move );
@@ -296,10 +302,25 @@ describe( 'due_ix', async () => {
  */
 
 describe( 'moveIsDue', () => {
+	const empty_move = {
+		id: 0,
+		userId: 0,
+		moveSan: '',
+		ownMove: 'w',
+		repForWhite: true,
+		fromFen: '',
+		toFen: '',
+		learningStep: 0,
+		reviewInterval: null,
+		reviewEase: null,
+		deleted: false,
+		learningDueTime: new Date('2023-01-01T00:00:01Z'),
+	};
 	test('not-own moves', () => {
 		const date = new Date('2023-02-19T12:00:00Z');
 		expect(
 			moveIsDue( {
+				...empty_move,
 				ownMove: false, 
 				learningDueTime: new Date('2023-02-18T10:00:00Z'),
 				reviewDueDate: null
@@ -307,6 +328,7 @@ describe( 'moveIsDue', () => {
 		).toBe(false);
 		expect(
 			moveIsDue( {
+				...empty_move,
 				ownMove: false, 
 				learningDueTime: null,
 				reviewDueDate: new Date('2023-02-17')
@@ -316,6 +338,7 @@ describe( 'moveIsDue', () => {
 	
 	test('moves in learning', () => {
 		const move230218T10 = {
+			...empty_move,
 			ownMove: true, 
 			learningDueTime: new Date('2023-02-18T10:00:00Z'),
 			reviewDueDate: null
@@ -335,7 +358,8 @@ describe( 'moveIsDue', () => {
 	} );
 
 	test('moves in review', () => {
-		const move230218 = {
+		const move230218: Move = {
+			...empty_move,
 			ownMove: true, 
 			learningDueTime: null,
 			reviewDueDate: new Date('2023-02-18')
