@@ -17,7 +17,7 @@ export type StudyLineResponse = {
 // a branch is a choice of moves from the user, e.g. 1. c4 and 1. Nf3 in the White repertoire.
 // the first move in a branch is the one that is due and intended for continuation
 type MoveWithBranches = Move & { branches: Move[] };
-type MoveWithPossibleBranches = Move | MoveWithBranches;
+export type MoveWithPossibleBranches = Move | MoveWithBranches;
 
 /*
  * getLineForStudy( moves, now, last_line )
