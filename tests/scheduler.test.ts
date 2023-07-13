@@ -1,6 +1,7 @@
 import { getLineForStudy, moveIsDue } from '$lib/scheduler.js';
 import { Chess } from 'chess.js'; // for createRepertoire helper
-import type { StudyLineResponse } from '$lib/scheduler.js';
+import type { Move } from '@prisma/client';
+import type { StudyLineResponse, MoveWithPossibleBranches } from '$lib/scheduler.js';
 
 /*
  * Test study-line fetching logic
@@ -9,12 +10,13 @@ import type { StudyLineResponse } from '$lib/scheduler.js';
 const emptyStudyLineResponse: StudyLineResponse = {
 	line: [],
 	start_ix: 0,
+	due_ix: [],
 	num_due_moves: 0
 };
 
 // helper function to turn array of SAN lines into a repertoire / Move-array for getLineForStudy
-function createRepertoire( sanLines, repForWhite = true ) {
-	let repertoire = [];
+function createRepertoire( sanLines: string[][], repForWhite = true ) {
+	let repertoire: Move[] = [];
 	const chess = new Chess();
 	for ( const sanLine of sanLines ) {
 		chess.reset();
