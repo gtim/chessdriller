@@ -14,7 +14,7 @@ const emptyStudyLineResponse: StudyLineResponse = {
 	num_due_moves: 0
 };
 
-// helper function to turn array of SAN lines into a repertoire / Move-array for getLineForStudy
+// helper functions to turn array of SAN lines into a repertoire / Move-array for getLineForStudy
 function createRepertoire( sanLines: string[][], repForWhite = true ) {
 	let repertoire: Move[] = [];
 	const chess = new Chess();
@@ -38,12 +38,22 @@ function createRepertoire( sanLines: string[][], repForWhite = true ) {
 	}
 	return repertoire;
 }
+function setAllDueTime( rep: Move[], dueTime: Date ) {
+	rep.forEach( m => m.learningDueTime = dueTime );
+}
+function setSanDueTime( rep: Move[], san: string, dueTime: Date ) {
+	const moves = rep.filter( m => m.moveSan === san );
+	if ( moves.length == 0 ) {
+		throw new Error( 'no moves with san ' + san );
+	}
+	moves.forEach( m => m.learningDueTime = dueTime );
+}
 
 describe('getLineForStudy without lastLine', async () => {
 	test( 'due move is returned for White move 1', async () => {
 		let rep = createRepertoire( [ ['e4'],['d4'] ] );
-		rep.find(m=>m.moveSan==='e4').learningDueTime = new Date( '2023-01-31T12:34:56Z' );
-		rep.find(m=>m.moveSan==='d4').learningDueTime = new Date( '2023-01-21T12:34:56Z' );
+		setSanDueTime( rep, 'e4', new Date( '2023-01-31T12:34:56Z' ) );
+		setSanDueTime( rep, 'd4', new Date( '2023-01-21T12:34:56Z' ) );
 		for ( let i = 0; i < 100; i++ ) {
 			const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 			expect( line ).toHaveLength(1);
@@ -53,8 +63,8 @@ describe('getLineForStudy without lastLine', async () => {
 	} );
 	test( 'due move is returned for White move 2', async () => {
 		let rep = createRepertoire( [ ['e4','e5','Nf3'],['e4','e5','f4'] ] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-31T12:34:56Z' ) );
-		rep.find(m=>m.moveSan==='f4').learningDueTime = new Date( '2023-01-21T12:34:56Z' );
+		setAllDueTime( rep, new Date( '2023-01-31T12:34:56Z' ) );
+		setSanDueTime( rep, 'f4', new Date( '2023-01-21T12:34:56Z' ) );
 		for ( let i = 0; i < 100; i++ ) {
 			const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 			expect( line ).toHaveLength(3);
@@ -64,8 +74,8 @@ describe('getLineForStudy without lastLine', async () => {
 	} );
 	test( 'due move is returned for Black', async () => {
 		let rep = createRepertoire( [ ['e4','e6'],['d4','Nf6'] ], false );
-		rep.find(m=>m.moveSan==='e6' ).learningDueTime = new Date( '2023-01-31T12:34:56Z' );
-		rep.find(m=>m.moveSan==='Nf6').learningDueTime = new Date( '2023-01-21T12:34:56Z' );
+		setSanDueTime( rep, 'e6', new Date( '2023-01-31T12:34:56Z' ) );
+		setSanDueTime( rep, 'Nf6', new Date( '2023-01-21T12:34:56Z' ) );
 		for ( let i = 0; i < 100; i++ ) {
 			const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 			expect( line ).toHaveLength(2);
@@ -75,8 +85,8 @@ describe('getLineForStudy without lastLine', async () => {
 	} );
 	test( 'undue moves are included at end of line', async () => {
 		let rep = createRepertoire( [ ['e4','e5','Nf3'] ] );
-		rep.find(m=>m.moveSan==='e4').learningDueTime = new Date( '2023-01-21T12:34:56Z' );
-		rep.find(m=>m.moveSan==='Nf3').learningDueTime = new Date( '2023-01-31T12:34:56Z' );
+		setSanDueTime( rep, 'e4', new Date( '2023-01-21T12:34:56Z' ) );
+		setSanDueTime( rep, 'Nf3', new Date( '2023-01-31T12:34:56Z' ) );
 		const { line } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 		expect( line ).toHaveLength(3);
 	} );
@@ -85,8 +95,8 @@ describe('getLineForStudy without lastLine', async () => {
 			['g3','e5','Bg2','Nc6','Nf3','d5','d3'],
 			['g3','e5','Nf3','Nc6','Bg2','d5','d3']
 		] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-31T12:34:56Z' ) );
-		rep.find( m => m.moveSan === 'd3' ).learningDueTime = new Date( '2023-01-21T12:34:56Z' );
+		setAllDueTime( rep, new Date( '2023-01-31T12:34:56Z' ) );
+		setSanDueTime( rep, 'd3', new Date( '2023-01-21T12:34:56Z' ) );
 		let results = [];
 		for ( let i = 0; i < 1000; i++ ) {
 			const { line } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
@@ -103,9 +113,9 @@ describe('getLineForStudy without lastLine', async () => {
 			['g3','e5','Bg2','Nc6','Nf3','d5','d3'],
 			['g3','e5','Nf3','Nc6','Bg2','d5','d3']
 		] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-31T12:34:56Z' ) );
-		rep.find( m => m.moveSan === 'Bg2' ).learningDueTime = new Date( '2023-01-21T12:34:56Z' ); // only Bg2 in the first branch
-		rep.find( m => m.moveSan === 'd3' ).learningDueTime = new Date( '2023-01-21T12:34:56Z' );
+		setAllDueTime( rep, new Date( '2023-01-31T12:34:56Z' ) );
+		rep[2].learningDueTime = new Date( '2023-01-21T12:34:56Z' ); // Bg2 in the first branch
+		setSanDueTime( rep, 'd3', new Date( '2023-01-21T12:34:56Z' ) );
 		for ( let i = 0; i < 100; i++ ) {
 			const { line } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 			expect( line ).toHaveLength(7);
@@ -115,7 +125,7 @@ describe('getLineForStudy without lastLine', async () => {
 	} );
 	test( 'first-move branch is returned for White', async () => {
 		let rep = createRepertoire( [ ['Nf3'],['g3'] ] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-21T12:34:56Z' ) );
+		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
 		for ( let i = 0; i < 100; i++ ) {
 			const { line } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 			expect( line[0] ).toHaveProperty('branches');
@@ -124,7 +134,7 @@ describe('getLineForStudy without lastLine', async () => {
 	} );
 	test( 'first-move branch is returned for Black', async () => {
 		let rep = createRepertoire( [ ['e4','g6'],['e4','d6'] ], false );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-21T12:34:56Z' ) );
+		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
 		for ( let i = 0; i < 100; i++ ) {
 			const { line } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 			expect( line[1] ).toHaveProperty('branches');
@@ -146,7 +156,7 @@ describe('getLineForStudy without lastLine', async () => {
 	test('no due moves', async () => {
 		const rep = createRepertoire( [['e4','c5','Nf3','d6','Bb5+']] );
 		// all moves in learning
-		rep.forEach( m => m.learningDueTime = new Date('2023-01-21T12:34:56' ) );
+		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
 		expect(
 			await getLineForStudy( rep, new Date('2023-01-21T12:34:55') )
 		).toMatchObject( emptyStudyLineResponse );
@@ -167,7 +177,7 @@ describe( 'getLineForStudy with lastLine', async () => {
 			['e4','c5','Nf3','d6','d4'],
 			['e4','c5','Nf3','Nc6','Bb5']
 		] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-21T12:34:56Z' ) );
+		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
 		const { start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
 		expect( start_ix ).toEqual(3);
 	} );
@@ -176,13 +186,13 @@ describe( 'getLineForStudy with lastLine', async () => {
 			['e4','c5','Nf3','d6'],
 			['e4','c5','Nc3','Nc6']
 		], false );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-21T12:34:56Z' ) );
+		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
 		const { start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3] );
 		expect( start_ix ).toEqual(2);
 	} );
 	test( 'returned move was not in last line', async () => {
 		let rep = createRepertoire( [ ['e4'],['d4'] ] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-21T12:34:56Z' ) );
+		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
 		for ( let i = 0; i < 100; i++ ) {
 			const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [1] );
 			expect( line ).toHaveLength(1);
@@ -192,7 +202,7 @@ describe( 'getLineForStudy with lastLine', async () => {
 	} );
 	test( 'return random first move, but not the one from last line', async () => {
 		let rep = createRepertoire( [ ['e4'],['d4'],['c4'] ] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-21T12:34:56Z' ) );
+		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
 		let responses = [0,0,0];
 		for ( let i = 0; i < 1000; i++ ) {
 			const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [1] );
@@ -206,21 +216,21 @@ describe( 'getLineForStudy with lastLine', async () => {
 	} );
 	test( 'backtrack from lastLine', async () => {
 		let rep = createRepertoire( [ ['e4','c5','Nf3','d6','d4'],['e4','c6','d4'] ] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-21T12:34:56Z' ) );
+		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
 		const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
 		expect( line.map(m=>m.moveSan) ).toEqual( ['e4','c6','d4'] );
 		expect( start_ix ).toEqual(1);
 	} );
 	test( 'backtrack from lastLine to another White first-move', async () => {
 		let rep = createRepertoire( [ ['e4','c5','Nf3','d6','d4'],['d4','d5','c4'] ] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-21T12:34:56Z' ) );
+		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
 		const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
 		expect( line.map(m=>m.moveSan) ).toEqual( ['d4','d5','c4'] );
 		expect( start_ix ).toEqual(0);
 	} );
 	test( 'returns line close to lastLine', async () => {
 		let rep = createRepertoire( [ ['e4','c5','Nf3','d6','d4'],['e4','c5','Nf3','Nc6','Bb5'],['e4','c6','Nc3'] ] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-21T12:34:56Z' ) );
+		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
 		for ( let i = 0; i < 100; i++ ) {
 			const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
 			expect( line.map(m=>m.moveSan) ).toEqual( ['e4','c5','Nf3','Nc6','Bb5'] );
@@ -229,8 +239,8 @@ describe( 'getLineForStudy with lastLine', async () => {
 	} );
 	test( 'does not return line close to lastLine if not due', async () => {
 		let rep = createRepertoire( [ ['e4','c5','Nf3','d6','d4'],['e4','c5','Nf3','Nc6','Bb5'],['e4','c6','Nc3'] ] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-31T12:34:56Z' ) );
-		rep.find( m => m.moveSan === 'Nc3' ).learningDueTime = new Date( '2023-01-21T12:34:56Z' );
+		setAllDueTime( rep, new Date( '2023-01-31T12:34:56Z' ) );
+		setSanDueTime( rep, 'Nc3', new Date( '2023-01-21T12:34:56Z' ) );
 		for ( let i = 0; i < 100; i++ ) {
 			const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
 			expect( line.map(m=>m.moveSan) ).toEqual( ['e4','c6','Nc3'] );
@@ -242,14 +252,14 @@ describe( 'getLineForStudy with lastLine', async () => {
 describe( 'getLineForStudy cycle handling', async () => {
 	test( 'cycle of undue moves is avoided', async () => {
 		let rep = createRepertoire( [ ['e4','e5','Nf3','Nc6','Ng1','Nb8'] ] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-31T12:34:56Z' ) );
-		rep.find(m=>m.moveSan==='e4').learningDueTime = new Date( '2023-01-21T12:34:56Z' );
+		setAllDueTime( rep, new Date( '2023-01-31T12:34:56Z' ) );
+		setSanDueTime( rep, 'e4', new Date( '2023-01-21T12:34:56Z' ) );
 		const { line } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 		expect( line ).toHaveLength(6);
 	} );
 	test( 'cycle of due moves is avoided', async () => {
 		let rep = createRepertoire( [ ['e4','e5','Nf3','Nc6','Ng1','Nb8'] ] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-21T12:34:56Z' ) );
+		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
 		const { line } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 		expect( line ).toHaveLength(6);
 	} );
@@ -258,23 +268,23 @@ describe( 'getLineForStudy cycle handling', async () => {
 describe( 'due_ix', async () => {
 	test( 'due_ix for white', async () => {
 		let rep = createRepertoire( [ ['e4','e5','Nf3'] ] );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-31T12:34:56Z' ) );
-		rep.find(m=>m.moveSan==='Nf3').learningDueTime = new Date( '2023-01-21T12:34:56Z' );
+		setAllDueTime( rep, new Date( '2023-01-31T12:34:56Z' ) );
+		setSanDueTime( rep, 'Nf3', new Date( '2023-01-21T12:34:56Z' ) );
 		let res = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 		expect( res.due_ix ).toEqual( [2] );
 
-		rep.find(m=>m.moveSan==='e4').learningDueTime = new Date( '2023-01-21T12:34:56Z' );
+		setSanDueTime( rep, 'e4', new Date( '2023-01-21T12:34:56Z' ) );
 		res = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 		expect( res.due_ix ).toEqual( [0,2] );
 	} );
 	test( 'due_ix for black', async () => {
 		let rep = createRepertoire( [ ['e4','e5','Nf3','Nc6'] ], false );
-		rep.forEach( m => m.learningDueTime = new Date( '2023-01-31T12:34:56Z' ) );
-		rep.find(m=>m.moveSan==='e5').learningDueTime = new Date( '2023-01-21T12:34:56Z' );
+		setAllDueTime( rep, new Date( '2023-01-31T12:34:56Z' ) );
+		setSanDueTime( rep, 'e5', new Date( '2023-01-21T12:34:56Z' ) );
 		let res = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 		expect( res.due_ix ).toEqual( [1] );
 
-		rep.find(m=>m.moveSan==='Nc6').learningDueTime = new Date( '2023-01-21T12:34:56Z' );
+		setSanDueTime( rep, 'Nc6', new Date( '2023-01-21T12:34:56Z' ) );
 		res = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 		expect( res.due_ix ).toEqual( [1,3] );
 	} );
