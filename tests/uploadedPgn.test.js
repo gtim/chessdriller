@@ -27,7 +27,7 @@ test("prisma client is defined", () => {
 describe( 'importPgn', () => {
 
 	test('simple pgn', async () => {
-		const pgn_content = fs.readFileSync( './test/pgn/simple.pgn', 'utf8' );
+		const pgn_content = fs.readFileSync( './tests/pgn/simple.pgn', 'utf8' );
 		await importPgn( pgn_content, 'simple.pgn', prisma, 1, true );
 		expect( await prisma.move.count() ).toEqual( 4 );
 		expect(
@@ -70,7 +70,7 @@ describe( 'importPgn', () => {
 	});
 
 	test('simple pgn, black', async () => {
-		const pgn_content = fs.readFileSync( './test/pgn/simple.pgn', 'utf8' );
+		const pgn_content = fs.readFileSync( './tests/pgn/simple.pgn', 'utf8' );
 		await importPgn( pgn_content, 'simple.pgn', prisma, 1, false );
 		expect( await prisma.move.count() ).toEqual( 4 );
 		expect(
@@ -100,7 +100,7 @@ describe( 'importPgn', () => {
 	});
 
 	test('recursive annotation variation', async () => {
-		const pgn_content = fs.readFileSync( './test/pgn/rav.pgn', 'utf8' );
+		const pgn_content = fs.readFileSync( './tests/pgn/rav.pgn', 'utf8' );
 		await importPgn( pgn_content, 'rav.pgn', prisma, 1, true );
 		expect( await prisma.move.count() ).toEqual( 11 );
 		expect( await prisma.move.count({ where: { moveSan: 'd5' } } )).toEqual( 2 );
@@ -116,7 +116,7 @@ describe( 'importPgn', () => {
 	});
 
 	test('pgn database', async () => {
-		const pgn_content = fs.readFileSync( './test/pgn/database.pgn', 'utf8' );
+		const pgn_content = fs.readFileSync( './tests/pgn/database.pgn', 'utf8' );
 		await importPgn( pgn_content, 'database.pgn', prisma, 1, true );
 		expect( await prisma.move.count() ).toEqual( 13 );
 		expect( await prisma.move.count({ where: { moveSan: 'd4' } } )).toEqual( 1 );
@@ -129,7 +129,7 @@ describe( 'importPgn', () => {
 	});
 
 	test('transposition', async () => {
-		const pgn_content = fs.readFileSync( './test/pgn/transposition.pgn', 'utf8' );
+		const pgn_content = fs.readFileSync( './tests/pgn/transposition.pgn', 'utf8' );
 		await importPgn( pgn_content, 'transposition.pgn', prisma, 1, true );
 		expect( await prisma.move.count() ).toEqual( 11 );
 		expect( await prisma.move.count({ where: { moveSan: 'd4' } } )).toEqual( 2 );
@@ -147,14 +147,14 @@ describe( 'importPgn', () => {
 	});
 
 	test('not a PGN file', async () => {
-		const pgn_content = fs.readFileSync( './test/pgn/not-a-pgn.txt', 'utf8' );
+		const pgn_content = fs.readFileSync( './tests/pgn/not-a-pgn.txt', 'utf8' );
 		await expect( importPgn( pgn_content, 'not-a-pgn.txt', prisma, 1, true ) ).rejects.toThrowError();
 		expect( await prisma.pgn.count() ).toEqual( 0 );
 		expect( await prisma.move.count() ).toEqual( 0 );
 	} );
 
 	test('64-chapter PGN', async () => {
-		const pgn_content = fs.readFileSync( './test/pgn/64-chapters.pgn', 'utf8' );
+		const pgn_content = fs.readFileSync( './tests/pgn/64-chapters.pgn', 'utf8' );
 		await importPgn( pgn_content, '64-chapters.pgn', prisma, 1, false );
 		expect( await prisma.pgn.count() ).toEqual( 1 );
 		expect( await prisma.move.count({ where: { ownMove: true } } ) ).toEqual( 68 );
