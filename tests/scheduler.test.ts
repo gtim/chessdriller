@@ -1,7 +1,6 @@
 import { getLineForStudy, moveIsDue } from '$lib/scheduler.js';
 import { Chess } from 'chess.js'; // for createRepertoire helper
 import type { StudyLineResponse } from '$lib/scheduler.js';
-// TODO move /test to /tests -- svelte-check does not check /test
 
 /*
  * Test study-line fetching logic
