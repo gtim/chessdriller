@@ -172,8 +172,8 @@
 	.grid_two_elements {
 		width:720px;
 	}
-	.unincluded_studies { }
-	.included_studies { }
+	/*.unincluded_studies { }*/
+	/*.included_studies { }*/
 	.hidden_studies {
 		margin-top:32px;
 	}

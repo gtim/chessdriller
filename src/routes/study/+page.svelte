@@ -19,6 +19,7 @@
 	let line;
 	let line_study_id;
 	let start_move_ix;
+	let due_ix = [];
 
 
 	// MoveSheet logic: TODO move pair_moves and move_pairs* into lib/MoveSheet.svelte (and simplify)
@@ -44,6 +45,7 @@
 			console.log(data);
 			if ( data.num_due_moves > 0 ) {
 				line = data.line;
+				due_ix = data.due_ix;
 				start_move_ix = data.start_ix;
 				last_move_ix = start_move_ix - 1;
 				num_wrongs_this_move = 0;
@@ -207,7 +209,7 @@
 						transition:fade on:click={()=>{studyBoard.showAnswer()}} 
 					>Show answer</button>
 				{/if}
-				{#if line && line.slice(last_move_ix+1).length > 0 && line.slice(last_move_ix+1).filter(m=>m.isDue).length == 0}
+				{#if line && line.slice(last_move_ix+1).length > 0 && last_move_ix >= Math.max(...due_ix)}
 					<button 
 						class="cdbutton skip_to_end"
 						title="All due moves are reviewed, skip the end of this line"

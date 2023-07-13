@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
-import { getLineForStudy, getClosestLineForStudy } from '$lib/scheduler.js';
+import { getLineForStudy } from '$lib/scheduler.ts';
 
 export async function GET({ url, locals }) {
 
@@ -11,15 +11,14 @@ export async function GET({ url, locals }) {
 
 	const prisma = new PrismaClient();
 
-	const last_line = url.searchParams.has('last') ? JSON.parse( url.searchParams.get('last') ) : [];
+	const lastLineJson = url.searchParams.get('last');
+	const lastLine = lastLineJson === null ? [] : JSON.parse( lastLineJson );
 
-	const moves = await prisma.Move.findMany({
+	const moves = await prisma.move.findMany({
 		where: { userId, deleted: false }
 	});
 
-	const response = last_line.length == 0
-	                 ? await getLineForStudy( moves, new Date() )
-	                 : await getClosestLineForStudy( moves, new Date(), last_line );
+	const response = await getLineForStudy( moves, new Date(), lastLine );
 
 	return json(response);
 }

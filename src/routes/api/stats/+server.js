@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
-import { moveIsDue } from '$lib/scheduler.js';
+import { moveIsDue } from '$lib/scheduler.ts';
 
 const prisma = new PrismaClient();
 
