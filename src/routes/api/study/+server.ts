@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
-import { getLineForStudy } from '$lib/scheduler.ts';
+import { getLineForStudy } from '$lib/scheduler';
 
 export async function GET({ url, locals }) {
 
