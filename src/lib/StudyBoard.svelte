@@ -16,6 +16,7 @@
 
 	const Delay_before_opponent_move = 250;
 	const Delay_before_wrong_move_undo = 250;
+	const Delay_before_branch_undo  = 750;
 	
 	export let line; // line is an array of moves
 	export let start_move_ix; // move index (of line[]) for the first move to show; fast-forward to that one
@@ -95,13 +96,20 @@
 
 	function checkMove( orig, dest ) {
 		const chess_move = chess.move( { from: orig, to: dest } );
-		const correct = chess_move.san === line[current_move_i].moveSan;
+		let result;
+		if ( chess_move.san === line[current_move_i].moveSan ) {
+			result = 'correct';
+		} else if ( line[current_move_i].branches && line[current_move_i].branches.some( (m) => m.moveSan === chess_move.san ) ) {
+			result = 'branch';
+		} else {
+			result = 'wrong';
+		}
 		const container_rect = container.getBoundingClientRect();
 		const [ relX, relY ] = keyToRelPos( dest );
 		dispatch( 'move', {
 			move_id: line[current_move_i].id,
 			move_ix: current_move_i,
-			correct: correct,
+			result,
 			guess: chess_move.san,
 			dest_pos: {
 				x: container_rect.x + relX,
@@ -109,7 +117,7 @@
 				file: dest.charAt(0)
 			}
 		} );
-		if ( ! correct ) {
+		if ( result === 'wrong' ) {
 			setTimeout( ()=>{
 				chess.undo();
 				chessground.set({
@@ -118,7 +126,18 @@
 				});
 				allowBoardInput();
 			}, Delay_before_wrong_move_undo );
-		} else {
+		} else if ( result === 'branch' ) {
+			setTimeout( ()=>{
+				chess.undo();
+				chessground.set({ animation: { enabled: false } });
+				chessground.set({
+					fen: chess.fen(),
+					lastMove: undefined,
+				});
+				chessground.set({ animation: { enabled: true  } });
+				allowBoardInput();
+			}, Delay_before_branch_undo );
+		} else if ( result === 'correct' ) {
 			const turnColor = chess.turn() === 'w' ? 'white' : 'black';
 			chessground.set({ turnColor: turnColor });
 			chessground.setAutoShapes( [] );
@@ -132,6 +151,8 @@
 			} else {
 				setTimeout( playOpponentMove, Delay_before_opponent_move );
 			}
+		} else {
+			throw new Error( 'invalid move result: ' + result );
 		}
 	}
 

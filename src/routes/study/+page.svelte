@@ -21,7 +21,7 @@
 		detail: {
 			move_id: number;
 			move_ix: number;
-			correct: boolean;
+			result: 'correct' | 'wrong' | 'branch';
 			guess: string;
 			dest_pos: {
 				x: number;
@@ -90,6 +90,7 @@
 
 	let studyBoard: StudyBoard;
 	let error_text = "";
+	let played_branches: Set<string> = new Set();
 	let stats: undefined | Stats;
 	let review_finished = false;
 
@@ -97,18 +98,25 @@
 	let last_fetchmove_promise: Promise<void>;
 
 	async function onMove(e: MoveEvent) {
-		if ( e.detail.correct ) {
+		if ( e.detail.result === 'correct' ) {
 			last_move_ix = e.detail.move_ix;
 			num_wrongs_this_move = 0;
-		} else {
+			played_branches.clear();
+		} else if ( e.detail.result === 'branch' ) {
+			played_branches.add( e.detail.guess );
+		} else if ( e.detail.result === 'wrong' ) {
 			num_wrongs_this_move++;
+			played_branches.clear();
+		} else {
+			throw new Error( 'invalid move result: ' + e.detail.result );
 		}
+		played_branches = played_branches;
 		last_fetchmove_promise = fetch( '/api/study/move', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				move_id: e.detail.move_id,
-				correct: e.detail.correct,
+				correct: e.detail.result === 'correct' || e.detail.result === 'branch',
 				guess:   e.detail.guess,
 				line_study_id: line_study_id
 			})
@@ -207,8 +215,6 @@
 		{/if}
 	</p>
 
-
-
 	{#if line}
 		<div style="display:flex;justify-content:center;align-items:center;">
 			<div style="position:relative;width:100%;max-width:512px;">
@@ -237,10 +243,14 @@
 		</div>
 	{/if}
 
-
+	{#if played_branches.size == 1 }
+		<p class="branch_text">{[...played_branches][0]} is correct. Play your alternative move to continue.</p>
+	{:else if played_branches.size > 1 }
+		<p class="branch_text">{[...played_branches].join(' and ')} are correct. Play another alternative move to continue.</p>
+	{/if}
 
 	{#if error_text}
-		<div class="error">{error_text}</div>
+		<div class="error" transition:fade>{error_text}</div>
 	{/if}
 
 	{#if line}
@@ -258,6 +268,9 @@
 		margin:0 auto;
 	}
 	#stats {
+		text-align:center;
+	}
+	.branch_text {
 		text-align:center;
 	}
 
