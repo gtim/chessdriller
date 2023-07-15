@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 
 	import StudyBoard from '$lib/StudyBoard.svelte';
 	import MoveFeedbackStamp from '$lib/MoveFeedbackStamp.svelte';
@@ -8,6 +8,34 @@
 	import { fade } from 'svelte/transition';
 	import gsap from 'gsap';
 
+	import type { StudyLineResponse, MoveWithPossibleBranches as Move } from '$lib/scheduler';
+
+	type Stats = {
+		moves_total: number;
+		moves_due: number;
+		moves_learning: number;
+		moves_review: number;
+	};
+	// TODO move event types into StudyBoard.svelte when that file is typescriptified
+	type MoveEvent = {
+		detail: {
+			move_id: number;
+			move_ix: number;
+			correct: boolean;
+			guess: string;
+			dest_pos: {
+				x: number;
+				y: number;
+				file: 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' |'h';
+			}
+		}
+	};
+	type FinishedEvent = {
+		detail: {
+			move_ids: number[]
+		}
+	};
+
 	const delay_after_line_ms = 500;
 
 	const nocache_headers = new Headers();
@@ -16,14 +44,14 @@
 	
 	let num_wrongs_this_move = 0;
 
-	let line;
-	let line_study_id;
-	let start_move_ix;
-	let due_ix = [];
+	let line: Move[];
+	let line_study_id = -1;
+	let start_move_ix = -1;
+	let due_ix: number[] = [];
 
 
 	// MoveSheet logic: TODO move pair_moves and move_pairs* into lib/MoveSheet.svelte (and simplify)
-	function pair_moves( line ) {
+	function pair_moves( line: Move[] ) {
 		let pairs = [];
 		for ( let i = 0; i < line.length; i += 2 ) {
 			pairs.push( line.slice( i, i+2 ) );
@@ -35,8 +63,8 @@
 	                           : move_pairs.slice(0, Math.ceil(last_move_ix/2)+1 );
 
 
-	let nextline_promise;
-	async function studyNextLine( last_line_move_ids = [] ) {
+	let nextline_promise: Promise<void>;
+	async function studyNextLine( last_line_move_ids: number[] = [] ) {
 		nextline_promise = fetch( '/api/study?' + new URLSearchParams({
 			last: JSON.stringify(last_line_move_ids),
 		}), nocache_headers )
@@ -61,15 +89,15 @@
 		} );
 	}
 
-	let studyBoard;
+	let studyBoard: StudyBoard;
 	let error_text = "";
-	let stats;
+	let stats: undefined | Stats;
 	let review_finished = false;
 
 	let last_move_ix = -1;
-	let last_fetchmove_promise;
+	let last_fetchmove_promise: Promise<void>;
 
-	async function onMove(e) {
+	async function onMove(e: MoveEvent) {
 		if ( e.detail.correct ) {
 			console.log('yes! move ID: ' + e.detail.move_id);
 			last_move_ix = e.detail.move_ix;
@@ -122,7 +150,7 @@
 			console.warn(error_text);
 		} );
 	}
-	function lineFinished(e) {
+	function lineFinished(e: FinishedEvent) {
 		console.log('nice!');
 		const last_line_move_ids = e.detail.move_ids;
 		setTimeout(()=>{

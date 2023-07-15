@@ -2,6 +2,9 @@ import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 import { moveIsDue } from '$lib/scheduler.ts';
 
+// TODO return-type described in /src/routes/study/+page.svelte, move it here
+// (or elsewhere) when this file is typescriptified
+
 const prisma = new PrismaClient();
 
 export async function GET({ locals }) {

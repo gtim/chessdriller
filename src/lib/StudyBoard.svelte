@@ -1,5 +1,8 @@
 <script>
 
+	// TODO event types defined in /src/routes/study/+page.svelte, move
+	// them here when this file is typescriptified
+
 	import { ChessgroundUnstyled } from 'svelte-chessground';
 	import { Chess } from 'chess.js'; // Chess logic for finding valid moves
 	import { onMount } from 'svelte';
