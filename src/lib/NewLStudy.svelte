@@ -41,7 +41,6 @@
 		if ( adding_state != 1 ) {
 			return;
 		}
-		console.log('adding..' + repForWhite );
 		adding_state = 2;
 		const res = await fetch(
 			'/api/lichess-study/'+id+'/include/' + ( repForWhite ? 'white' : 'black' ),

@@ -70,7 +70,6 @@
 		}), { headers: nocache_headers } )
 		.then( (res) => res.json() )
 		.then( (data) => {
-			console.log(data);
 			if ( data.num_due_moves > 0 ) {
 				line = data.line;
 				due_ix = data.due_ix;
@@ -99,11 +98,9 @@
 
 	async function onMove(e: MoveEvent) {
 		if ( e.detail.correct ) {
-			console.log('yes! move ID: ' + e.detail.move_id);
 			last_move_ix = e.detail.move_ix;
 			num_wrongs_this_move = 0;
 		} else {
-			console.log('no:( move ID: ' + e.detail.move_id);
 			num_wrongs_this_move++;
 		}
 		last_fetchmove_promise = fetch( '/api/study/move', {
@@ -151,7 +148,6 @@
 		} );
 	}
 	function lineFinished(e: FinishedEvent) {
-		console.log('nice!');
 		const last_line_move_ids = e.detail.move_ids;
 		setTimeout(()=>{
 			studyNextLine( last_line_move_ids );
