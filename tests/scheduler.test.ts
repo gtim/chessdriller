@@ -126,7 +126,10 @@ describe('getLineForStudy without lastLine', async () => {
 			const { line } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 			expect( line ).toHaveLength(7);
 			expect( line[2].moveSan ).toEqual('Bg2');
-			expect( line[2].branches[0].moveSan ).toEqual('Nf3');
+			expect( line[2].branches ).toBeTruthy();
+			if ( line[2].branches ) { // otherwise TS will complain that branches could be undefined
+				expect( line[2].branches[0].moveSan ).toEqual('Nf3');
+			}
 		}
 	} );
 	test( 'first-move branch is returned for White', async () => {
@@ -134,8 +137,10 @@ describe('getLineForStudy without lastLine', async () => {
 		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
 		for ( let i = 0; i < 100; i++ ) {
 			const { line } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
-			expect( line[0] ).toHaveProperty('branches');
-			expect( ['Nf3','g3'] ).toContain( line[0].branches[0].moveSan );
+			expect( line[0].branches ).toBeTruthy();
+			if ( line[0].branches ) {
+				expect( ['Nf3','g3'] ).toContain( line[0].branches[0].moveSan );
+			}
 		}
 	} );
 	test( 'first-move branch is returned for Black', async () => {
@@ -143,8 +148,10 @@ describe('getLineForStudy without lastLine', async () => {
 		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
 		for ( let i = 0; i < 100; i++ ) {
 			const { line } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
-			expect( line[1] ).toHaveProperty('branches');
-			expect( ['g6','d6'] ).toContain( line[1].branches[0].moveSan );
+			expect( line[1].branches ).toBeTruthy();
+			if ( line[1].branches ) {
+				expect( ['g6','d6'] ).toContain( line[1].branches[0].moveSan );
+			}
 		}
 	} );
 
