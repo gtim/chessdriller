@@ -137,7 +137,7 @@
 				{/if}
 				{#each hidden_studies as study, i (study.id)}
 					<span in:receive|local="{{key:study.id}}" out:send|local="{{key:study.id}}">
-						<a href="#" on:click|preventDefault={()=>unhide(study.id)} title="Unhide this study">{study.name}</a><!--
+						<a href="#?" on:click|preventDefault={()=>unhide(study.id)} title="Unhide this study">{study.name}</a><!--
 					--></span><!--
 					-->{i < hidden_studies.length - 2 ? ', ' : ( i == hidden_studies.length - 2 ? ' and ' : '.' ) }<!--
 				-->{/each}
