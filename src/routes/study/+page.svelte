@@ -160,14 +160,6 @@
 		} );
 	}
 
-	// Secret trick shows answer immediately after clicking "due" five times.
-	// Used to avoid wrongs until multiple alternative moves are supported.
-	let num_clicks_on_due = 0;
-	$: if ( num_clicks_on_due >= 5 ) {
-		num_clicks_on_due = 0;
-		studyBoard.showAnswer();
-	}
-
 </script>
 
 {#if review_finished}
@@ -185,7 +177,7 @@
 
 	<p id="stats">
 		{#if stats}
-			{stats.moves_due} move{stats.moves_due==1?'':'s'} <span on:click={()=>num_clicks_on_due++}>due</span>.
+			{stats.moves_due} move{stats.moves_due==1?'':'s'} due.
 		{:else}
 			&nbsp;
 		{/if}
