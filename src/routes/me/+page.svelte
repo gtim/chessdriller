@@ -3,7 +3,7 @@
 	export let data;
 </script>
 
-<h1>Profile</h1>
+<h1>You</h1>
 <div class="narrow_container">
 	<p>You are {data.lichessUsername}.</p>
 	<form use:enhance method="post">
