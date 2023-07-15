@@ -38,7 +38,7 @@
 
 	const delay_after_line_ms = 500;
 
-	const nocache_headers = new Headers();
+	const nocache_headers: HeadersInit = new Headers();
 	nocache_headers.append('pragma', 'no-cache');
 	nocache_headers.append('cache-control', 'no-cache');
 	
@@ -67,7 +67,7 @@
 	async function studyNextLine( last_line_move_ids: number[] = [] ) {
 		nextline_promise = fetch( '/api/study?' + new URLSearchParams({
 			last: JSON.stringify(last_line_move_ids),
-		}), nocache_headers )
+		}), { headers: nocache_headers } )
 		.then( (res) => res.json() )
 		.then( (data) => {
 			console.log(data);
