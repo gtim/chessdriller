@@ -39,7 +39,7 @@
 		margin-top:16px;
 	}
 	.content {
-		margin:0 8px;
+		margin:0 16px;
 	}
 	/* Backdrop for modals */
 	.backdrop {
