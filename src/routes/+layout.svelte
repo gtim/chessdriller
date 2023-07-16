@@ -8,15 +8,39 @@
 	$: loggedIn = !!data.user;
 </script>
 
-<NavLinks {loggedIn} />
+<div class="grid-container">
 
-<slot />
+	<div class="header">
+		<NavLinks {loggedIn} />
+	</div>
 
-<Modals>
-	<div slot="backdrop" class="backdrop" transition:fade on:click={closeModal} on:keydown={closeModal} />
-</Modals>
+	<div class="content">
+		<slot />
+	</div>
+
+	<div class="footer">
+	</div>
+
+	<Modals>
+		<div slot="backdrop" class="backdrop" transition:fade on:click={closeModal} on:keydown={closeModal} />
+	</Modals>
+
+</div>
 
 <style>
+	.grid-container {
+		display: grid;
+		grid-template-rows: auto 1fr auto;
+		grid-template-columns: 1fr;
+		min-height: 100vh;
+		width:100%;
+	}
+	.header {
+		margin-top:16px;
+	}
+	.content {
+		margin:0 8px;
+	}
 	/* Backdrop for modals */
 	.backdrop {
 		position: fixed;

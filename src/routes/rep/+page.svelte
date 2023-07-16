@@ -81,7 +81,6 @@
 		<div class="studies_container">
 			<div class="included_studies"
 				class:grid_single_element={included_studies.length<=1}
-				class:grid_two_elements={included_studies.length==2}
 			>
 			{#each included_studies as study (study.id) }
 				<div animate:flip={{duration:750, easing: cubicInOut }} in:receive|local="{{key:study.id}}" out:send|local="{{key:study.id}}">
@@ -110,7 +109,6 @@
 		<div class="studies_container">
 			<div class="unincluded_studies"
 				class:grid_single_element={unincluded_studies.length<=1}
-				class:grid_two_elements={unincluded_studies.length==2}
 			>
 			{#each unincluded_studies as study, i (study.id) }
 				<div 
@@ -148,8 +146,8 @@
 
 <style>
 	.narrow_container {
-		width:512px;
-		max-width:100%;
+		width:100%;
+		max-width:512px;
 		margin:0 auto;
 	}
 	.studies_container {
@@ -165,12 +163,9 @@
 		margin-bottom:20px;
 		justify-content: center;
 	}
-	/* classes to apply on study lists with just one or two elements in order to center */
+	/* class to apply on study lists with just one element in order to center */
 	.grid_single_element {
-		width:360px;
-	}
-	.grid_two_elements {
-		width:720px;
+		grid-template-columns: 1fr;
 	}
 	/*.unincluded_studies { }*/
 	/*.included_studies { }*/

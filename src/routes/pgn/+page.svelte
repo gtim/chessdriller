@@ -67,8 +67,8 @@
 
 <style>
 	div.narrow_container {
-		width:512px;
-		max-width:100%;
+		width:100%;
+		max-width:512px;
 		margin:0 auto;
 	}
 	h2 {
