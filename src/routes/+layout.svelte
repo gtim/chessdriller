@@ -21,11 +21,12 @@
 	<div class="footer">
 	</div>
 
-	<Modals>
-		<div slot="backdrop" class="backdrop" transition:fade on:click={closeModal} on:keydown={closeModal} />
-	</Modals>
-
 </div>
+
+<Modals>
+	<div slot="backdrop" class="backdrop" transition:fade on:click={closeModal} on:keydown={closeModal} />
+</Modals>
+
 
 <style>
 	.grid-container {
