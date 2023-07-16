@@ -14,6 +14,8 @@ Known bugs can be found on the [Github issue tracker](https://github.com/gtim/ch
 
 * proper error logging
 * repertoire: regenerate preview board on update
+* study: when no due cards, display time until next due
+    - round up for e.g. "3 moves in 5 min" or "24 moves tomorrow"
 * study: "skip to first due move" button
 * study: "skip end of line" should play it through quickly instead of jumping
 * set time zone per user (day currently wraps at 00:00 GMT)
