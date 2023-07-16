@@ -206,66 +206,79 @@
 	</div>
 
 {:else}
+	<div class="studygrid">
 
-	<p id="stats">
-		{#if stats}
-			{stats.moves_due} move{stats.moves_due==1?'':'s'} due.
-		{:else}
-			&nbsp;
-		{/if}
-	</p>
+		<div id="stats">
+			<p>
+			{#if stats}
+				{stats.moves_due} move{stats.moves_due==1?'':'s'} due.
+			{:else}
+				&nbsp;
+			{/if}
+			</p>
+		</div>
 
-	{#if line}
 		<div style="display:flex;justify-content:center;align-items:center;">
-			<div style="position:relative;width:100%;max-width:512px;">
-				<div style="position:absolute;right:6px;margin-top:-26px;">
-					{#await Promise.all( [ last_fetchmove_promise, nextline_promise ] ) }
-						<Spinner/>
-					{/await}
+			{#if line}
+				<div style="position:relative;width:100%;max-width:512px;">
+					<div style="position:absolute;right:6px;margin-top:-26px;">
+						{#await Promise.all( [ last_fetchmove_promise, nextline_promise ] ) }
+							<Spinner/>
+						{/await}
+					</div>
+					<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} bind:this={studyBoard} />
+					{#if num_wrongs_this_move >= 2 }
+						<button
+							class="cdbutton show_answer"
+							title="Show the right move"
+							transition:fade on:click={()=>{studyBoard.showAnswer()}} 
+						>Show answer</button>
+					{/if}
+					{#if line && line.slice(last_move_ix+1).length > 0 && last_move_ix >= Math.max(...due_ix)}
+						<button 
+							class="cdbutton skip_to_end"
+							title="All due moves are reviewed, skip the end of this line"
+							transition:fade
+							on:click|once={()=>studyNextLine(line.map(m=>m.id))}
+						>Skip to end</button>
+					{/if}
 				</div>
-				<StudyBoard {line} {start_move_ix} on:move={onMove} on:lineFinished={lineFinished} bind:this={studyBoard} />
-				{#if num_wrongs_this_move >= 2 }
-					<button
-						class="cdbutton show_answer"
-						title="Show the right move"
-						transition:fade on:click={()=>{studyBoard.showAnswer()}} 
-					>Show answer</button>
-				{/if}
-				{#if line && line.slice(last_move_ix+1).length > 0 && last_move_ix >= Math.max(...due_ix)}
-					<button 
-						class="cdbutton skip_to_end"
-						title="All due moves are reviewed, skip the end of this line"
-						transition:fade
-						on:click|once={()=>studyNextLine(line.map(m=>m.id))}
-					>Skip to end</button>
-				{/if}
-			</div>
+			{/if}
 		</div>
-	{/if}
 
-	{#if played_branches.size == 1 }
-		<p class="branch_text">{[...played_branches][0]} is correct. Play your alternative move to continue.</p>
-	{:else if played_branches.size > 1 }
-		<p class="branch_text">{[...played_branches].join(' and ')} are correct. Play another alternative move to continue.</p>
-	{/if}
+		<div>
+			{#if played_branches.size == 1 }
+				<p class="branch_text">{[...played_branches][0]} is correct. Play your alternative move to continue.</p>
+			{:else if played_branches.size > 1 }
+				<p class="branch_text">{[...played_branches].join(' and ')} are correct. Play another alternative move to continue.</p>
+			{/if}
 
-	{#if error_text}
-		<div class="error" transition:fade>{error_text}</div>
-	{/if}
+			{#if error_text}
+				<div class="error" transition:fade>{error_text}</div>
+			{/if}
+		</div>
 
-	{#if line}
 		<div style="text-align:center;">
-			<MoveSheet move_pairs={move_pairs_to_display}/>
+			{#if line}
+				<MoveSheet move_pairs={move_pairs_to_display}/>
+			{/if}
 		</div>
-	{/if}
 
+	</div>
 {/if}
 
 <style>
 	.narrow_container {
-		width:512px;
-		max-width:100%;
+		width:100%;
+		max-width:512px;
 		margin:0 auto;
+	}
+	.studygrid {
+		display: grid;
+		grid-template-rows: auto auto auto 1fr;
+		grid-template-columns: 1fr;
+		height: 100%;
+		width: 100%;
 	}
 	#stats {
 		text-align:center;
