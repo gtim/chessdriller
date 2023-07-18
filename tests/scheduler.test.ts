@@ -191,6 +191,8 @@ describe( 'getLineForStudy with lastLine', async () => {
 			['e4','c5','Nf3','Nc6','Bb5']
 		] );
 		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
+		setSanDueTime( rep, 'e4',  new Date( '2023-01-31T12:34:56Z' ) );
+		setSanDueTime( rep, 'Nf3',  new Date( '2023-01-31T12:34:56Z' ) );
 		const { start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
 		expect( start_ix ).toEqual(3);
 	} );
@@ -200,6 +202,8 @@ describe( 'getLineForStudy with lastLine', async () => {
 			['e4','c5','Nc3','Nc6']
 		], false );
 		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
+		setSanDueTime( rep, 'c5',  new Date( '2023-01-31T12:34:56Z' ) );
+		setSanDueTime( rep, 'd6',  new Date( '2023-01-31T12:34:56Z' ) );
 		const { start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3] );
 		expect( start_ix ).toEqual(2);
 	} );
@@ -230,6 +234,8 @@ describe( 'getLineForStudy with lastLine', async () => {
 	test( 'backtrack from lastLine', async () => {
 		let rep = createRepertoire( [ ['e4','c5','Nf3','d6','d4'],['e4','c6','d4'] ] );
 		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
+		setSanDueTime( rep, 'e4',  new Date( '2023-01-31T12:34:56Z' ) );
+		setSanDueTime( rep, 'Nf3', new Date( '2023-01-31T12:34:56Z' ) );
 		const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
 		expect( line.map(m=>m.moveSan) ).toEqual( ['e4','c6','d4'] );
 		expect( start_ix ).toEqual(1);
@@ -244,6 +250,8 @@ describe( 'getLineForStudy with lastLine', async () => {
 	test( 'returns line close to lastLine', async () => {
 		let rep = createRepertoire( [ ['e4','c5','Nf3','d6','d4'],['e4','c5','Nf3','Nc6','Bb5'],['e4','c6','Nc3'] ] );
 		setAllDueTime( rep, new Date( '2023-01-21T12:34:56Z' ) );
+		setSanDueTime( rep, 'e4',  new Date( '2023-01-31T12:34:56Z' ) );
+		setSanDueTime( rep, 'Nf3', new Date( '2023-01-31T12:34:56Z' ) );
 		for ( let i = 0; i < 100; i++ ) {
 			const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
 			expect( line.map(m=>m.moveSan) ).toEqual( ['e4','c5','Nf3','Nc6','Bb5'] );
