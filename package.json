@@ -38,7 +38,7 @@
 		"@prisma/client": "^4.16.2",
 		"@yaireo/relative-time": "^1.0.4",
 		"chess.js": "^1.0.0-beta.3",
-		"chessground": "^8.3.10",
+		"chessground": "^8.3.13",
 		"cm-pgn": "^3.3.0",
 		"express": "^4.18.2",
 		"gsap": "^3.12.2",
