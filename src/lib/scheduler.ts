@@ -85,9 +85,10 @@ export async function getLineForStudy( repertoire: Move[], now: Date, lastLineId
 		const repForWhite = lastFinalMove.repForWhite;
 		const continuation = bfsDueContinuationToEnd( repertoire, now, currentFen, repForWhite, nextMoveIsOwn, new Set(lastLineIds) );
 		if ( continuation.length > 0 ) {
+			let start_ix = line.length;
 			line.push( ...continuation );
 			const due_ix = lineToDueIx(line,now);
-			const start_ix = Math.min( line.length, ...due_ix );
+			start_ix = Math.min( start_ix, ...due_ix );
 			return { line, start_ix, due_ix, num_due_moves };
 		}
 	}
