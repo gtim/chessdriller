@@ -309,6 +309,18 @@ describe( 'due_ix', async () => {
 		res = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z') );
 		expect( res.due_ix ).toEqual( [1,3] );
 	} );
+	test( 'last move of line included in due_ix', async () => {
+		let rep = createRepertoire( [
+			['e4','c5','Nf3','d6','d4'],
+			['e4','c5','Nf3','d6','d3'],
+		] );
+		setAllDueTime( rep, new Date( '2023-01-31T12:34:56Z' ) );
+		setSanDueTime( rep, 'd3', new Date( '2023-01-21T12:34:56Z' ) );
+		const { line, start_ix, due_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
+		expect( line.map(m=>m.moveSan) ).toEqual( ['e4','c5','Nf3','d6','d3'] );
+		expect( start_ix ).toEqual(4);
+		expect( due_ix ).toEqual([4]); // only d3
+	} );
 } );
 
 
