@@ -91,18 +91,24 @@ export async function getLineForStudy( repertoire: Move[], now: Date, lastLineId
 		}
 	}
 
-	// Search White repertoire from initial position
+	// Search White/Black repertoire from initial position, in random order
 	// (note: with lastLine supplied, either W/B will be searched from initial twice after full backtracking)
-	line = bfsDueContinuationToEnd( repertoire, now, InitialFen, true, true );
+	let repForWhite = Math.random() > 0.5;
+	let nextMoveIsOwn = repForWhite;
+
+	// White or Black (random)
+	line = bfsDueContinuationToEnd( repertoire, now, InitialFen, repForWhite, nextMoveIsOwn );
+	if ( line.length > 0 ) {
+		return { line, start_ix: 0, due_ix: lineToDueIx(line,now), num_due_moves };
+	}
+	// Black or White
+	repForWhite = ! repForWhite;
+	nextMoveIsOwn = ! nextMoveIsOwn;
+	line = bfsDueContinuationToEnd( repertoire, now, InitialFen, repForWhite, nextMoveIsOwn );
 	if ( line.length > 0 ) {
 		return { line, start_ix: 0, due_ix: lineToDueIx(line,now), num_due_moves };
 	}
 
-	// Search Black repertoire from initial position
-	line = bfsDueContinuationToEnd( repertoire, now, InitialFen, false, false );
-	if ( line.length > 0 ) {
-		return { line, start_ix: 0, due_ix: lineToDueIx(line,now), num_due_moves };
-	}
 
 	throw new Error( 'No line found despite due moves existing' );
 }
