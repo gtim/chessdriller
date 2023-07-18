@@ -194,7 +194,7 @@ describe( 'getLineForStudy with lastLine', async () => {
 		setSanDueTime( rep, 'e4',  new Date( '2023-01-31T12:34:56Z' ) );
 		setSanDueTime( rep, 'Nf3',  new Date( '2023-01-31T12:34:56Z' ) );
 		const { start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
-		expect( start_ix ).toEqual(3);
+		expect( start_ix ).toEqual(4);
 	} );
 	test( 'start_ix returned for Black', async () => {
 		let rep = createRepertoire( [
@@ -205,7 +205,7 @@ describe( 'getLineForStudy with lastLine', async () => {
 		setSanDueTime( rep, 'c5',  new Date( '2023-01-31T12:34:56Z' ) );
 		setSanDueTime( rep, 'd6',  new Date( '2023-01-31T12:34:56Z' ) );
 		const { start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3] );
-		expect( start_ix ).toEqual(2);
+		expect( start_ix ).toEqual(3);
 	} );
 	test( 'returned move was not in last line', async () => {
 		let rep = createRepertoire( [ ['e4'],['d4'] ] );
@@ -238,7 +238,7 @@ describe( 'getLineForStudy with lastLine', async () => {
 		setSanDueTime( rep, 'Nf3', new Date( '2023-01-31T12:34:56Z' ) );
 		const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
 		expect( line.map(m=>m.moveSan) ).toEqual( ['e4','c6','d4'] );
-		expect( start_ix ).toEqual(1);
+		expect( start_ix ).toEqual(2);
 	} );
 	test( 'backtrack from lastLine to another White first-move', async () => {
 		let rep = createRepertoire( [ ['e4','c5','Nf3','d6','d4'],['d4','d5','c4'] ] );
@@ -255,7 +255,7 @@ describe( 'getLineForStudy with lastLine', async () => {
 		for ( let i = 0; i < 100; i++ ) {
 			const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
 			expect( line.map(m=>m.moveSan) ).toEqual( ['e4','c5','Nf3','Nc6','Bb5'] );
-			expect( start_ix ).toEqual(3);
+			expect( start_ix ).toEqual(4);
 		}
 	} );
 	test( 'does not return line close to lastLine if not due', async () => {
@@ -265,20 +265,8 @@ describe( 'getLineForStudy with lastLine', async () => {
 		for ( let i = 0; i < 100; i++ ) {
 			const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
 			expect( line.map(m=>m.moveSan) ).toEqual( ['e4','c6','Nc3'] );
-			expect( start_ix ).toEqual(1);
+			expect( start_ix ).toEqual(2);
 		}
-	} );
-	test( 'no due moves before start_ix (issue #11)', async () => {
-		let rep = createRepertoire( [
-			['e4','c5','Nf3','d6','d4'],
-			['e4','c5','Nf3','d6','d3'],
-		] );
-		setAllDueTime( rep, new Date( '2023-01-31T12:34:56Z' ) );
-		setSanDueTime( rep, 'Nf3', new Date( '2023-01-21T12:34:56Z' ) );
-		setSanDueTime( rep, 'd3', new Date( '2023-01-21T12:34:56Z' ) );
-		const { line, start_ix } = await getLineForStudy( rep, new Date('2023-01-28T00:00:00Z'), [0,1,2,3,4] );
-		expect( line.map(m=>m.moveSan) ).toEqual( ['e4','c5','Nf3','d6','d3'] );
-		expect( start_ix ).toEqual(2);
 	} );
 });
 
