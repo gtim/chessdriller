@@ -7,10 +7,9 @@ const prisma = new PrismaClient();
 /*
  * learning step:
  *   0: new card, show immediately
- *   1: 1 min
- *   2: 10 min
- *   3: 8h
- *   4: 16h (move to review when done)
+ *   1: 10 min
+ *   2: 1h
+ *   3: 8h (move to review when done)
  */
 
 const Max_Review_Interval = 100;
@@ -72,15 +71,15 @@ export async function POST({ request, locals }) {
 	} else {
 		if ( move.learningDueTime ) {
 			// promote correct moves in Learning regardless of whether they were due or not
-			const step_minutes = [ 0, 1, 10, 8*60, 16*60 ]; // number of minutes' delay in each learning step
-			if ( move.learningStep < 4 ) {
+			const step_minutes = [ 0, 10, 60, 8*60 ]; // number of minutes' delay in each learning step
+			if ( move.learningStep < 3 ) {
 				update.learningStep = move.learningStep + 1;
 				const minutes_delay = Math.ceil( fuzzed_minutes( step_minutes[update.learningStep], line_study_id ) );
 				update.learningDueTime = datetime_in_n_minutes( minutes_delay );
 				interval_value = minutes_delay;
 				interval_unit = 'm';
 				interval_increased = true;
-			} else if ( move.learningStep == 4 ) {
+			} else if ( move.learningStep >= 3 ) {
 				// graduate
 				update.learningDueTime = null;
 				update.learningStep    = null;
