@@ -209,7 +209,7 @@
 	<div class="studygrid">
 
 		<div id="stats">
-			<p>
+			<p title="You have {stats?stats.moves_due:0} move{stats&&stats.moves_due==1?'':'s'} to study right now.">
 			{#if stats}
 				{stats.moves_due} move{stats.moves_due==1?'':'s'} due.
 			{:else}
