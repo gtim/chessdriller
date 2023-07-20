@@ -11,6 +11,7 @@
 	{:else}
 		<li><a href="/me">You</a></li>
 	{/if}
+	<li><a href="/faq">FAQ</a></li>
 </ul>
 
 <style>
