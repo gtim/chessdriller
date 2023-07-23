@@ -56,6 +56,7 @@ model User {
 	studies                     LichessStudy[]
 	pgns                        Pgn[]
 	history                     StudyHistory[]
+	feedback                    Feedback[]
 	lichessUsername             String?
 	lichessAccessToken          String?
 	lichessAccessTokenFetchedAt DateTime?
@@ -138,4 +139,14 @@ model StudyHistory {
 	moveId             Int
 	studiedAt          DateTime @default(now())
 	incorrectGuessSan  String?  // guess if it was wrong, null if it was right
+}
+
+model Feedback {
+	id        Int      @id @default(autoincrement())
+	ip        String
+	user      User?    @relation( fields: [userId], references: [id] )
+	userId    Int?
+	content   String
+	email     String
+	submitted DateTime @default(now())
 }
