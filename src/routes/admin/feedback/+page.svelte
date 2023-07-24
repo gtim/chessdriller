@@ -14,6 +14,7 @@
 				<td title="{feedback.submitted}">{relativeTime.from(feedback.submitted)}</td>
 				<td>{feedback.user ? feedback.user.lichessUsername : ''}</td>
 				<td>{feedback.email}</td>
+				<td>{feedback.seen?'':'*'}</td>
 			</tr>
 		{/each}
 	</table>

@@ -149,4 +149,5 @@ model Feedback {
 	content   String
 	email     String
 	submitted DateTime @default(now())
+	seen      Boolean @default(false)
 }

@@ -11,5 +11,10 @@ export const load = async ({ locals }) => {
 		include: { user: true },
 		orderBy: [ { submitted: 'desc' } ],
 	});
+	await prisma.Feedback.updateMany({
+		data: {
+			seen: true,
+		},
+	});
 	return { feedbacks };
 };
