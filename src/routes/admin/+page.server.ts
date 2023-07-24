@@ -8,7 +8,7 @@ export const load = async ({ locals }) => {
 	if (!user) throw redirect(302, "/");
 	if ( user.cdUserId != 13 ) throw redirect(302, "/"); // TODO hardcoded admin user ID
 
-	const users = await prisma.User.findMany({
+	const users = await prisma.user.findMany({
 		select: {
 			id: true,
 			lichessUsername: true,
