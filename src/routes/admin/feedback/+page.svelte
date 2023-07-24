@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import RelativeTime from '@yaireo/relative-time';
 	const relativeTime = new RelativeTime();
 	export let data;
@@ -11,7 +11,7 @@
 		{#each data.feedbacks as feedback}
 			<tr>
 				<td>{feedback.content}</td>
-				<td title="{feedback.submitted}">{relativeTime.from(feedback.submitted)}</td>
+				<td title="{feedback.submitted.toLocaleString()}">{relativeTime.from(feedback.submitted)}</td>
 				<td>{feedback.user ? feedback.user.lichessUsername : ''}</td>
 				<td>{feedback.email}</td>
 				<td>{feedback.seen?'':'*'}</td>

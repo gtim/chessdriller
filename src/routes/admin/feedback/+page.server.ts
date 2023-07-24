@@ -7,11 +7,11 @@ export const load = async ({ locals }) => {
 	if (!user) throw redirect(302, "/");
 	if ( user.cdUserId != 13 ) throw redirect(302, "/"); // TODO hardcoded admin user ID
 
-	const feedbacks = await prisma.Feedback.findMany({
+	const feedbacks = await prisma.feedback.findMany({
 		include: { user: true },
 		orderBy: [ { submitted: 'desc' } ],
 	});
-	await prisma.Feedback.updateMany({
+	await prisma.feedback.updateMany({
 		data: {
 			seen: true,
 		},
