@@ -23,6 +23,7 @@
 
 	<div class="footer">
 		<ul>
+			<!--<li><a href="https://github.com/gtim/chessdriller" target="_blank" rel="noopener noreferrer">source code</a></li>-->
 			<li>
 				<!-- feedback SVG from Remixicon -->
 				<button on:click={()=>openModal(FeedbackModal)}>
