@@ -20,7 +20,6 @@ Known bugs can be found on the [Github issue tracker](https://github.com/gtim/ch
 * study: "skip end of line" should play it through quickly instead of jumping
 * set time zone per user (day currently wraps at 00:00 GMT)
 * pgn upload: guess repertoire color and display parse issues before submitting form
-* feedback button to conveniently send me feedback on chessdriller
 * when studies/PGNs don't start from the initial position, warn and fail gracefully
 * repertoire: check for repertoire updates regularly while logged in, notify with banner/message in header
 * internal: maybe prisma client should only be instantiated once?
