@@ -1,3 +1,8 @@
+<script lang="ts">
+	import FeedbackModal from '$lib/FeedbackModal.svelte'
+	import { openModal } from 'svelte-modals'
+</script>
+
 <div class="narrow_container">
 	<h1>Frequently Asked Questions</h1>
 	<div class="entry">
@@ -20,6 +25,17 @@
 		<p class="question">What does "<i>x</i> due moves" mean in the study screen?</p>
 		<p class="answer">There's <i>x</i> moves ready to practice. Play through your repertoire against Chessdriller to get to them. When you first add a move, it will be due immediately. After playing a move correctly for the first time, it will be due again after 10 minutes. Each time the move is played correctly, the interval increases, approximately: 10 minutes, one hour, 8 hours, 1 day, 3 days, 7 days... Playing a move incorrectly resets the interval. This science-based learning technique is called <a href="https://en.wikipedia.org/wiki/Spaced_repetition" target="_blank" rel="noopener noreferrer">spaced repetition</a>.</p>
 	</div>
+
+	<div class="entry">
+		<p class="question">I've got another question.</p>
+		<p class="answer">
+			<button on:click={()=>openModal(FeedbackModal)}>
+				Click here to ask me your question.
+			</button>
+			You could also open a <a href="https://github.com/gtim/chessdriller/issues" target="_blank" rel="noopener noreferrer">Github issue</a>
+			or <a href="mailto:tim@gurka.se">email me</a>.
+		</p>
+	</div>
 </div>
 
 <style>
@@ -36,5 +52,18 @@
 	}
 	.answer {
 		padding-left:32px;
+	}
+
+	button {
+		background: none!important;
+		border: none;
+		padding: 0!important;
+		color:#800020;
+		text-decoration: none;
+		cursor: pointer;
+		font-size:16px;
+	}
+	button:hover {
+		text-decoration: underline;
 	}
 </style>
