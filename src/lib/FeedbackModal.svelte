@@ -37,7 +37,7 @@
 </script>
 
 {#if isOpen}
-	<div role="dialog" class="modal" in:fly={{ x: 20, y: 50 }} on:introstart on:outroend>
+	<div role="dialog" class="modal" in:fly={{ x: 20, y: 50 }} out:fly={{ x: 50 }} on:introstart on:outroend>
 		<form method="POST" on:submit|preventDefault={submitFeedback}>
 			<div class="contents">
 				<h2>Feedback</h2>
