@@ -23,6 +23,10 @@ export const load = async ({ locals }) => {
 			}
 		}
 	});
-	return { users };
+
+	const numUnseenFeedback = await prisma.feedback.count({
+		where: { seen: false }
+	});
+	return { users, numUnseenFeedback };
 
 };

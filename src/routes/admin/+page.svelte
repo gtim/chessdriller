@@ -6,6 +6,9 @@
 <div class="narrow_container">
 	<p>
 		<a href="/admin/feedback">view feedback</a>
+		{#if data.numUnseenFeedback > 0}
+			<span title="unseen feedback: {data.numUnseenFeedback}">*</span>
+		{/if}
 		| <a href="/admin/dbcheck">database sanity check</a>
 	</p>
 	<table>
