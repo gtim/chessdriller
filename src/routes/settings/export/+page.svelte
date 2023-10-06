@@ -51,14 +51,16 @@
 		border-color:black;
 		border-style:solid;
 	}
+	table tr:nth-child(2) td {
+		padding-top:4px;
+	}
 	th {
 		text-align:left;
-	}
-	td {
 	}
 	tr td:first-child {
 		font-family: monospace;
 		vertical-align:top;
+		padding-right:8px;
 	}
 	
 </style>
