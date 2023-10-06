@@ -3,9 +3,9 @@
 	export let data;
 </script>
 
-<h1>You</h1>
+<h1>Settings</h1>
 <div class="narrow_container">
-	<p>You are {data.lichessUsername}.</p>
+	<p>You are logged in as {data.lichessUsername}.</p>
 	<form use:enhance method="post">
 		<input type="submit" class="cdbutton" value="Sign out" />
 	</form>
