@@ -4,8 +4,8 @@
 
 <h1>Export your data</h1>
 <div class="narrow_container">
-	<p><a href="/me/export/moves.csv">moves.csv</a></p>
-	<p><a href="/me/export/history.csv">history.csv</a></p>
+	<p><a href="/settings/export/moves.csv">moves.csv</a></p>
+	<p><a href="/settings/export/history.csv">history.csv</a></p>
 </div>
 
 <style>

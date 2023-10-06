@@ -9,7 +9,7 @@
 	{#if ! loggedIn}
 		<li><a href="/join">Join or log in</a></li>
 	{:else}
-		<li><a href="/me">You</a></li>
+		<li><a href="/settings">Settings</a></li>
 	{/if}
 	<li><a href="/faq">FAQ</a></li>
 </ul>
