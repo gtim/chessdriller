@@ -24,32 +24,53 @@ export async function GET({ locals, params }) {
 			},
 			select,
 		});
+		moves.forEach( (move) => {
+			move.repForWhite = move.repForWhite ? 1 : 0; // compress true/false to 1/0
+			move.ownMove = move.ownMove ? 1 : 0;
+			move.learningDueTime = move.learningDueTime?.toISOString();
+			move.reviewDueDate = move.reviewDueDate?.toISOString();
+			move.reviewInterval = move.reviewInterval?.toFixed(2);
+			move.reviewEase = move.reviewEase?.toFixed(2);
+		} );
 
-		// construct CSV. assumes column headers and cells don't include comma or newline.
-		const moveToCsvRow = (move) => {
-			return columns.map( (col) => {
-				if ( col === 'repForWhite' || col === 'ownMove' ) {
-					return move[col] ? 1 : 0 // compress true/false to 1/0
-				} else if ( col === 'learningDueTime' || col === 'reviewDueDate' ) {
-					return move[col]?.toISOString(); 
-				} else if ( col === 'reviewInterval' || col === 'reviewEase' ) {
-					return move[col]?.toFixed(2); // no point in returning 10 decimals
-				} else {
-					return move[col]
-				}
-			} ).join(',');
-		};
-		return new Response(
-			columns.join(',') + '\n' + moves.map(moveToCsvRow).join('\n') + '\n',
-			{
-				headers: {
-					'Content-Type': 'text/csv',
-					'Content-Disposition': `attachment; filename=${exportType}.csv`
-				}
+		return csvResponse( 'moves.csv', columns, moves );
+
+	} else if ( exportType == 'history' ) {
+
+		const history = await prisma.StudyHistory.findMany({
+			where: {
+				userId,
+				move: { deleted: false },
+			},
+			select: {
+				moveId: true,
+				studiedAt: true,
+				incorrectGuessSan: true,
 			}
-		);
+		});
+		history.forEach( (entry) => {
+			entry.studiedAt = entry.studiedAt.toISOString();
+			entry.correct = entry.incorrectGuessSan === null ? 1 : 0;
+		} );
+		return csvResponse( 'history.csv', ['moveId','studiedAt','correct','incorrectGuessSan'], history );
+
 
 	} else {
 		throw error(404);
 	}
+}
+
+function csvResponse( filename, columns, objs ) {
+		// assumes column headers and cells don't include comma or newline
+		const rows = objs.map( (obj) => columns.map( (col) => obj[col] ).join(',') );
+		return new Response(
+			columns.join(',') + '\n' + rows.join('\n') + '\n',
+			{
+				headers: {
+					'Content-Type': 'text/csv',
+					'Content-Disposition': `attachment; filename=${filename}`
+				}
+			}
+		);
+	
 }
