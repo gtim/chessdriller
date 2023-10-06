@@ -1,7 +1,3 @@
-<script lang="ts">
-	export let data;
-</script>
-
 <h1>Export your data</h1>
 <div class="narrow_container">
 
