@@ -3,8 +3,9 @@ import { fetchAllStudyChangesUnlessFetchedRecently } from '$lib/lichessStudy.js'
 import { PrismaClient } from '@prisma/client';
 
 export const load = async ({ locals }) => {
-	const { user } = await locals.auth.validateUser();
-	if (!user) throw redirect(302, "/join"); // force login
+	const session = await locals.auth.validate();
+	if (!session) throw redirect(302, "/");
+	const user = session.user;
 
 	// fetch lichess study updates
 	const prisma = new PrismaClient();

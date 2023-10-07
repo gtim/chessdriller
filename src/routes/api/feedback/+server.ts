@@ -3,8 +3,8 @@ import { PrismaClient } from '@prisma/client';
 
 export async function POST({ locals, request }) {
 
-	const { user } = await locals.auth.validateUser();
-	const userId = user ? user.cdUserId : null;
+	const session = await locals.auth.validate();
+	const userId = session ? session.user.cdUserId : null;
 
 	const { content, email } = await request.json();
 

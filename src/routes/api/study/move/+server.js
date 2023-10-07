@@ -17,9 +17,9 @@ const Max_Review_Interval = 100;
 export async function POST({ request, locals }) {
 
 	// session
-	const { user } = await locals.auth.validateUser();
-	if (!user) return json({ success: false, message: 'not logged in' });
-	const userId = user.cdUserId;
+	const session = await locals.auth.validate();
+	if (!session) return json({ success: false, message: 'not logged in' });
+	const userId = session.user.cdUserId;
 
 	const { move_id, correct, guess, line_study_id } = await request.json();
 

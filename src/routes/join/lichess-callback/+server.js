@@ -18,8 +18,8 @@ export async function GET({ cookies, url, locals }) {
 	// login successful
 
 	try {
-		const { existingUser, providerUser, tokens } = await lichessAuth.validateCallback( code, code_verifier );
-		const providerUserId = providerUser.id
+		const { existingUser, lichessUser, lichessTokens } = await lichessAuth.validateCallback( code );
+		const lichessUserId = lichessUser.id
 		const getUser = async () => {
 			if ( existingUser )
 				return existingUser;
@@ -27,9 +27,9 @@ export async function GET({ cookies, url, locals }) {
 			const newCdUser = await prismaClient.user.create({ data: { } });
 			// then, create Auth user
 			return await auth.createUser({
-				primaryKey: {
+				key: {
 					providerId: 'lichess',
-					providerUserId
+					lichessUserId
 				},
 				attributes: {
 					cdUserId: newCdUser.id
@@ -40,13 +40,16 @@ export async function GET({ cookies, url, locals }) {
 		await prismaClient.user.update({
 			where: { id: user.cdUserId },
 			data: {
-				lichessUsername: providerUserId,
-				lichessAccessToken: tokens.accessToken,
-				lichessAccessTokenExpiresIn: tokens.accessTokenExpiresIn,
+				lichessUsername: lichessUserId,
+				lichessAccessToken: lichessTokens.accessToken,
+				lichessAccessTokenExpiresIn: lichessTokens.accessTokenExpiresIn,
 				lichessAccessTokenFetchedAt: new Date()
 			}
 		});
-		const session = await auth.createSession(user.userId);
+		const session = await auth.createSession({
+			userId: user.userId,
+			attributes: {}
+		});
 		locals.auth.setSession(session);
 	} catch (e) {
 		// invalid code

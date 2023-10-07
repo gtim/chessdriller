@@ -2,13 +2,13 @@ import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 
 export async function GET({ locals }) {
-	const { user } = await locals.auth.validateUser();
-	if (!user) return json({ success: false, message: 'not logged in' });
+	const session = await locals.auth.validate();
+	if (!session) return json({ success: false, message: 'not logged in' });
 
 	const prisma = new PrismaClient();
 	try {
 		const studies = await prisma.LichessStudy.findMany({
-			where: { userId: user.cdUserId },
+			where: { userId: session.user.cdUserId },
 			select: {
 				id: true, 
 				lichessId: true,

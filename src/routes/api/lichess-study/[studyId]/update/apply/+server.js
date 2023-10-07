@@ -10,8 +10,8 @@ const prisma = new PrismaClient();
 
 export async function POST({ locals, params }) {
 
-	const { user } = await locals.auth.validateUser();
-	if (!user) return json({ success: false, message: 'not logged in' });
+	const session = await locals.auth.validate();
+	if (!session) return json({ success: false, message: 'not logged in' });
 
 
 	// Get study + update
@@ -45,7 +45,7 @@ export async function POST({ locals, params }) {
 			}
 		}
 	});
-	if ( study.userId !== user.cdUserId )
+	if ( study.userId !== session.user.cdUserId )
 		return json({ success: false, message: 'Study does not belong to this user (are you logged in?)' });
 	if ( ! study.included )
 		return json({ success: false, message: 'Only studies that are part of your repertoire can be updated, please add it first.' });

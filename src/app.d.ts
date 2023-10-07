@@ -4,7 +4,7 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			auth: import("lucia-auth").AuthRequest;
+			auth: import("lucia").AuthRequest;
 		}
 		// interface PageData {}
 		// interface Platform {}
@@ -15,7 +15,7 @@ declare global {
 declare global {
 	namespace Lucia {
 		type Auth = import("$lib/server/lucia").Auth;
-		type UserAttributes = {
+		type DatabaseUserAttributes = {
 			cdUserId: number
 		};
 	}

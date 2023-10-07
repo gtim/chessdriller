@@ -1,5 +1,6 @@
 export const load = async ({ locals }) => {
-	const { user } = await locals.auth.validateUser();
+	const session = await locals.auth.validate();
+	const user = session ? session.user : null;
 	return { user };
 };
 

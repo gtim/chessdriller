@@ -6,15 +6,15 @@ const prisma = new PrismaClient();
 
 export async function POST({ locals, params }) {
 
-	const { user } = await locals.auth.validateUser();
-	if (!user) return json({ success: false, message: 'not logged in' });
+	const session = await locals.auth.validate();
+	if (!session) return json({ success: false, message: 'not logged in' });
 
 	const cdUser = await prisma.User.findUniqueOrThrow({
-		where: { id: user.cdUserId }
+		where: { id: session.user.cdUserId }
 	});
 
 	try {
-		const update = await fetchStudyUpdate( user.cdUserId, +params.studyId, prisma, cdUser.lichessUsername, cdUser.lichessAccessToken );
+		const update = await fetchStudyUpdate( session.user.cdUserId, +params.studyId, prisma, cdUser.lichessUsername, cdUser.lichessAccessToken );
 		return json({
 			success: true,
 			update

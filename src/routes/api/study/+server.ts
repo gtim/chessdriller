@@ -5,9 +5,9 @@ import { getLineForStudy } from '$lib/scheduler';
 export async function GET({ url, locals }) {
 
 	// session
-	const { user } = await locals.auth.validateUser();
-	if (!user) return json({ success: false, message: 'not logged in' });
-	const userId = user.cdUserId;
+	const session = await locals.auth.validate();
+	if (!session) return json({ success: false, message: 'not logged in' });
+	const userId = session.user.cdUserId;
 
 	const prisma = new PrismaClient();
 

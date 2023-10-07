@@ -10,9 +10,9 @@ const prisma = new PrismaClient();
 export async function GET({ locals }) {
 
 	// session
-	const { user } = await locals.auth.validateUser();
-	if (!user) return json({ success: false, message: 'not logged in' });
-	const userId = user.cdUserId;
+	const session = await locals.auth.validate();
+	if (!session) return json({ success: false, message: 'not logged in' });
+	const userId = session.user.cdUserId;
 
 	// get moves
 	const moves = await prisma.Move.findMany({

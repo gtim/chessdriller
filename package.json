@@ -1,6 +1,6 @@
 {
 	"name": "chessdriller",
-	"version": "1.7.0",
+	"version": "1.8.0",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -33,8 +33,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@lucia-auth/adapter-prisma": "^2.0.0",
-		"@lucia-auth/oauth": "file:../dev/lucia/packages/integration-oauth/dist/lucia-auth-oauth-1.1.1.tgz",
+		"@lucia-auth/adapter-prisma": "^3.0.2",
+		"@lucia-auth/oauth": "^3.3.0",
 		"@prisma/client": "^4.16.2",
 		"@yaireo/relative-time": "^1.0.4",
 		"chess.js": "^1.0.0-beta.3",
@@ -42,7 +42,7 @@
 		"cm-pgn": "^3.3.0",
 		"express": "^4.18.2",
 		"gsap": "^3.12.2",
-		"lucia-auth": "^1.7.1",
+		"lucia": "^2.7.1",
 		"svelte-chessground": "^1.1.0",
 		"svelte-modals": "^1.3.0"
 	}

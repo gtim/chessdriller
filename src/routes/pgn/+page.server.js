@@ -7,12 +7,12 @@ const prisma = new PrismaClient();
 
 export const load = async ({locals}) => {
 	// session
-	const { user } = await locals.auth.validateUser();
-	if (!user) throw redirect(302, "/join"); // force login
+	const session = await locals.auth.validate();
+	if (!session) throw redirect(302, "/join"); // force login
 
 	// get PGNs
 	const pgns = await prisma.Pgn.findMany({
-		where: { userId: user.cdUserId },
+		where: { userId: session.user.cdUserId },
 		select: {
 			id: true,
 			repForWhite: true,
@@ -33,9 +33,9 @@ export const actions = {
 	default: async ({request,locals}) => {
 
 		// session
-		const { user } = await locals.auth.validateUser();
-		if (!user) return json({ success: false, message: 'not logged in' });
-		const userId = user.cdUserId;
+		const session = await locals.auth.validate();
+		if (!session) return json({ success: false, message: 'not logged in' });
+		const userId = session.user.cdUserId;
 
 		const formData = await request.formData();
 

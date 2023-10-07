@@ -3,8 +3,8 @@ import { PrismaClient } from '@prisma/client';
 import { includeStudy } from '$lib/lichessStudy.js';
 
 export async function POST({ locals, params }) {
-	const { user } = await locals.auth.validateUser();
-	if (!user) return json({ success: false, message: 'not logged in' });
+	const session = await locals.auth.validate();
+	if (!session) return json({ success: false, message: 'not logged in' });
 
 	if ( params.color !== 'white' && params.color !== 'black' ) {
 		return json({ success: false, message: 'invalid color: ' + params.color });
@@ -13,7 +13,7 @@ export async function POST({ locals, params }) {
 
 	try {
 		const prisma = new PrismaClient();
-		includeStudy( +params.studyId, prisma, user.cdUserId, repForWhite );
+		includeStudy( +params.studyId, prisma, session.user.cdUserId, repForWhite );
 	} catch(e) {
 		return json({
 			success: false,

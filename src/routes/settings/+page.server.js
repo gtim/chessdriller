@@ -3,12 +3,12 @@ import { auth } from "$lib/server/lucia";
 import { PrismaClient } from '@prisma/client';
 
 export const load = async ({ locals }) => {
-	const { user } = await locals.auth.validateUser();
-	if (!user) throw redirect(302, "/join");
+	const session = await locals.auth.validate();
+	if (!session) throw redirect(302, "/join");
 
 	const prisma = new PrismaClient();
 	const cdUser = await prisma.User.findUniqueOrThrow({
-		where: { id: user.cdUserId },
+		where: { id: session.user.cdUserId },
 		select: {
 			lichessUsername: true,
 		}

@@ -2,8 +2,8 @@ import { json } from '@sveltejs/kit';
 import { PrismaClient } from '@prisma/client';
 
 export async function POST({ locals, params }) {
-	const { user } = await locals.auth.validateUser();
-	if (!user) return json({ success: false, message: 'not logged in' });
+	const session = await locals.auth.validate();
+	if (!session) return json({ success: false, message: 'not logged in' });
 
 	let new_value;
 	if ( params.column === 'hidden' ) {
@@ -23,7 +23,7 @@ export async function POST({ locals, params }) {
 	try {
 		await prisma.LichessStudy.updateMany({
 			where: {
-				userId: user.cdUserId,
+				userId: session.user.cdUserId,
 				id: +params.studyId
 			},
 			data: {

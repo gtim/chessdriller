@@ -4,9 +4,9 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const load = async ({ locals }) => {
-	const { user } = await locals.auth.validateUser();
-	if (!user) throw redirect(302, "/");
-	if ( user.cdUserId != 13 ) throw redirect(302, "/"); // TODO hardcoded admin user ID
+	const session = await locals.auth.validate();
+	if (!session) throw redirect(302, "/");
+	if ( session.user.cdUserId != 13 ) throw redirect(302, "/"); // TODO hardcoded admin user ID
 
 	const users = await prisma.user.findMany({
 		select: {
