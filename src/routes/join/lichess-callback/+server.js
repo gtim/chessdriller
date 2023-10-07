@@ -18,9 +18,10 @@ export async function GET({ cookies, url, locals }) {
 	// login successful
 
 	try {
-		const { existingUser, lichessUser, lichessTokens } = await lichessAuth.validateCallback( code, codeVerifier );
+		const { getExistingUser, lichessUser, lichessTokens } = await lichessAuth.validateCallback( code, codeVerifier );
 		const lichessUserId = lichessUser.id;
 		const getUser = async () => {
+			const existingUser = await getExistingUser();
 			if ( existingUser )
 				return existingUser;
 			// new account: first create a new Chessdriller user (authenticated by the Auth user)
