@@ -30,6 +30,7 @@ export async function GET({ cookies, url, locals }) {
 				key: {
 					providerId: 'lichess',
 					providerUserId: lichessUserId,
+					password: null,
 				},
 				attributes: {
 					cdUserId: newCdUser.id
