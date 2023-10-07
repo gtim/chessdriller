@@ -13,7 +13,7 @@
 		<tr><td>ownMove</td><td>1 if this move is played by the user, 0 if it is played by the opponent.</td></tr>
 		<tr><td>learningDueTime</td><td>Time at which the move is due, if it's in the learning phase.</td></tr>
 		<tr><td>learningStep</td><td></td></tr>
-		<tr><td>ReviewDueDate</td><td>Date at which the move is due, if it's in the review phase.</td></tr>
+		<tr><td>reviewDueDate</td><td>Date at which the move is due, if it's in the review phase.</td></tr>
 		<tr><td>reviewInterval</td><td>Length of current repetition spacing in days.</td></tr>
 		<tr><td>reviewEase</td><td>How hard the move is. Decreases on wrong answer. Used as multiplier for the repetition spacing on correct answer.</td></tr>
 	</table>
