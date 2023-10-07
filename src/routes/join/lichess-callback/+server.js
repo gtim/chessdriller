@@ -10,7 +10,7 @@ export async function GET({ cookies, url, locals }) {
 
 	const code = url.searchParams.get("code");
 	const state = url.searchParams.get("state");
-	const [ storedState, code_verifier ] = JSON.parse( cookies.get("lichess_oauth_state") );
+	const [ storedState, codeVerifier ] = JSON.parse( cookies.get("lichess_oauth_state") );
 
 	if (state !== storedState)
 		return new Response(null, { status: 401 });
@@ -18,8 +18,8 @@ export async function GET({ cookies, url, locals }) {
 	// login successful
 
 	try {
-		const { existingUser, lichessUser, lichessTokens } = await lichessAuth.validateCallback( code );
-		const lichessUserId = lichessUser.id
+		const { existingUser, lichessUser, lichessTokens } = await lichessAuth.validateCallback( code, codeVerifier );
+		const lichessUserId = lichessUser.id;
 		const getUser = async () => {
 			if ( existingUser )
 				return existingUser;
@@ -29,7 +29,7 @@ export async function GET({ cookies, url, locals }) {
 			return await auth.createUser({
 				key: {
 					providerId: 'lichess',
-					lichessUserId
+					providerUserId: lichessUserId,
 				},
 				attributes: {
 					cdUserId: newCdUser.id
