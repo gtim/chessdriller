@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import lucia from "lucia-auth";
 import { sveltekit } from "lucia-auth/middleware";
 import { lichess } from '@lucia-auth/oauth/providers';
@@ -19,7 +20,7 @@ export const auth = lucia({
 
 export const lichessAuth = lichess( auth, {
 	clientId:    'chessdriller.org (tim@gurka.se)',
-	redirectUri: 'https://chessdriller.org/join/lichess-callback',
+	redirectUri: process.env.LICHESS_REDIRECT_ORIGIN + '/join/lichess-callback',
 	scope: ['study:read'],
 	clientSecret: '', // TODO should not be needed
 } );
