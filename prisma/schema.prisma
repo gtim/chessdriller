@@ -60,6 +60,11 @@ model User {
 	lichessAccessTokenFetchedAt DateTime?
 	lichessAccessTokenExpiresIn Int?
 	lastRepertoireUpdateCheck   DateTime?
+
+	// user settings are implemented as columns in the User table until unwieldly or slow
+
+	// whether to display the name of the lichessStudy/PGN the current line came from when studying
+	settingsStudyDisplayLineSource    Boolean @default(false) 
 }
 
 model Move {
