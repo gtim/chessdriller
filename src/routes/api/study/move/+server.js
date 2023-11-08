@@ -10,6 +10,12 @@ const prisma = new PrismaClient();
  *   1: 10 min
  *   2: 1h
  *   3: 8h (move to review when done)
+ *
+ * on wrong answer:
+ *   if interval > 1 days:
+ *     reset to first review step (1 day)
+ *   else:
+ *     reset to first learning step (10 min)
  */
 
 const Max_Review_Interval = 100;
@@ -58,16 +64,30 @@ export async function POST({ request, locals }) {
 	const now = new Date(); 
 	let update = {};
 	if ( ! correct ) {
-		// Incorrect: reset card, regardless of Learning/Review state.
-		update.learningDueTime = new Date();
-		update.learningStep = 0;
-		update.reviewDueDate  = null;
-		update.reviewInterval = null;
-		update.reviewEase     = move.reviewEase ? Math.max( 1.3, move.reviewEase - 0.2 ) : null;
-		interval_value = 0;
-		interval_unit = 'm';
-		interval_increased = false;
-		console.log( 'move ' + move.moveSan + ' wrong' );
+		if ( move.learningDueTime || move.reviewInterval == 1 ) {
+			// in learning or 1-day review interval: reset to first learning step
+			update.learningDueTime = new Date();
+			update.learningStep = 0;
+			update.reviewDueDate  = null;
+			update.reviewInterval = null;
+			update.reviewEase     = move.reviewEase ? Math.max( 1.3, move.reviewEase - 0.2 ) : null;
+			interval_value = 0;
+			interval_unit = 'm';
+			interval_increased = false;
+			console.log( 'move ' + move.moveSan + ' wrong: restart learning' );
+		} else {
+			// in review with >1 day interval: reset to 1-day interval.
+			// reviewInterval == 0 indicates "reset learning" and is handled on next correct
+			update.learningDueTime = null;
+			update.learningStep = null;
+			update.reviewInterval = 0;
+			update.reviewDueDate   = new Date();
+			update.reviewEase     = move.reviewEase ? Math.max( 1.3, move.reviewEase - 0.2 ) : null;
+			interval_value = 0;
+			interval_unit = 'd';
+			interval_increased = false;
+			console.log( 'move ' + move.moveSan + ' wrong: restart review' );
+		}
 	} else {
 		if ( move.learningDueTime ) {
 			// promote correct moves in Learning regardless of whether they were due or not
@@ -95,10 +115,17 @@ export async function POST({ request, locals }) {
 		} else {
 			// move in review
 			if ( moveIsDue( move, now ) ) {
-				update.reviewInterval = move.reviewInterval * move.reviewEase;
-				if ( update.reviewInterval > Max_Review_Interval ) {
-					update.reviewInterval = Max_Review_Interval;
-					interval_maxed = true;
+				if ( move.reviewInterval == 0 ) {
+					// this move was previously reset to first review step due to incorrect guess, set interval to 1d
+					console.log( 'review-reset move ' + move.moveSan + ' now correct' );
+					update.reviewInterval = 1;
+				} else {
+					// normal move, just increment the review interval
+					update.reviewInterval = move.reviewInterval * move.reviewEase;
+					if ( update.reviewInterval > Max_Review_Interval ) {
+						update.reviewInterval = Max_Review_Interval;
+						interval_maxed = true;
+					}
 				}
 				// Maybe reviewInterval should be fuzzed too? How does Anki do it?
 				const fuzzed_interval = Math.ceil( fuzzed_days( update.reviewInterval, line_study_id ) );
