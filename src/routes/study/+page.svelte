@@ -10,6 +10,8 @@
 
 	import type { StudyLineResponse, MoveWithPossibleBranches as Move } from '$lib/scheduler';
 
+	export let data;
+
 	type Stats = {
 		moves_total: number;
 		moves_due: number;
@@ -48,6 +50,7 @@
 	let line_study_id = -1;
 	let start_move_ix = -1;
 	let due_ix: number[] = [];
+	let line_source_name: string | null = null;
 
 
 	// MoveSheet logic: TODO move pair_moves and move_pairs* into lib/MoveSheet.svelte (and simplify)
@@ -76,11 +79,13 @@
 				start_move_ix = data.start_ix;
 				last_move_ix = start_move_ix - 1;
 				num_wrongs_this_move = 0;
+				line_source_name = data.source_name;
 				// line-study ID is only used to fuzz intervals from the same line and session equally
 				// expected to be random float [0,1)
 				line_study_id = Math.random(); 
 			} else {
 				review_finished = true;
+				line_source_name = null;
 			}
 		} ).catch( (err) => {
 			error_text = 'Failed asking for next line to study: ' + err.message;
@@ -209,9 +214,16 @@
 	<div class="studygrid">
 
 		<div id="stats">
-			<p title="You have {stats?stats.moves_due:0} move{stats&&stats.moves_due==1?'':'s'} to study right now.">
+			<p>
+			{#if data.user.settingsStudyDisplayLineSource && line_source_name}
+				<span title="This line is in your study named &quot;{line_source_name}&quot;">
+					{line_source_name}.
+				</span>
+			{/if}
 			{#if stats}
-				{stats.moves_due} move{stats.moves_due==1?'':'s'} due.
+				<span title="You have {stats?stats.moves_due:0} move{stats&&stats.moves_due==1?'':'s'} to study right now.">
+					{stats.moves_due} move{stats.moves_due==1?'':'s'} due.
+				</span>
 			{:else}
 				&nbsp;
 			{/if}

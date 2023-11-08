@@ -9,6 +9,7 @@ export async function GET({ url, locals }) {
 	if (!session) return json({ success: false, message: 'not logged in' });
 	const userId = session.user.cdUserId;
 
+
 	const prisma = new PrismaClient();
 
 	const lastLineJson = url.searchParams.get('last');
@@ -18,7 +19,23 @@ export async function GET({ url, locals }) {
 		where: { userId, deleted: false }
 	});
 
-	const response = await getLineForStudy( moves, new Date(), lastLine );
+	let response = await getLineForStudy( moves, new Date(), lastLine );
+
+	// grab title of move source
+	const finalMoveId = response.line[ response.line.length-1 ].id;
+	const finalMove = await prisma.move.findUniqueOrThrow({
+		where: {id: finalMoveId },
+		select: {
+			studies: {
+				select: { name: true },
+			}
+		}
+	});
+	if ( finalMove.studies.length > 0 ) {
+		response.source_name = finalMove.studies[0].name;
+	} else {
+		// TODO handle pgn case
+	}
 
 	return json(response);
 }

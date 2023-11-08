@@ -12,6 +12,7 @@ export type StudyLineResponse = {
 	start_ix: number,
 	due_ix: number[],
 	num_due_moves: number,
+	source_name?: string, // Title of a study/pgn from which this line derives
 };
 
 // a branch is a choice of moves from the user, e.g. 1. c4 and 1. Nf3 in the White repertoire.

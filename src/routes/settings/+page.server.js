@@ -11,20 +11,35 @@ export const load = async ({ locals }) => {
 		where: { id: session.user.cdUserId },
 		select: {
 			lichessUsername: true,
+			settingsStudyDisplayLineSource: true,
 		}
 	});
 
 	return {
-		lichessUsername: cdUser.lichessUsername
+		user: cdUser
 	};
 };
 
 
 export const actions = {
-	default: async ({ locals }) => {
+	logoff: async ({ locals }) => {
 		const session = await locals.auth.validate();
 		if (!session) return fail(401);
-		await auth.invalidateSession(session.sessionId); // invalidate session
-		locals.auth.setSession(null); // remove cookie
+		await auth.invalidateSession(session.sessionId);
+		locals.auth.setSession(null);
+	},
+	update: async ({ locals, request }) => {
+		const session = await locals.auth.validate();
+		if (!session) return fail(401);
+		const data = await request.formData();
+		console.log('upd: ' + data.get('settingsStudyDisplayLineSource'));
+
+		const prisma = new PrismaClient();
+		await prisma.User.update({
+			where: { id: session.user.cdUserId },
+			data: {
+				settingsStudyDisplayLineSource: !! data.get('settingsStudyDisplayLineSource' ),
+			}
+		});
 	}
 };
