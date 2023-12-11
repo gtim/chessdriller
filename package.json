@@ -22,7 +22,7 @@
 		"env-cmd": "^10.1.0",
 		"eslint": "^8.51.0",
 		"eslint-plugin-svelte3": "^4.0.0",
-		"prisma": "^4.16.2",
+		"prisma": "^5.7.0",
 		"svelte": "^3.59.2",
 		"svelte-check": "^3.5.2",
 		"tslib": "^2.6.2",
