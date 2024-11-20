@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    container_name: chessdriller
+    ports:
+      - "3123:3123"
+    volumes:
+      - ./prisma:/code/prisma
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
